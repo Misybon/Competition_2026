@@ -1,0 +1,10 @@
+build
+svd
+.vscode/launch.json
+.vscode/tasks.json
+Core/Src/debug.c
+Core/Inc/debug.h
+openocd.cfg
+mx.scratch
+!.settings
+.clang-format
