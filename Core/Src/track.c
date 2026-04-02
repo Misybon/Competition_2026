@@ -58,6 +58,8 @@ void Track_Restart(void)
  */
 void ProcessLineLostEvent(void)
 {
+    IR_GetVal();
+
     if (!IsLineLost())
     {
         return; // 没丢线就返回

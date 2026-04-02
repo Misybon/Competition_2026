@@ -73,7 +73,7 @@ void MX_TIM1_Init(void)
   LL_TIM_SetTriggerOutput(TIM1, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM1);
   /* USER CODE BEGIN TIM1_Init 2 */
-
+    LL_TIM_EnableCounter(TIM1);
   /* USER CODE END TIM1_Init 2 */
 
 }
@@ -127,7 +127,7 @@ void MX_TIM2_Init(void)
   LL_TIM_SetTriggerOutput(TIM2, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM2);
   /* USER CODE BEGIN TIM2_Init 2 */
-
+    LL_TIM_EnableCounter(TIM2);
   /* USER CODE END TIM2_Init 2 */
 
 }
@@ -176,7 +176,7 @@ void MX_TIM3_Init(void)
   LL_TIM_SetTriggerOutput(TIM3, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM3);
   /* USER CODE BEGIN TIM3_Init 2 */
-
+    LL_TIM_EnableCounter(TIM3);
   /* USER CODE END TIM3_Init 2 */
 
 }
@@ -225,7 +225,7 @@ void MX_TIM4_Init(void)
   LL_TIM_SetTriggerOutput(TIM4, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM4);
   /* USER CODE BEGIN TIM4_Init 2 */
-
+    LL_TIM_EnableCounter(TIM4);
   /* USER CODE END TIM4_Init 2 */
 
 }
@@ -245,11 +245,11 @@ void MX_TIM5_Init(void)
 
   /* USER CODE END TIM5_Init 1 */
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 0;
+  htim5.Init.Prescaler = 35;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 65535;
+  htim5.Init.Period = 999;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
   {
     Error_Handler();
@@ -356,7 +356,8 @@ void MX_TIM7_Init(void)
   LL_TIM_SetTriggerOutput(TIM7, LL_TIM_TRGO_RESET);
   LL_TIM_DisableMasterSlaveMode(TIM7);
   /* USER CODE BEGIN TIM7_Init 2 */
-
+    LL_TIM_ClearFlag_UPDATE(TIM7);
+    LL_TIM_EnableIT_UPDATE(TIM7);
   /* USER CODE END TIM7_Init 2 */
 
 }
@@ -377,12 +378,12 @@ void MX_TIM8_Init(void)
 
   /* USER CODE END TIM8_Init 1 */
   htim8.Instance = TIM8;
-  htim8.Init.Prescaler = 0;
+  htim8.Init.Prescaler = 35;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = 65535;
+  htim8.Init.Period = 999;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
-  htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim8) != HAL_OK)
   {
     Error_Handler();

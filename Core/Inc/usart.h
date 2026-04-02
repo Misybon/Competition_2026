@@ -68,3 +68,4 @@ __STATIC_INLINE void WaitForAck(void)
 #endif
 
 #endif /* __USART_H__ */
+

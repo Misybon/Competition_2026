@@ -21,13 +21,15 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "ir.h"
 #include "tim.h"
 #include "usart.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "color.h"
+#include "ir.h"
+#include "pid.h"
 #include "track.h"
 
 /* USER CODE END Includes */
@@ -102,6 +104,7 @@ int main(void)
     SystemClock_Config();
 
     /* USER CODE BEGIN SysInit */
+    LL_mDelay(100); // 等待扩展板上电
     /* USER CODE END SysInit */
 
     /* Initialize all configured peripherals */
@@ -118,6 +121,8 @@ int main(void)
     MX_TIM6_Init();
     MX_TIM7_Init();
     /* USER CODE BEGIN 2 */
+
+    PID_Init();
     Color_Init();
     /* USER CODE END 2 */
 
@@ -130,6 +135,10 @@ int main(void)
         case STBY:
             if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
             {
+                LL_mDelay(20); // 消抖
+                while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
+                {
+                }
                 g_status = TRACK;
             }
             break;
@@ -266,8 +275,9 @@ void Error_Handler(void)
     __disable_irq();
     while (1)
     {
-        if (g_status_errorflag)
+        if (g_status_errorflag) // 状态错误
         {
+            // 恢复起始状态
             Track_Break();
             Track_Stop();
             g_status = STBY;

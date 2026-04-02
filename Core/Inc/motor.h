@@ -1,6 +1,8 @@
 #ifndef __MOTOR_H
 #define __MOTOR_H
 
+// PWM频率：5kHz
+
 #include "main.h"
 #include "tim.h"
 
@@ -22,7 +24,16 @@ struct Motor_Speed
     int32_t _4;
 };
 
+struct Motor_TargetSpeed
+{
+    int32_t _1;
+    int32_t _2;
+    int32_t _3;
+    int32_t _4;
+};
+
 extern struct Motor_Speed g_motor_speed;
+extern struct Motor_TargetSpeed g_motor_tgtspeed;
 
 /**
  * @brief 开启电机
