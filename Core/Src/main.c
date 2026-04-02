@@ -24,7 +24,6 @@
 #include "tim.h"
 #include "usart.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "color.h"
@@ -202,6 +201,7 @@ int main(void)
             {
                 Track_Break(); // 刹车
                 TIM6_Stop(); // 关闭定时器6
+                TIM7_Stop(); // 关闭定时器7
                 Track_Stop(); // 关闭PWM输出
                 Color_Stop(); // 关闭颜色传感器
                 g_corner_count = 0; // 重置转弯计数

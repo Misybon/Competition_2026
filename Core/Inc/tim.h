@@ -49,7 +49,7 @@ void MX_TIM6_Init(void);
 void MX_TIM7_Init(void);
 void MX_TIM8_Init(void);
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim);
 
 /* USER CODE BEGIN Prototypes */
 
@@ -80,6 +80,11 @@ __STATIC_INLINE void TIM7_Start(void)
     LL_TIM_EnableIT_UPDATE(TIM7);
     LL_TIM_EnableCounter(TIM7);
 }
+
+__STATIC_INLINE void TIM7_Stop(void)
+{
+    LL_TIM_DisableCounter(TIM7);
+}
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
@@ -87,4 +92,3 @@ __STATIC_INLINE void TIM7_Start(void)
 #endif
 
 #endif /* __TIM_H__ */
-

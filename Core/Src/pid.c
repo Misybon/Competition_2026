@@ -11,7 +11,7 @@
 #define IR_PID_KI 0
 #define IR_PID_KD 0
 
-#define MOTOR_MAX_SPEED 100
+#define MOTOR_MAX_SPEED 999
 
 #define IR_TGT 0
 #define IR_WEIGH_1 200
@@ -28,7 +28,7 @@ struct IR_PID
 static int32_t s_ir_current = 0;
 static int32_t s_ir_err_0 = 0;
 static int32_t s_ir_err_1 = 0;
-static int32_t s_ir_err_int = 0;
+static int32_t s_ir_err_2 = 0;
 int32_t g_ir_out = 0;
 
 static struct IR_PID s_ir_pid = { 0 };
@@ -56,26 +56,18 @@ struct Motor_PID_Out
     int32_t _4;
 };
 
-struct Motor_PID_Err_Int
-{
-    int32_t _1;
-    int32_t _2;
-    int32_t _3;
-    int32_t _4;
-};
-
 static struct Motor_PID s_motor_pid = { 0 };
 
 static struct Motor_PID_Err s_motor_err_0 = { 0 };
 static struct Motor_PID_Err s_motor_err_1 = { 0 };
 
-static struct Motor_PID_Err_Int s_motor_err_int = { 0 };
+static struct Motor_PID_Err s_motor_err_2 = { 0 };
 
 static struct Motor_PID_Out s_motor_out = { 0 };
 
 void PID_Init(void)
 {
-    s_ir_pid.kp = IR_PID_KD;
+    s_ir_pid.kp = IR_PID_KP;
     s_ir_pid.ki = IR_PID_KI;
     s_ir_pid.kd = IR_PID_KD;
 
@@ -99,6 +91,7 @@ void PID_Control(void)
 
         // 计算误差值
         {
+            s_motor_err_2 = s_motor_err_1;
             s_motor_err_1 = s_motor_err_0;
 
             s_motor_err_0._1 = g_motor_tgtspeed._1 - g_motor_speed._1;
@@ -107,20 +100,12 @@ void PID_Control(void)
             s_motor_err_0._4 = g_motor_tgtspeed._4 - g_motor_speed._4;
         }
 
-        // 误差累加
-        {
-            s_motor_err_int._1 += s_motor_err_0._1;
-            s_motor_err_int._2 += s_motor_err_0._2;
-            s_motor_err_int._3 += s_motor_err_0._3;
-            s_motor_err_int._4 += s_motor_err_0._4;
-        }
-
         // 计算输出值
         {
-            s_motor_out._1 = s_motor_pid.kp * s_motor_err_0._1 + s_motor_pid.ki * s_motor_err_int._1 + s_motor_pid.kd * (s_motor_err_0._1 * s_motor_err_1._1);
-            s_motor_out._2 = s_motor_pid.kp * s_motor_err_0._2 + s_motor_pid.ki * s_motor_err_int._2 + s_motor_pid.kd * (s_motor_err_0._2 * s_motor_err_1._2);
-            s_motor_out._3 = s_motor_pid.kp * s_motor_err_0._3 + s_motor_pid.ki * s_motor_err_int._3 + s_motor_pid.kd * (s_motor_err_0._3 * s_motor_err_1._3);
-            s_motor_out._4 = s_motor_pid.kp * s_motor_err_0._4 + s_motor_pid.ki * s_motor_err_int._4 + s_motor_pid.kd * (s_motor_err_0._4 * s_motor_err_1._4);
+            s_motor_out._1 += s_motor_pid.kp * (s_motor_err_0._1 - s_motor_err_1._1) + s_motor_pid.ki * s_motor_err_0._1 + s_motor_pid.kd * (s_motor_err_0._1 - (s_motor_err_1._1 << 1) + s_motor_err_2._1);
+            s_motor_out._2 += s_motor_pid.kp * (s_motor_err_0._2 - s_motor_err_1._2) + s_motor_pid.ki * s_motor_err_0._2 + s_motor_pid.kd * (s_motor_err_0._2 - (s_motor_err_1._2 << 1) + s_motor_err_2._2);
+            s_motor_out._3 += s_motor_pid.kp * (s_motor_err_0._3 - s_motor_err_1._3) + s_motor_pid.ki * s_motor_err_0._3 + s_motor_pid.kd * (s_motor_err_0._3 - (s_motor_err_1._3 << 1) + s_motor_err_2._3);
+            s_motor_out._4 += s_motor_pid.kp * (s_motor_err_0._4 - s_motor_err_1._4) + s_motor_pid.ki * s_motor_err_0._4 + s_motor_pid.kd * (s_motor_err_0._4 - (s_motor_err_1._4 << 1) + s_motor_err_2._4);
 
             // 应该将放大的输出值按比例减小
         }
@@ -176,14 +161,12 @@ void PID_Control(void)
         s_ir_current = -IR_WEIGH_1 * g_ir_val._1 - IR_WEIGH_2 * g_ir_val._2 + IR_WEIGH_3 * g_ir_val._3 + IR_WEIGH_2 * g_ir_val._4 + IR_WEIGH_1 * g_ir_val._5;
 
         // 计算误差值
+        s_ir_err_2 = s_ir_err_1;
         s_ir_err_1 = s_ir_err_0;
         s_ir_err_0 = IR_TGT - s_ir_current;
 
-        // 误差累加
-        s_ir_err_int = s_ir_err_0 + s_ir_err_1;
-
         // 计算输出值
-        g_ir_out = s_ir_pid.kp * s_ir_err_0 + s_ir_pid.ki * s_ir_err_int + s_ir_pid.kd * (s_ir_err_0 - s_ir_err_1);
+        g_ir_out += s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 << 1) + s_ir_err_2);
 
         // 应该将放大的输出值按比例减小
     }

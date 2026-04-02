@@ -2,7 +2,6 @@
 #include "ir.h"
 #include "main.h"
 #include "motor.h"
-#include "stm32f1xx.h"
 
 extern bool g_motor_startflag;
 extern volatile bool g_status_errorflag;
@@ -81,7 +80,7 @@ void ProcessLineLostEvent(void)
             // 直接在此完成转弯动作
             Track_Break(); // 刹车
             Motor_Rot(-90); // 顺时针旋转90°
-            Track_Restart(); // 重启电机
+            Track_Restart(); // 重启循迹
 
             g_status = STOP_PREPARE; // 准备停车
         }
@@ -98,7 +97,6 @@ void ProcessLineLostEvent(void)
             g_motor_startflag = 0;
             g_status_errorflag = 1;
             Error_Handler();
-            return;
         }
     }
 }
