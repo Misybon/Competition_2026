@@ -10,3 +10,5 @@ struct IR_Val
     bool _4;
     bool _5;
 } g_ir_val = { 1 };
+
+int32_t g_ir_out = 0;

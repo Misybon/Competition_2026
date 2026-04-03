@@ -43,24 +43,6 @@ void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
-/**
- * @brief 向视觉发送准备信号
- */
-__STATIC_INLINE void SendReady(void)
-{
-    HAL_UART_Transmit(&huart3, (uint8_t*)"READY!", 6, 50);
-}
-
-/**
- * @brief 等待视觉应答
- */
-__STATIC_INLINE void WaitForAck(void)
-{
-    while (strcmp((char*)g_rx_data, "ACK!") != 0)
-    {
-    }
-    TIM6_Stop(); // 关闭定时器6
-}
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
@@ -68,4 +50,3 @@ __STATIC_INLINE void WaitForAck(void)
 #endif
 
 #endif /* __USART_H__ */
-

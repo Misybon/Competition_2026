@@ -51,6 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/motor.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/color.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/track.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/task.c
 )
 
 # Add include paths

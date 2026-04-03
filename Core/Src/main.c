@@ -29,6 +29,7 @@
 #include "color.h"
 #include "ir.h"
 #include "pid.h"
+#include "task.h"
 #include "track.h"
 
 /* USER CODE END Includes */
@@ -65,6 +66,7 @@ volatile bool g_return_flag = 0; // 是否处于返回中
 volatile uint8_t g_corner_count = 0; // 转弯计数
 
 uint8_t g_rx_data[20] = { 0 }; // 串口接收缓冲区
+uint8_t g_cmd[20] = { 0 };
 
 volatile TRACK_STATUS g_status = STBY; // 等待启动
 /* USER CODE END PV */
@@ -120,7 +122,6 @@ int main(void)
     MX_TIM6_Init();
     MX_TIM7_Init();
     /* USER CODE BEGIN 2 */
-
     PID_Init();
     Color_Init();
     /* USER CODE END 2 */
@@ -187,7 +188,7 @@ int main(void)
             TIM6_Start(); // 开启定时器6，用于处理超时
             WaitForAck(); // 等待应答
             // FindBasket();
-            // Throw();
+            Throw();
             g_return_flag = 1; // 返回
             Motor_Rot(180); // 转身离开
             Track_Restart(); // 重启循迹

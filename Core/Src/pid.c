@@ -29,7 +29,6 @@ static int32_t s_ir_current = 0;
 static int32_t s_ir_err_0 = 0;
 static int32_t s_ir_err_1 = 0;
 static int32_t s_ir_err_2 = 0;
-int32_t g_ir_out = 0;
 
 static struct IR_PID s_ir_pid = { 0 };
 
@@ -65,6 +64,9 @@ static struct Motor_PID_Err s_motor_err_2 = { 0 };
 
 static struct Motor_PID_Out s_motor_out = { 0 };
 
+/**
+ * @brief PID初始化
+ */
 void PID_Init(void)
 {
     s_ir_pid.kp = IR_PID_KP;
@@ -76,7 +78,9 @@ void PID_Init(void)
     s_motor_pid.kd = MOTOR_PID_KD;
 }
 
-// 控制内容：循迹PID，电机PID
+/**
+ * @brief 控制电机和循迹PID
+ */
 void PID_Control(void)
 {
     // 电机PID

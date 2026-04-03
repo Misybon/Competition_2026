@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "color.h"
 #include "pid.h"
+#include "task.h"
 #include "track.h"
 #include "usart.h"
 

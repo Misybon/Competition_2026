@@ -29,16 +29,17 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
-#include "stm32f1xx_ll_rcc.h"
 #include "stm32f1xx_ll_bus.h"
-#include "stm32f1xx_ll_system.h"
-#include "stm32f1xx_ll_exti.h"
 #include "stm32f1xx_ll_cortex.h"
-#include "stm32f1xx_ll_utils.h"
-#include "stm32f1xx_ll_pwr.h"
 #include "stm32f1xx_ll_dma.h"
-#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_exti.h"
 #include "stm32f1xx_ll_gpio.h"
+#include "stm32f1xx_ll_pwr.h"
+#include "stm32f1xx_ll_rcc.h"
+#include "stm32f1xx_ll_system.h"
+#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_utils.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -80,7 +81,7 @@ extern volatile TRACK_STATUS g_status;
 extern volatile bool g_start_area_flag;
 extern volatile bool g_throw_area_flag;
 extern uint8_t g_rx_data[20];
-
+extern uint8_t g_cmd[20];
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

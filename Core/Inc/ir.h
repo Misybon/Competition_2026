@@ -12,6 +12,8 @@ struct IR_Val
     bool _5;
 };
 
+extern int32_t g_ir_out;
+
 extern struct IR_Val g_ir_val;
 
 /**
