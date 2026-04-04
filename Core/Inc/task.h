@@ -4,6 +4,7 @@
 #define __TASK_H
 
 #include "main.h"
+#include "stm32f1xx_hal.h"
 #include "usart.h"
 
 extern const uint8_t TASK_READY[9];
@@ -28,14 +29,27 @@ __STATIC_INLINE void SendReturn(void)
 }
 
 /**
- * @brief 等待视觉应答
+ * @brief 等待视觉应答，1000毫秒超时，重试三次
  */
 __STATIC_INLINE void WaitForAck(void)
 {
-    while (g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K')
+    uint32_t tick_start = HAL_GetTick();
+    uint32_t retry = 0;
+    while (!(g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K'))
     {
+        if (HAL_GetTick() - tick_start >= 1000)
+        {
+            tick_start = HAL_GetTick();
+            if (retry >= 3)
+            {
+                g_vision_errorflag = 1;
+                Error_Handler();
+                return;
+            }
+            SendReady();
+            retry++;
+        }
     }
-    TIM6_Stop(); // 关闭定时器6
 }
 
 #endif

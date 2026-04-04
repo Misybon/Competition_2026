@@ -40,7 +40,6 @@ extern "C" {
 #include "stm32f1xx_ll_tim.h"
 #include "stm32f1xx_ll_utils.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -80,6 +79,7 @@ extern volatile uint8_t g_corner_count;
 extern volatile TRACK_STATUS g_status;
 extern volatile bool g_start_area_flag;
 extern volatile bool g_throw_area_flag;
+extern volatile bool g_vision_errorflag;
 extern uint8_t g_rx_data[20];
 extern uint8_t g_cmd[20];
 /* USER CODE END EFP */

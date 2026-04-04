@@ -58,6 +58,7 @@ volatile bool g_motor_startflag = 0; // 电机标志位
 volatile bool g_color_status = 0; // 颜色传感器标志位
 
 volatile bool g_status_errorflag = 0; // 状态机错误标志位
+volatile bool g_vision_errorflag = 0; // 视觉错误标志位
 
 volatile bool g_start_area_flag = 0; // 是否处于开始区
 volatile bool g_throw_area_flag = 0; // 是否处于投掷区
@@ -185,7 +186,6 @@ int main(void)
             HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, 20); // 准备接收应答
             __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);
             SendReady();
-            TIM6_Start(); // 开启定时器6，用于处理超时
             WaitForAck(); // 等待应答
             // FindBasket();
             Throw();
@@ -277,6 +277,14 @@ void Error_Handler(void)
     while (1)
     {
         if (g_status_errorflag) // 状态错误
+        {
+            // 恢复起始状态
+            Track_Break();
+            Track_Stop();
+            g_status = STBY;
+            break;
+        }
+        else if (g_vision_errorflag) // 视觉错误
         {
             // 恢复起始状态
             Track_Break();

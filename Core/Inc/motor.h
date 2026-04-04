@@ -61,7 +61,7 @@ __STATIC_INLINE void Motor2_Start(void)
 __STATIC_INLINE void Motor3_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_3);
-    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
 }
 
 /**
@@ -70,7 +70,7 @@ __STATIC_INLINE void Motor3_Start(void)
 __STATIC_INLINE void Motor4_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_4);
-    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
 }
 
 /**
@@ -106,8 +106,8 @@ __STATIC_INLINE void Motor2_Break(void)
  */
 __STATIC_INLINE void Motor3_Break(void)
 {
-    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor1_Con1_Pin);
-    LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor1_Con2_Pin);
+    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
 }
 
 /**
@@ -115,8 +115,8 @@ __STATIC_INLINE void Motor3_Break(void)
  */
 __STATIC_INLINE void Motor4_Break(void)
 {
-    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor1_Con1_Pin);
-    LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor1_Con2_Pin);
+    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
 }
 
 /**
@@ -140,7 +140,7 @@ __STATIC_INLINE void Motor2_Restart(void)
  */
 __STATIC_INLINE void Motor3_Restart(void)
 {
-    LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
 }
 
 /**
@@ -148,7 +148,7 @@ __STATIC_INLINE void Motor3_Restart(void)
  */
 __STATIC_INLINE void Motor4_Restart(void)
 {
-    LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
 }
 
 /**

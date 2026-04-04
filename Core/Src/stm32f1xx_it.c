@@ -25,7 +25,6 @@
 /* USER CODE BEGIN Includes */
 #include "color.h"
 #include "pid.h"
-#include "task.h"
 #include "track.h"
 #include "usart.h"
 
@@ -260,10 +259,6 @@ void TIM6_IRQHandler(void)
         if (g_color_status) // 如果开启了颜色传感器
         {
             GetColor(); // 读取颜色传感器数据
-        }
-        else
-        {
-            SendReady(); // 超时则重发信号
         }
     }
     /* USER CODE END TIM6_IRQn 0 */
