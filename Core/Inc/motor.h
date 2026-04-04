@@ -1,7 +1,9 @@
+// 等待完善...
+
 #ifndef __MOTOR_H
 #define __MOTOR_H
 
-// PWM频率：5kHz
+// PWM频率：2KHz
 
 #include "main.h"
 #include "tim.h"

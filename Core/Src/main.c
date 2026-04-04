@@ -192,7 +192,7 @@ int main(void)
             g_return_flag = 1; // 返回
             Motor_Rot(180); // 转身离开
             Track_Restart(); // 重启循迹
-            while (!IsLineLost())
+            while (!IsLineLost()) // 等待回到线上
             {
             }
             g_status = TRACK;
