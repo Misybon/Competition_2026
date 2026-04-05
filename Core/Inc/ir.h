@@ -1,5 +1,5 @@
-#ifndef __IR_H
-#define __IR_H
+#ifndef IR_H
+#define IR_H
 
 #include "main.h"
 

@@ -84,7 +84,7 @@ void PID_Init(void)
 }
 
 /**
- * @brief 控制电机和循迹PID
+ * @brief 电机和循迹PID控制
  */
 void PID_Control(void)
 {
@@ -116,7 +116,11 @@ void PID_Control(void)
             s_motor_out._3 += s_motor_pid.kp * (s_motor_err_0._3 - s_motor_err_1._3) + s_motor_pid.ki * s_motor_err_0._3 + s_motor_pid.kd * (s_motor_err_0._3 - (s_motor_err_1._3 << 1) + s_motor_err_2._3);
             s_motor_out._4 += s_motor_pid.kp * (s_motor_err_0._4 - s_motor_err_1._4) + s_motor_pid.ki * s_motor_err_0._4 + s_motor_pid.kd * (s_motor_err_0._4 - (s_motor_err_1._4 << 1) + s_motor_err_2._4);
 
-            // 应该将放大的输出值按比例减小
+            // 将放大的输出值按比例减小
+            s_motor_out._1 >>= 8;
+            s_motor_out._2 >>= 8;
+            s_motor_out._3 >>= 8;
+            s_motor_out._4 >>= 8;
         }
 
         // 输出限幅
@@ -228,6 +232,7 @@ void PID_Control(void)
         // 计算输出值
         g_ir_out += s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 << 1) + s_ir_err_2);
 
-        // 应该将放大的输出值按比例减小
+        // 将放大的输出值按比例减小
+        g_ir_out >>= 8;
     }
 }

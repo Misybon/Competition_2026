@@ -1,7 +1,7 @@
 // 等待完善...
 
-#ifndef __MOTOR_H
-#define __MOTOR_H
+#ifndef MOTOR_H
+#define MOTOR_H
 
 // PWM频率：2KHz
 

@@ -1,7 +1,7 @@
 // 等待完善...
 
-#ifndef __TRACK_H
-#define __TRACK_H
+#ifndef TRACK_H
+#define TRACK_H
 
 #include "motor.h"
 

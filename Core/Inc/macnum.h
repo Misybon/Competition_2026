@@ -1,5 +1,7 @@
-#ifndef __MACNUM_H
-#define __MACNUM_H
+// 等待完善...
+
+#ifndef MACNUM_H
+#define MACNUM_H
 
 #include "main.h"
 #include "motor.h"
