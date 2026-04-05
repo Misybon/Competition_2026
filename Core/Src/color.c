@@ -69,7 +69,7 @@ __STATIC_INLINE void Color_Wakeup(void)
 /**
  * @brief 初始化颜色传感器
  * 
- * @return uint32_t 0:成功；1:失败
+ * @return uint32_t 1:成功；0:失败
  */
 uint32_t Color_Init(void)
 {
@@ -81,7 +81,7 @@ uint32_t Color_Init(void)
     HAL_I2C_Master_Receive(&hi2c1, COLOR_ADDR, (uint8_t*)&id, 1, 100);
     if (id != 0x4D && id != 0x44)
     {
-        return 1;
+        return 0;
     }
 
     // 设置积分时间
@@ -102,7 +102,7 @@ uint32_t Color_Init(void)
     Color_Sleep();
 
     // 成功
-    return 0;
+    return 1;
 }
 
 /**

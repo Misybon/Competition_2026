@@ -45,13 +45,14 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-    ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/debug.c # Showld be removed for release
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/debug.c # 仅作PID调试用，正式版本应去除
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/ir.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/pid.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/motor.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/color.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/track.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/task.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/macnum.c
 )
 
 # Add include paths

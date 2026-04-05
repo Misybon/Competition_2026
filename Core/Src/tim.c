@@ -47,7 +47,7 @@ void MX_TIM1_Init(void)
   PA8   ------> TIM1_CH1
   PA9   ------> TIM1_CH2
   */
-  GPIO_InitStruct.Pin = Motor_EncoderA8_Pin|Motor_EncoderA9_Pin;
+  GPIO_InitStruct.Pin = Motor_Encoder_1_Pin|Motor_Encoder_1A9_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -98,13 +98,13 @@ void MX_TIM2_Init(void)
   PA15   ------> TIM2_CH1
   PB3   ------> TIM2_CH2
   */
-  GPIO_InitStruct.Pin = Motor_EncoderA15_Pin;
+  GPIO_InitStruct.Pin = Motor_Encoder_2_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
-  LL_GPIO_Init(Motor_EncoderA15_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(Motor_Encoder_2_GPIO_Port, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = Motor_EncoderB3_Pin;
+  GPIO_InitStruct.Pin = Motor_Encoder_2B3_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
-  LL_GPIO_Init(Motor_EncoderB3_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(Motor_Encoder_2B3_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
@@ -151,7 +151,7 @@ void MX_TIM3_Init(void)
   PA6   ------> TIM3_CH1
   PA7   ------> TIM3_CH2
   */
-  GPIO_InitStruct.Pin = Motor_Encoder_Pin|Motor_EncoderA7_Pin;
+  GPIO_InitStruct.Pin = Motor_Encoder_3_Pin|Motor_Encoder_3A7_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -200,7 +200,7 @@ void MX_TIM4_Init(void)
   PB6   ------> TIM4_CH1
   PB7   ------> TIM4_CH2
   */
-  GPIO_InitStruct.Pin = Motor_EncoderB6_Pin|Motor_EncoderB7_Pin;
+  GPIO_InitStruct.Pin = Motor_Encoder_4_Pin|Motor_Encoder_4B7_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 

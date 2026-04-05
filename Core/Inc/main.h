@@ -29,16 +29,16 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
-#include "stm32f1xx_ll_bus.h"
-#include "stm32f1xx_ll_cortex.h"
-#include "stm32f1xx_ll_dma.h"
-#include "stm32f1xx_ll_exti.h"
-#include "stm32f1xx_ll_gpio.h"
-#include "stm32f1xx_ll_pwr.h"
 #include "stm32f1xx_ll_rcc.h"
+#include "stm32f1xx_ll_bus.h"
 #include "stm32f1xx_ll_system.h"
-#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_exti.h"
+#include "stm32f1xx_ll_cortex.h"
 #include "stm32f1xx_ll_utils.h"
+#include "stm32f1xx_ll_pwr.h"
+#include "stm32f1xx_ll_dma.h"
+#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -101,10 +101,10 @@ extern uint8_t g_cmd[20];
 #define Motor1_Con1_GPIO_Port GPIOA
 #define Motor1_Con2_Pin LL_GPIO_PIN_5
 #define Motor1_Con2_GPIO_Port GPIOA
-#define Motor_Encoder_Pin LL_GPIO_PIN_6
-#define Motor_Encoder_GPIO_Port GPIOA
-#define Motor_EncoderA7_Pin LL_GPIO_PIN_7
-#define Motor_EncoderA7_GPIO_Port GPIOA
+#define Motor_Encoder_3_Pin LL_GPIO_PIN_6
+#define Motor_Encoder_3_GPIO_Port GPIOA
+#define Motor_Encoder_3A7_Pin LL_GPIO_PIN_7
+#define Motor_Encoder_3A7_GPIO_Port GPIOA
 #define Motor2_Con1_Pin LL_GPIO_PIN_4
 #define Motor2_Con1_GPIO_Port GPIOC
 #define Motor2_Con2_Pin LL_GPIO_PIN_5
@@ -135,18 +135,18 @@ extern uint8_t g_cmd[20];
 #define Motor_PWM_AlternativeC8_GPIO_Port GPIOC
 #define Motor_PWM_AlternativeC9_Pin LL_GPIO_PIN_9
 #define Motor_PWM_AlternativeC9_GPIO_Port GPIOC
-#define Motor_EncoderA8_Pin LL_GPIO_PIN_8
-#define Motor_EncoderA8_GPIO_Port GPIOA
-#define Motor_EncoderA9_Pin LL_GPIO_PIN_9
-#define Motor_EncoderA9_GPIO_Port GPIOA
-#define Motor_EncoderA15_Pin LL_GPIO_PIN_15
-#define Motor_EncoderA15_GPIO_Port GPIOA
-#define Motor_EncoderB3_Pin LL_GPIO_PIN_3
-#define Motor_EncoderB3_GPIO_Port GPIOB
-#define Motor_EncoderB6_Pin LL_GPIO_PIN_6
-#define Motor_EncoderB6_GPIO_Port GPIOB
-#define Motor_EncoderB7_Pin LL_GPIO_PIN_7
-#define Motor_EncoderB7_GPIO_Port GPIOB
+#define Motor_Encoder_1_Pin LL_GPIO_PIN_8
+#define Motor_Encoder_1_GPIO_Port GPIOA
+#define Motor_Encoder_1A9_Pin LL_GPIO_PIN_9
+#define Motor_Encoder_1A9_GPIO_Port GPIOA
+#define Motor_Encoder_2_Pin LL_GPIO_PIN_15
+#define Motor_Encoder_2_GPIO_Port GPIOA
+#define Motor_Encoder_2B3_Pin LL_GPIO_PIN_3
+#define Motor_Encoder_2B3_GPIO_Port GPIOB
+#define Motor_Encoder_4_Pin LL_GPIO_PIN_6
+#define Motor_Encoder_4_GPIO_Port GPIOB
+#define Motor_Encoder_4B7_Pin LL_GPIO_PIN_7
+#define Motor_Encoder_4B7_GPIO_Port GPIOB
 #define Color_Sensor_Pin LL_GPIO_PIN_8
 #define Color_Sensor_GPIO_Port GPIOB
 #define Color_SensorB9_Pin LL_GPIO_PIN_9

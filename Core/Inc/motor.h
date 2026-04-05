@@ -155,7 +155,7 @@ __STATIC_INLINE void Motor4_Restart(void)
  * @brief 设置电机速度
  * 
  * @param Motor 电机编号
- * @param Speed 电机速度，范围______
+ * @param Speed 电机速度，范围0~999
  */
 __STATIC_INLINE void Motor_SetSpeed(uint32_t Motor, uint32_t Speed)
 {
@@ -175,6 +175,7 @@ __STATIC_INLINE int32_t Motor_GetSpeed(TIM_TypeDef* Motor_Encoder)
     return speed;
 }
 
+// 待完善...
 // 应该在函数内加入IN引脚控制
 __STATIC_INLINE void Motor_Rot(uint32_t Angle)
 {

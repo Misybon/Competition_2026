@@ -140,7 +140,7 @@ int main(void)
                 while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
                 {
                 }
-                g_status = TRACK;
+                g_status = TRACK; // 进入循迹状态
             }
             break;
         case TRACK:
@@ -165,7 +165,7 @@ int main(void)
             }
             g_corner_count++;
             Track_Restart();
-            g_status = TRACK;
+            g_status = TRACK; // 返回循迹状态
             break;
         case THROW_PREPARE:
             if (IsThrowAreaReached()) // 如果到达了投掷区
@@ -195,7 +195,7 @@ int main(void)
             while (!IsLineLost()) // 等待回到线上
             {
             }
-            g_status = TRACK;
+            g_status = TRACK; // 返回循迹状态
             break;
         case STOP_PREPARE:
             if (IsStartAreaReached()) // 如果回到了开始区
@@ -206,7 +206,7 @@ int main(void)
                 Track_Stop(); // 关闭PWM输出
                 Color_Stop(); // 关闭颜色传感器
                 g_corner_count = 0; // 重置转弯计数
-                g_status = STBY;
+                g_status = STBY; // 恢复等待状态
             }
             else if (!g_color_status) // 如果没有开启颜色传感器
             {

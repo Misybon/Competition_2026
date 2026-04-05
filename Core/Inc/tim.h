@@ -49,7 +49,7 @@ void MX_TIM6_Init(void);
 void MX_TIM7_Init(void);
 void MX_TIM8_Init(void);
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim);
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN Prototypes */
 
@@ -92,3 +92,4 @@ __STATIC_INLINE void TIM7_Stop(void)
 #endif
 
 #endif /* __TIM_H__ */
+

@@ -65,7 +65,6 @@ static struct Motor_PID s_motor_pid = { 0 };
 
 static struct Motor_PID_Err s_motor_err_0 = { 0 };
 static struct Motor_PID_Err s_motor_err_1 = { 0 };
-
 static struct Motor_PID_Err s_motor_err_2 = { 0 };
 
 static struct Motor_PID_Out s_motor_out = { 0 };
@@ -153,6 +152,57 @@ void PID_Control(void)
             else if (s_motor_out._4 < -MOTOR_MAX_SPEED)
             {
                 s_motor_out._4 = -MOTOR_MAX_SPEED;
+            }
+        }
+
+        // 设置旋转方向
+        {
+            // 电机1
+            if (s_motor_out._1 >= 0)
+            {
+                LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+                LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+            }
+            else
+            {
+                LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+                LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+            }
+
+            // 电机2
+            if (s_motor_out._2 >= 0)
+            {
+                LL_GPIO_ResetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con2_Pin);
+                LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+            }
+            else
+            {
+                LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+                LL_GPIO_ResetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+            }
+
+            // 电机3
+            if (s_motor_out._3 >= 0)
+            {
+                LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+                LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+            }
+            else
+            {
+                LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+                LL_GPIO_ResetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+            }
+
+            // 电机4
+            if (s_motor_out._4 >= 0)
+            {
+                LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+                LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
+            }
+            else
+            {
+                LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+                LL_GPIO_ResetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
             }
         }
 
