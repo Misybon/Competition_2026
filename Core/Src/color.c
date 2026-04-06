@@ -9,6 +9,7 @@
 
 #define COLOR_ENA 0x00
 #define COLOR_ATIME 0x01 // 采样时间寄存器
+#define COLOR_GAIN 0x0F // 增益值寄存器
 #define COLOR_ID 0x12 // ID寄存器
 #define COLOR_CDATAL 0x14
 
@@ -85,10 +86,10 @@ uint32_t Color_Init(void)
     }
 
     // 设置积分时间
-    Color_WriteByte(COLOR_ATIME, 0xD6);
+    Color_WriteByte(COLOR_ATIME, ATIME);
 
     // 设置增益
-    Color_WriteByte(0x0F, 0x02);
+    Color_WriteByte(COLOR_GAIN, GAIN);
 
     // 开启电源
     Color_WriteByte(COLOR_ENA, COLOR_PEN);

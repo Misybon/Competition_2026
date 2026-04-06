@@ -1,7 +1,6 @@
 // 等待完善...
 
-#ifndef TRACK_H
-#define TRACK_H
+#pragma once
 
 #include "motor.h"
 
@@ -10,5 +9,3 @@ void Track_Stop(void);
 void Track_Break(void);
 void Track_Restart(void);
 void ProcessLineLostEvent(void);
-
-#endif

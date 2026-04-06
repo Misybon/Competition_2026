@@ -5,25 +5,6 @@
 #include "main.h"
 #include "motor.h"
 
-// 电机PID参数
-#define MOTOR_PID_KP 0
-#define MOTOR_PID_KI 0
-#define MOTOR_PID_KD 0
-
-// 红外PID参数
-#define IR_PID_KP 0
-#define IR_PID_KI 0
-#define IR_PID_KD 0
-
-// 电机最大速度
-#define MOTOR_MAX_SPEED 999
-
-// 红外目标值和各路权重
-#define IR_TGT 0
-#define IR_WEIGH_1 200
-#define IR_WEIGH_2 100
-#define IR_WEIGH_3 0
-
 struct IR_PID
 {
     uint16_t kp;

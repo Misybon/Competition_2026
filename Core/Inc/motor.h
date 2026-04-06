@@ -1,7 +1,5 @@
 // 等待完善...
-
-#ifndef MOTOR_H
-#define MOTOR_H
+#pragma once
 
 // PWM频率：2KHz
 
@@ -180,5 +178,3 @@ __STATIC_INLINE int32_t Motor_GetSpeed(TIM_TypeDef* Motor_Encoder)
 __STATIC_INLINE void Motor_Rot(uint32_t Angle)
 {
 }
-
-#endif

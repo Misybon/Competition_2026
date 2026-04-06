@@ -62,7 +62,7 @@ volatile bool g_vision_errorflag = 0; // 视觉错误标志位
 
 volatile bool g_start_area_flag = 0; // 是否处于开始区
 volatile bool g_throw_area_flag = 0; // 是否处于投掷区
-volatile bool g_return_flag = 0; // 是否处于返回中
+volatile bool g_return_flag = 0; // 是否处于返回过程
 
 volatile uint8_t g_corner_count = 0; // 转弯计数
 
@@ -106,7 +106,7 @@ int main(void)
     SystemClock_Config();
 
     /* USER CODE BEGIN SysInit */
-    LL_mDelay(100); // 等待扩展板上电
+    LL_mDelay(10); // 等待扩展板上电
     /* USER CODE END SysInit */
 
     /* Initialize all configured peripherals */
@@ -168,7 +168,7 @@ int main(void)
             g_status = TRACK; // 返回循迹状态
             break;
         case THROW_PREPARE:
-            if (IsThrowAreaReached()) // 如果到达了投掷区
+            if (g_throw_area_flag) // 如果到达了投掷区
             {
                 Track_Break();
                 TIM6_Stop(); // 关闭定时器6
@@ -185,7 +185,7 @@ int main(void)
         case THROW_WAIT:
             HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, 20); // 准备接收应答
             __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);
-            SendReady();
+            SendReady(); // 发送准备信号
             WaitForAck(); // 等待应答
             // FindBasket();
             Throw();
@@ -198,7 +198,7 @@ int main(void)
             g_status = TRACK; // 返回循迹状态
             break;
         case STOP_PREPARE:
-            if (IsStartAreaReached()) // 如果回到了开始区
+            if (g_start_area_flag) // 如果回到了开始区
             {
                 Track_Break(); // 刹车
                 TIM6_Stop(); // 关闭定时器6
@@ -210,7 +210,7 @@ int main(void)
             }
             else if (!g_color_status) // 如果没有开启颜色传感器
             {
-                Color_Start();
+                Color_Start(); // 唤醒颜色传感器
                 TIM6_Start(); // 开启定时器6，用于定时扫描颜色
             }
             break;

@@ -1,7 +1,6 @@
 // 等待完善...
 
-#ifndef TASK_H
-#define TASK_H
+#pragma once
 
 #include "main.h"
 #include "stm32f1xx_hal.h"
@@ -10,8 +9,9 @@
 extern const uint8_t TASK_READY[9];
 extern const uint8_t TASK_RETURN[10];
 
-void Throw(void);
 void WaitForAck(void);
+void FindBasket(void);
+void Throw(void);
 
 /**
  * @brief 向视觉发送准备信号
@@ -28,5 +28,3 @@ __STATIC_INLINE void SendReturn(void)
 {
     HAL_UART_Transmit(&huart3, TASK_RETURN, sizeof(TASK_RETURN) / sizeof(uint8_t), 100);
 }
-
-#endif

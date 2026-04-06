@@ -31,6 +31,11 @@ void WaitForAck(void)
 }
 
 // 待完善
+void FindBasket(void)
+{
+}
+
+// 待完善
 void Throw(void)
 {
     // 投掷代码
