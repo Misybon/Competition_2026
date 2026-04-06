@@ -21,6 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "main.h"
 #include "task.h"
 /* USER CODE END 0 */
 
@@ -165,15 +166,31 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
  */
 static void ReadCmd(void)
 {
-    if (g_rx_data[2] >= 16) // 有效负载长度超限
+    for (uint32_t i = 0; i + 2 < 20; i++)
     {
-        return;
-    }
-    if (g_rx_data[0] == 0xAA && g_rx_data[1] == 0x55)
-    {
-        for (uint32_t i = 3; i < 3 + g_rx_data[2]; i++)
+        if (g_rx_data[i] == 0xAA && g_rx_data[i + 1] == 0x55) // 解析到帧头
         {
-            g_cmd[i - 3] = g_rx_data[i];
+            uint32_t len = g_rx_data[i + 2]; // 读取有效负载长度
+            if (i + 4 + len > 20) // 长度超限
+            {
+                continue; // 检查剩余部分有无数据包
+            }
+
+            uint32_t check = 0; // 计算校验和
+            for (uint32_t j = 0; j <= len; j++)
+            {
+                check += g_rx_data[i + j + 2];
+            }
+            if ((uint8_t)check != g_rx_data[i + len + 3]) // 计算错误
+            {
+                continue; // 检查剩余部分有无数据包
+            }
+
+            for (uint32_t j = i + 3; j < i + 3 + g_rx_data[i + 2]; j++) // 解析命令
+            {
+                g_cmd[j - i - 3] = g_rx_data[j];
+            }
+            return;
         }
     }
 }

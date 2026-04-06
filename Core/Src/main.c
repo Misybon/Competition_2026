@@ -67,7 +67,7 @@ volatile bool g_return_flag = 0; // 是否处于返回中
 volatile uint8_t g_corner_count = 0; // 转弯计数
 
 uint8_t g_rx_data[20] = { 0 }; // 串口接收缓冲区
-uint8_t g_cmd[20] = { 0 };
+uint8_t g_cmd[20] = { 0 }; // 解析出来的命令
 
 volatile TRACK_STATUS g_status = STBY; // 等待启动
 /* USER CODE END PV */
@@ -232,27 +232,33 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-    LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
-    while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0)
+    LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
+    while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_2)
     {
     }
-    LL_RCC_HSI_SetCalibTrimming(16);
-    LL_RCC_HSI_Enable();
+    LL_RCC_HSE_Enable();
 
-    /* Wait till HSI is ready */
-    while (LL_RCC_HSI_IsReady() != 1)
+    /* Wait till HSE is ready */
+    while (LL_RCC_HSE_IsReady() != 1)
+    {
+    }
+    LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE_DIV_1, LL_RCC_PLL_MUL_9);
+    LL_RCC_PLL_Enable();
+
+    /* Wait till PLL is ready */
+    while (LL_RCC_PLL_IsReady() != 1)
     {
     }
     LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-    LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+    LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_2);
     LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
-    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI);
+    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
 
     /* Wait till System clock is ready */
-    while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI)
+    while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
     {
     }
-    LL_SetSystemCoreClock(8000000);
+    LL_SetSystemCoreClock(72000000);
 
     /* Update the time base */
     if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
