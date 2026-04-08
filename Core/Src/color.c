@@ -48,7 +48,7 @@ static void Color_WriteByte(uint8_t Addr, uint8_t Byte)
 }
 
 /**
- * @brief What can I say
+ * @brief 休眠颜色传感器
  */
 __STATIC_INLINE void Color_Sleep(void)
 {
@@ -57,7 +57,7 @@ __STATIC_INLINE void Color_Sleep(void)
 }
 
 /**
- * @brief What can I say
+ * @brief 唤醒颜色传感器
  *
  * @note 如需读取数据，还要考虑采样时间
  */
