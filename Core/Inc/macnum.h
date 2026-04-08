@@ -5,6 +5,8 @@
 #include "main.h"
 #include "motor.h"
 
+extern struct Track_Speed g_track_speed;
+
 /**
  * @brief 麦轮运动学解算
  * 

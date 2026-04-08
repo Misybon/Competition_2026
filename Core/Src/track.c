@@ -2,10 +2,12 @@
 
 #include "track.h"
 #include "ir.h"
+#include "macnum.h"
 #include "main.h"
 #include "motor.h"
+#include "pid.h"
 
-extern bool g_motor_startflag;
+extern volatile bool g_motor_startflag;
 extern volatile bool g_status_errorflag;
 
 /**
@@ -17,6 +19,11 @@ void Track_Start(void)
     Motor2_Start();
     Motor3_Start();
     Motor4_Start();
+    for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
+    {
+        g_track_speed.vx = speed;
+        LL_mDelay(2);
+    }
     g_motor_startflag = 1;
 }
 
@@ -41,6 +48,7 @@ void Track_Break(void)
     Motor2_Break();
     Motor3_Break();
     Motor4_Break();
+    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
 }
 
 /**
@@ -52,6 +60,11 @@ void Track_Restart(void)
     Motor2_Restart();
     Motor3_Restart();
     Motor4_Restart();
+    for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
+    {
+        g_track_speed.vx = speed;
+        LL_mDelay(2);
+    }
 }
 
 /**
@@ -81,7 +94,7 @@ void ProcessLineLostEvent(void)
         {
             // 直接在此完成转弯动作
             Track_Break(); // 刹车
-            Motor_Rot(-90); // 顺时针旋转90°
+            Motor_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 
             g_status = STOP_PREPARE; // 准备停车

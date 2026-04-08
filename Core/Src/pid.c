@@ -71,6 +71,9 @@ void PID_Control(void)
 {
     // 电机PID
     {
+        // 获取目标速度
+        Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+
         // 获取实际速度
         {
             g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1);
@@ -140,7 +143,7 @@ void PID_Control(void)
             }
         }
 
-        // 设置旋转方向
+        // 设置电机旋转方向
         {
             // 电机1
             if (s_motor_out._1 >= 0)

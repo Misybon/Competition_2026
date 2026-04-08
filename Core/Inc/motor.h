@@ -3,6 +3,7 @@
 
 // PWM频率：2KHz
 
+#include "macnum.h"
 #include "main.h"
 #include "tim.h"
 
@@ -78,6 +79,7 @@ __STATIC_INLINE void Motor4_Start(void)
  */
 __STATIC_INLINE void Motor_Stop(uint32_t Motor)
 {
+    __HAL_TIM_SET_COMPARE(&htim5, Motor, 0);
     HAL_TIM_PWM_Stop(&htim5, Motor);
 }
 
@@ -175,6 +177,11 @@ __STATIC_INLINE int32_t Motor_GetSpeed(TIM_TypeDef* Motor_Encoder)
 
 // 待完善...
 // 应该在函数内加入IN引脚控制
-__STATIC_INLINE void Motor_Rot(uint32_t Angle)
+__STATIC_INLINE void Motor_Rot_Angle(int32_t Angle)
 {
+}
+
+__STATIC_INLINE void Motor_Rot_Seppd(int32_t Speed)
+{
+    g_track_speed.vz = Speed;
 }

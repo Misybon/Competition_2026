@@ -157,11 +157,11 @@ int main(void)
             Track_Break();
             if (!g_return_flag) // 如果不处于返回状态
             {
-                Motor_Rot(90); // 逆时针旋转90°
+                Motor_Rot_Angle(90); // 逆时针旋转90°
             }
             else
             {
-                Motor_Rot(-90); // 顺时针旋转90°
+                Motor_Rot_Angle(-90); // 顺时针旋转90°
             }
             g_corner_count++;
             Track_Restart();
@@ -190,7 +190,7 @@ int main(void)
             // FindBasket();
             Throw();
             g_return_flag = 1; // 返回
-            Motor_Rot(180); // 转身离开
+            Motor_Rot_Angle(180); // 转身离开
             Track_Restart(); // 重启循迹
             while (!IsLineLost()) // 等待回到线上
             {
