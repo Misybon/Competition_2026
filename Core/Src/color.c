@@ -4,17 +4,17 @@
 
 #define COLOR_ADDR (0x29 << 1) // 7位地址
 
-#define COLOR_CMD_BIT 0x80 // 命令位
-#define COLOR_CMD_AUTOINC 0xA0 // 地址自增
+#define COLOR_CMD_BIT (0x80) // 命令位
+#define COLOR_CMD_AUTOINC (0xA0) // 地址自增
 
-#define COLOR_ENA 0x00
-#define COLOR_ATIME 0x01 // 采样时间寄存器
-#define COLOR_GAIN 0x0F // 增益值寄存器
-#define COLOR_ID 0x12 // ID寄存器
-#define COLOR_CDATAL 0x14
+#define COLOR_ENA (0x00)
+#define COLOR_ATIME (0x01) // 采样时间寄存器
+#define COLOR_GAIN (0x0F) // 增益值寄存器
+#define COLOR_ID (0x12) // ID寄存器
+#define COLOR_CDATAL (0x14)
 
-#define COLOR_PEN 0x01 // 开启电源
-#define COLOR_AEN 0x02 // ADC使能
+#define COLOR_PEN (0x01) // 开启电源
+#define COLOR_AEN (0x02) // ADC使能
 
 struct Origin_Color
 {

@@ -43,13 +43,20 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "config.h"
-#include "types.h"
 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum
+{
+    STBY = 0,
+    TRACK = 1,
+    CORNER = 2,
+    THROW_PREPARE = 3,
+    THROW_WAIT = 4,
+    STOP_PREPARE = 5,
+} TRACK_STATUS;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

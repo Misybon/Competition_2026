@@ -26,7 +26,6 @@
 #include "color.h"
 #include "pid.h"
 #include "track.h"
-#include "types.h"
 #include "usart.h"
 
 /* USER CODE END Includes */
@@ -282,7 +281,7 @@ void TIM7_IRQHandler(void)
             ProcessLineLostEvent();
             PID_Control();
         }
-        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT)
+        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
         {
             PID_Control();
         }

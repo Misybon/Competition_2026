@@ -28,11 +28,9 @@
 /* USER CODE BEGIN Includes */
 #include "color.h"
 #include "ir.h"
-#include "macnum.h"
 #include "motor.h"
 #include "pid.h"
 #include "task.h"
-#include "track.h"
 
 /* USER CODE END Includes */
 
@@ -172,7 +170,7 @@ int main(void)
         case THROW_PREPARE:
             if (g_throw_area_flag) // 如果到达了投掷区
             {
-                Track_Break();
+                Track_Break(); // 制动
                 TIM6_Stop(); // 关闭定时器6
                 Color_Stop(); // 关闭颜色传感器
                 g_corner_count = 0; // 重置转弯计数

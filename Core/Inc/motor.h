@@ -1,11 +1,11 @@
 // 等待完善...
+
 #pragma once
 
 // PWM频率：2KHz
 
 #include "main.h"
 #include "tim.h"
-#include "track.h"
 
 #define MOTOR_1 TIM_CHANNEL_1
 #define MOTOR_2 TIM_CHANNEL_2
@@ -16,6 +16,9 @@
 #define MOTOR_ENCODER_2 TIM2
 #define MOTOR_ENCODER_3 TIM3
 #define MOTOR_ENCODER_4 TIM4
+
+// 电机最大速度
+#define MOTOR_MAX_SPEED (999)
 
 struct Motor_Speed
 {
@@ -42,7 +45,9 @@ extern struct Motor_TargetSpeed g_motor_tgtspeed;
 __STATIC_INLINE void Motor1_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_1);
-    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+
+    // 是否还要下面的函数有待考量...
+    // LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
 }
 
 /**
@@ -51,7 +56,9 @@ __STATIC_INLINE void Motor1_Start(void)
 __STATIC_INLINE void Motor2_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_2);
-    LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+
+    // 是否还要下面的函数有待考量...
+    // LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
 }
 
 /**
@@ -60,7 +67,9 @@ __STATIC_INLINE void Motor2_Start(void)
 __STATIC_INLINE void Motor3_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_3);
-    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+
+    // 是否还要下面的函数有待考量...
+    // LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
 }
 
 /**
@@ -69,7 +78,9 @@ __STATIC_INLINE void Motor3_Start(void)
 __STATIC_INLINE void Motor4_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_4);
-    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+
+    // 是否还要下面的函数有待考量...
+    // LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
 }
 
 /**
@@ -83,73 +94,73 @@ __STATIC_INLINE void Motor_Stop(uint32_t Motor)
     HAL_TIM_PWM_Stop(&htim5, Motor);
 }
 
-/**
- * @brief 电机1制动
- */
-__STATIC_INLINE void Motor1_Break(void)
-{
-    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-    LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
-}
+// /**
+//  * @brief 电机1制动
+//  */
+// __STATIC_INLINE void Motor1_Break(void)
+// {
+//     LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+//     LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+// }
 
-/**
- * @brief 电机2制动
- */
-__STATIC_INLINE void Motor2_Break(void)
-{
-    LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
-    LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
-}
+// /**
+//  * @brief 电机2制动
+//  */
+// __STATIC_INLINE void Motor2_Break(void)
+// {
+//     LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+//     LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+// }
 
-/**
- * @brief 电机3制动
- */
-__STATIC_INLINE void Motor3_Break(void)
-{
-    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
-    LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
-}
+// /**
+//  * @brief 电机3制动
+//  */
+// __STATIC_INLINE void Motor3_Break(void)
+// {
+//     LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+//     LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+// }
 
-/**
- * @brief 电机4制动
- */
-__STATIC_INLINE void Motor4_Break(void)
-{
-    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
-    LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
-}
+// /**
+//  * @brief 电机4制动
+//  */
+// __STATIC_INLINE void Motor4_Break(void)
+// {
+//     LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+//     LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
+// }
 
-/**
- * @brief 重启电机1
- */
-__STATIC_INLINE void Motor1_Restart(void)
-{
-    LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-}
+// /**
+//  * @brief 重启电机1
+//  */
+// __STATIC_INLINE void Motor1_Restart(void)
+// {
+//     LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+// }
 
-/**
- * @brief 重启电机2
- */
-__STATIC_INLINE void Motor2_Restart(void)
-{
-    LL_GPIO_ResetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
-}
+// /**
+//  * @brief 重启电机2
+//  */
+// __STATIC_INLINE void Motor2_Restart(void)
+// {
+//     LL_GPIO_ResetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+// }
 
-/**
- * @brief 重启电机3
- */
-__STATIC_INLINE void Motor3_Restart(void)
-{
-    LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
-}
+// /**
+//  * @brief 重启电机3
+//  */
+// __STATIC_INLINE void Motor3_Restart(void)
+// {
+//     LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+// }
 
-/**
- * @brief 重启电机4
- */
-__STATIC_INLINE void Motor4_Restart(void)
-{
-    LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
-}
+// /**
+//  * @brief 重启电机4
+//  */
+// __STATIC_INLINE void Motor4_Restart(void)
+// {
+//     LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+// }
 
 /**
  * @brief 设置电机速度
@@ -173,15 +184,4 @@ __STATIC_INLINE int32_t Motor_GetSpeed(TIM_TypeDef* Motor_Encoder)
     int32_t speed = LL_TIM_GetCounter(Motor_Encoder);
     LL_TIM_SetCounter(Motor_Encoder, 0);
     return speed;
-}
-
-// 待完善...
-// 应该在函数内加入IN引脚控制
-__STATIC_INLINE void Motor_Rot_Angle(int32_t Angle)
-{
-}
-
-__STATIC_INLINE void Motor_Rot_Speed(int32_t Speed)
-{
-    g_track_speed.vz = Speed;
 }

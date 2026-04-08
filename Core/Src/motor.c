@@ -2,7 +2,6 @@
 
 #include "motor.h"
 #include "main.h"
-#include "types.h"
 
 struct Motor_TargetSpeed g_motor_tgtspeed = { 0 };
 

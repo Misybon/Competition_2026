@@ -2,10 +2,7 @@
 
 #include "track.h"
 #include "ir.h"
-#include "macnum.h"
-#include "main.h"
 #include "motor.h"
-#include "pid.h"
 
 extern volatile bool g_motor_startflag;
 extern volatile bool g_status_errorflag;
@@ -24,7 +21,7 @@ void Track_Start(void)
     for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
     {
         g_track_speed.vx = speed;
-        LL_mDelay(2);
+        LL_mDelay(1);
     }
     g_motor_startflag = 1;
 }
@@ -46,10 +43,12 @@ void Track_Stop(void)
  */
 void Track_Break(void)
 {
-    Motor1_Break();
-    Motor2_Break();
-    Motor3_Break();
-    Motor4_Break();
+    // 是否还要下面四个函数有待考量...
+    // Motor1_Break();
+    // Motor2_Break();
+    // Motor3_Break();
+    // Motor4_Break();
+
     g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
 }
 
@@ -58,14 +57,16 @@ void Track_Break(void)
  */
 void Track_Restart(void)
 {
-    Motor1_Restart();
-    Motor2_Restart();
-    Motor3_Restart();
-    Motor4_Restart();
+    // 是否还要下面四个函数有待考量...
+    // Motor1_Restart();
+    // Motor2_Restart();
+    // Motor3_Restart();
+    // Motor4_Restart();
+
     for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
     {
         g_track_speed.vx = speed;
-        LL_mDelay(2);
+        LL_mDelay(1);
     }
 }
 
@@ -96,6 +97,9 @@ void ProcessLineLostEvent(void)
         {
             // 直接在此完成转弯动作
             Track_Break(); // 刹车
+            LL_TIM_DisableIT_UPDATE(TIM7);
+            LL_mDelay(1000); // 根据经验修改
+            LL_TIM_EnableIT_UPDATE(TIM7);
             Motor_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 
