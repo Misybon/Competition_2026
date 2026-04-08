@@ -28,6 +28,8 @@
 /* USER CODE BEGIN Includes */
 #include "color.h"
 #include "ir.h"
+#include "macnum.h"
+#include "motor.h"
 #include "pid.h"
 #include "task.h"
 #include "track.h"

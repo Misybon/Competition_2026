@@ -3,7 +3,6 @@
 #pragma once
 
 #include "main.h"
-#include "stm32f1xx_hal.h"
 #include "usart.h"
 
 extern const uint8_t TASK_READY[9];

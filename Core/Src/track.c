@@ -10,6 +10,8 @@
 extern volatile bool g_motor_startflag;
 extern volatile bool g_status_errorflag;
 
+struct Track_Speed g_track_speed = { 0 };
+
 /**
  * @brief 开始循迹
  */

@@ -3,9 +3,9 @@
 
 // PWM频率：2KHz
 
-#include "macnum.h"
 #include "main.h"
 #include "tim.h"
+#include "track.h"
 
 #define MOTOR_1 TIM_CHANNEL_1
 #define MOTOR_2 TIM_CHANNEL_2
@@ -181,7 +181,7 @@ __STATIC_INLINE void Motor_Rot_Angle(int32_t Angle)
 {
 }
 
-__STATIC_INLINE void Motor_Rot_Seppd(int32_t Speed)
+__STATIC_INLINE void Motor_Rot_Speed(int32_t Speed)
 {
     g_track_speed.vz = Speed;
 }
