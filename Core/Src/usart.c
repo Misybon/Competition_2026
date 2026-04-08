@@ -21,6 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "config.h"
 #include "main.h"
 #include "task.h"
 /* USER CODE END 0 */
@@ -162,12 +163,12 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
  */
 static void ReadCmd(void)
 {
-    for (uint32_t i = 0; i + 2 < 20; i++)
+    for (uint32_t i = 0; i + 2 < BUF_SIZE; i++)
     {
         if (g_rx_data[i] == 0xAA && g_rx_data[i + 1] == 0x55) // 解析到帧头
         {
             uint32_t len = g_rx_data[i + 2]; // 读取有效负载长度
-            if (i + 4 + len > 20) // 长度超限
+            if (i + 4 + len > BUF_SIZE) // 长度超限
             {
                 continue; // 检查剩余部分有无数据包
             }

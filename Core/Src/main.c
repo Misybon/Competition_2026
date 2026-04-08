@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "config.h"
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
@@ -66,8 +67,8 @@ volatile bool g_return_flag = 0; // 是否处于返回过程
 
 volatile uint8_t g_corner_count = 0; // 转弯计数
 
-uint8_t g_rx_data[20] = { 0 }; // 串口接收缓冲区
-uint8_t g_cmd[20] = { 0 }; // 解析出来的命令
+uint8_t g_rx_data[BUF_SIZE] = { 0 }; // 串口接收缓冲区
+uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
 
 volatile TRACK_STATUS g_status = STBY; // 等待启动
 /* USER CODE END PV */

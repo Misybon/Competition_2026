@@ -4,6 +4,9 @@
 #define CAR_W (0) // 底盘轴距
 #define ROT_PARAM ((CAR_H >> 1) + (CAR_W >> 1)) // 旋转参数
 
+// 缓冲区长度
+#define BUF_SIZE (30)
+
 // 电机PID参数
 #define MOTOR_PID_KP (0)
 #define MOTOR_PID_KI (0)

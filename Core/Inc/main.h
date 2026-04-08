@@ -68,8 +68,8 @@ extern volatile TRACK_STATUS g_status;
 extern volatile bool g_start_area_flag;
 extern volatile bool g_throw_area_flag;
 extern volatile bool g_vision_errorflag;
-extern uint8_t g_rx_data[20];
-extern uint8_t g_cmd[20];
+extern uint8_t g_rx_data[BUF_SIZE];
+extern uint8_t g_cmd[BUF_SIZE];
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
