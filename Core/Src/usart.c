@@ -199,9 +199,9 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size)
 {
     if (huart == &huart3)
     {
-        HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, 20);
-        __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);
-        ReadCmd();
+        HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, sizeof(g_rx_data) / sizeof(uint8_t)); // 重新开启接收
+        __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT); // 关闭半传输中断
+        ReadCmd(); // 解析命令
     }
 }
 
@@ -218,7 +218,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef* huart)
         }
 
         HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, 20); // 重新开启接收
-        __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);
+        __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT); // 关闭半传输中断
     }
 }
 /* USER CODE END 1 */

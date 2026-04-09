@@ -40,6 +40,7 @@ extern "C" {
 #include "stm32f1xx_ll_tim.h"
 #include "stm32f1xx_ll_utils.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "config.h"
@@ -69,7 +70,7 @@ extern volatile bool g_start_area_flag;
 extern volatile bool g_throw_area_flag;
 extern volatile bool g_vision_errorflag;
 extern uint8_t g_rx_data[BUF_SIZE];
-extern uint8_t g_cmd[BUF_SIZE];
+volatile extern uint8_t g_cmd[BUF_SIZE];
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

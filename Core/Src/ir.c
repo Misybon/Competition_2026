@@ -9,6 +9,6 @@ struct IR_Val
     bool _3;
     bool _4;
     bool _5;
-} g_ir_val = { 1 };
+} g_ir_val = { 1 }; // 黑0,否则1
 
 int32_t g_ir_out = 0;

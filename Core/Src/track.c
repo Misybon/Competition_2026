@@ -1,7 +1,6 @@
 // 等待完善...
 
 #include "track.h"
-#include "ir.h"
 #include "motor.h"
 
 extern volatile bool g_motor_startflag;
@@ -38,37 +37,37 @@ void Track_Stop(void)
     g_motor_startflag = 0;
 }
 
-/**
- * @brief 整车刹车
- */
-void Track_Break(void)
-{
-    // 是否还要下面四个函数有待考量...
-    // Motor1_Break();
-    // Motor2_Break();
-    // Motor3_Break();
-    // Motor4_Break();
+// /**
+//  * @brief 整车刹车
+//  */
+// void Track_Break(void)
+// {
+//     // 是否还要下面四个函数有待考量...
+//     // Motor1_Break();
+//     // Motor2_Break();
+//     // Motor3_Break();
+//     // Motor4_Break();
 
-    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
-}
+//     g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
+// }
 
-/**
- * @brief 重启循迹
- */
-void Track_Restart(void)
-{
-    // 是否还要下面四个函数有待考量...
-    // Motor1_Restart();
-    // Motor2_Restart();
-    // Motor3_Restart();
-    // Motor4_Restart();
+// /**
+//  * @brief 重启循迹
+//  */
+// void Track_Restart(void)
+// {
+//     // 是否还要下面四个函数有待考量...
+//     // Motor1_Restart();
+//     // Motor2_Restart();
+//     // Motor3_Restart();
+//     // Motor4_Restart();
 
-    for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
-    {
-        g_track_speed.vx = speed;
-        LL_mDelay(1);
-    }
-}
+//     for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
+//     {
+//         g_track_speed.vx = speed;
+//         LL_mDelay(1);
+//     }
+// }
 
 /**
  * @brief 处理丢线事件
@@ -114,10 +113,10 @@ void ProcessLineLostEvent(void)
         }
         else // 出现问题！！！
         {
-            g_corner_count = 0;
-            g_motor_startflag = 0;
-            g_status_errorflag = 1;
-            Error_Handler();
+            g_corner_count = 0; // 重置转弯计数
+            g_motor_startflag = 0; // 重置电机启动状态
+            g_status_errorflag = 1; // 状态机错误
+            Error_Handler(); // 进入错误处理，尝试恢复待机模式
         }
     }
 }

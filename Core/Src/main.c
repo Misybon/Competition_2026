@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "config.h"
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
@@ -29,7 +28,6 @@
 /* USER CODE BEGIN Includes */
 #include "color.h"
 #include "ir.h"
-#include "motor.h"
 #include "pid.h"
 #include "task.h"
 
@@ -68,7 +66,7 @@ volatile bool g_return_flag = 0; // 是否处于返回过程
 volatile uint8_t g_corner_count = 0; // 转弯计数
 
 uint8_t g_rx_data[BUF_SIZE] = { 0 }; // 串口接收缓冲区
-uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
+volatile uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
 
 volatile TRACK_STATUS g_status = STBY; // 等待启动
 /* USER CODE END PV */
@@ -124,8 +122,9 @@ int main(void)
     MX_TIM6_Init();
     MX_TIM7_Init();
     /* USER CODE BEGIN 2 */
-    PID_Init();
-    Color_Init();
+    PID_Init(); // 初始化PID参数
+
+    Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -148,24 +147,24 @@ int main(void)
             if (!g_motor_startflag) // 如果电机没启动
             {
                 Track_Start(); // 开始循迹
-                if (!g_return_flag)
+                if (!g_return_flag) // 如果不在返回状态
                 {
                     TIM7_Start(); // 开启定时器7，用于丢线判断和PID控制
                 }
             }
             break;
         case CORNER:
-            Track_Break();
+            Track_Break(); // 制动
             if (!g_return_flag) // 如果不处于返回状态
             {
                 Motor_Rot_Angle(90); // 逆时针旋转90°
             }
-            else
+            else // 处于返回状态
             {
                 Motor_Rot_Angle(-90); // 顺时针旋转90°
             }
-            g_corner_count++;
-            Track_Restart();
+            g_corner_count++; // 转弯计数+1
+            Track_Restart(); // 重启循迹
             g_status = TRACK; // 返回循迹状态
             break;
         case THROW_PREPARE:
@@ -175,27 +174,28 @@ int main(void)
                 TIM6_Stop(); // 关闭定时器6
                 Color_Stop(); // 关闭颜色传感器
                 g_corner_count = 0; // 重置转弯计数
-                g_status = THROW_WAIT;
+                g_status = THROW_WAIT; // 进入准备投掷状态
             }
             else if (!g_color_status) // 如果没有开启颜色传感器
             {
-                Color_Start();
+                Color_Start(); // 唤醒颜色传感器
                 TIM6_Start(); // 开启定时器6，用于定时扫描颜色
             }
             break;
         case THROW_WAIT:
-            HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, 20); // 准备接收应答
-            __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);
+            HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, sizeof(g_rx_data) / sizeof(uint8_t)); // 准备接收应答
+            __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT); // 关闭半传输中断
             SendReady(); // 发送准备信号
             WaitForAck(); // 等待应答
-            // FindBasket();
-            Throw();
+            FindBasket(); // 寻找篮筐
+            Throw(); // 投掷弹丸
             g_return_flag = 1; // 返回
             Motor_Rot_Angle(180); // 转身离开
             Track_Restart(); // 重启循迹
             while (!IsLineLost()) // 等待回到线上
             {
             }
+            // 注意：记得关闭串口接收
             g_status = TRACK; // 返回循迹状态
             break;
         case STOP_PREPARE:
@@ -216,8 +216,8 @@ int main(void)
             }
             break;
         default:
-            g_status_errorflag = 1;
-            Error_Handler();
+            g_status_errorflag = 1; // 状态机出错
+            Error_Handler(); // 进入错误处理，尝试恢复待机模式
             break;
         }
         /* USER CODE END WHILE */
