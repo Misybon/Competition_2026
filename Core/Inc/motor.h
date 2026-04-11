@@ -2,9 +2,8 @@
 
 #pragma once
 
-// PWM频率：2KHz
+// PWM频率：18KHz
 
-#include "main.h"
 #include "tim.h"
 
 #define MOTOR_1 TIM_CHANNEL_1

@@ -99,7 +99,7 @@ void ProcessLineLostEvent(void)
             LL_TIM_DisableIT_UPDATE(TIM7);
             LL_mDelay(1000); // 根据经验修改
             LL_TIM_EnableIT_UPDATE(TIM7);
-            Motor_Rot_Angle(-90); // 顺时针旋转90°
+            Track_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 
             g_status = STOP_PREPARE; // 准备停车

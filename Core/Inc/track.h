@@ -3,7 +3,6 @@
 #pragma once
 
 #include "ir.h"
-#include "main.h"
 
 struct Track_Speed
 {
@@ -19,7 +18,7 @@ extern struct Track_Speed g_track_speed;
  * 
  * @param Angle 旋转的角度，应该只有90, -90, 180
  */
-__STATIC_INLINE void Motor_Rot_Angle(int32_t Angle)
+__STATIC_INLINE void Track_Rot_Angle(int32_t Angle)
 {
     if (Angle == 90 || Angle == -90)
     {
@@ -44,7 +43,7 @@ __STATIC_INLINE void Motor_Rot_Angle(int32_t Angle)
  * 
  * @param Speed 旋转速度，逆时针为正
  */
-__STATIC_INLINE void Motor_Rot_Speed(int32_t Speed)
+__STATIC_INLINE void Track_Rot_Speed(int32_t Speed)
 {
     g_track_speed.vz = Speed;
 }
