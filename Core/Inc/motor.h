@@ -93,41 +93,45 @@ __STATIC_INLINE void Motor_Stop(uint32_t Motor)
     HAL_TIM_PWM_Stop(&htim5, Motor);
 }
 
-// /**
-//  * @brief 电机1制动
-//  */
-// __STATIC_INLINE void Motor1_Break(void)
-// {
-//     LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-//     LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
-// }
+/**
+ * @brief 电机1制动
+ */
+__STATIC_INLINE void Motor1_Break(void)
+{
+    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+    __HAL_TIM_SET_COMPARE(&htim5, MOTOR_1, MOTOR_MAX_SPEED);
+}
 
-// /**
-//  * @brief 电机2制动
-//  */
-// __STATIC_INLINE void Motor2_Break(void)
-// {
-//     LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
-//     LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
-// }
+/**
+ * @brief 电机2制动
+ */
+__STATIC_INLINE void Motor2_Break(void)
+{
+    LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+    __HAL_TIM_SET_COMPARE(&htim5, MOTOR_2, MOTOR_MAX_SPEED);
+}
 
-// /**
-//  * @brief 电机3制动
-//  */
-// __STATIC_INLINE void Motor3_Break(void)
-// {
-//     LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
-//     LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
-// }
+/**
+ * @brief 电机3制动
+ */
+__STATIC_INLINE void Motor3_Break(void)
+{
+    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+    __HAL_TIM_SET_COMPARE(&htim5, MOTOR_3, MOTOR_MAX_SPEED);
+}
 
-// /**
-//  * @brief 电机4制动
-//  */
-// __STATIC_INLINE void Motor4_Break(void)
-// {
-//     LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
-//     LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
-// }
+/**
+ * @brief 电机4制动
+ */
+__STATIC_INLINE void Motor4_Break(void)
+{
+    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
+    __HAL_TIM_SET_COMPARE(&htim5, MOTOR_4, MOTOR_MAX_SPEED);
+}
 
 // /**
 //  * @brief 重启电机1
@@ -173,7 +177,7 @@ __STATIC_INLINE void Motor_SetSpeed(uint32_t Motor, uint32_t Speed)
 }
 
 /**
- * @brief 获取电机速度
+ * @brief 获取电机速度，同时清除定时器计数
  * 
  * @param Motor_Encoder 电机编码器编号
  * @return int32_t 编码器数值

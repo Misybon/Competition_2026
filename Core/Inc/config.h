@@ -8,6 +8,13 @@
 // 缓冲区长度
 #define BUF_SIZE (30)
 
+// 制动完成判断阈值
+#define BREAK_CPLT (0)
+
+// 制动完成判断计数和超时判断计数
+#define BREAK_CPLT_CNT (5)
+#define BREAK_MAX_CNT (20)
+
 // 电机PID参数(放大256倍)
 #define MOTOR_PID_KP (0)
 #define MOTOR_PID_KI (0)

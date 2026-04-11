@@ -3,6 +3,8 @@
 #include "track.h"
 #include "motor.h"
 
+volatile bool g_break_flag = 0; // 制动状态标志位
+
 extern volatile bool g_motor_startflag;
 extern volatile bool g_status_errorflag;
 
@@ -37,19 +39,22 @@ void Track_Stop(void)
     g_motor_startflag = 0;
 }
 
-// /**
-//  * @brief 整车刹车
-//  */
-// void Track_Break(void)
-// {
-//     // 是否还要下面四个函数有待考量...
-//     // Motor1_Break();
-//     // Motor2_Break();
-//     // Motor3_Break();
-//     // Motor4_Break();
+/**
+ * @brief 整车刹车
+ */
+void Track_Break(void)
+{
+    Motor1_Break();
+    Motor2_Break();
+    Motor3_Break();
+    Motor4_Break();
 
-//     g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
-// }
+    g_break_flag = 1;
+    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
+    while (g_break_flag) // 等待制动完成
+    {
+    }
+}
 
 // /**
 //  * @brief 重启循迹
@@ -95,10 +100,7 @@ void ProcessLineLostEvent(void)
         else // 处于返回状态
         {
             // 直接在此完成转弯动作
-            Track_Break(); // 刹车
-            LL_TIM_DisableIT_UPDATE(TIM7);
-            LL_mDelay(1000); // 根据经验修改
-            LL_TIM_EnableIT_UPDATE(TIM7);
+            Track_Break(); // 制动
             Track_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 

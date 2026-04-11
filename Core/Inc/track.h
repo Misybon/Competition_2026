@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ir.h"
+#include "motor.h"
 
 struct Track_Speed
 {
@@ -12,6 +13,7 @@ struct Track_Speed
 };
 
 extern struct Track_Speed g_track_speed;
+extern volatile bool g_break_flag;
 
 /**
  * @brief 小车旋转指定角度，逆时针正，顺时针负
@@ -66,22 +68,8 @@ __STATIC_INLINE void Track_Restart(void)
     }
 }
 
-/**
- * @brief 整车刹车
- */
-__STATIC_INLINE void Track_Break(void)
-{
-    // 是否还要下面四个函数有待考量...
-    // Motor1_Break();
-    // Motor2_Break();
-    // Motor3_Break();
-    // Motor4_Break();
-
-    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
-}
-
 void Track_Start(void);
 void Track_Stop(void);
-// void Track_Break(void);
+void Track_Break(void);
 // void Track_Restart(void);
 void ProcessLineLostEvent(void);
