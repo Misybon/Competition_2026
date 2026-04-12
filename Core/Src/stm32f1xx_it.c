@@ -25,12 +25,9 @@
 /* USER CODE BEGIN Includes */
 #include <stdlib.h>
 #include "color.h"
-#include "config.h"
 #include "main.h"
-#include "motor.h"
 #include "pid.h"
 #include "track.h"
-#include "usart.h"
 
 /* USER CODE END Includes */
 

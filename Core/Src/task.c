@@ -4,8 +4,8 @@
 #include "main.h"
 
 // 加校验和位
-const uint8_t TASK_READY[9] = { 0xAA, 0x55, 0x05, 'R', 'E', 'A', 'D', 'Y' };
-const uint8_t TASK_RETURN[10] = { 0xAA, 0x55, 0x06, 'R', 'E', 'T', 'U', 'R', 'N' };
+const uint8_t TASK_READY[5] = { 0xAA, 0x55, 0x01, 0x01, 0x02 };
+const uint8_t TASK_RETURN[10] = { 0xAA, 0x55, 0x01, 0x02, 0x03 };
 const uint8_t TASK_ACK[7] = { 0xAA, 0x55, 0x03, 'A', 'C', 'K' };
 
 /**
@@ -18,13 +18,13 @@ void WaitForAck(void)
 
     while (!(g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K')) // 等待收到应答命令
     {
-        if (HAL_GetTick() - tick_start >= 1000)
+        if (HAL_GetTick() - tick_start >= 500)
         {
             tick_start = HAL_GetTick();
             if (retry >= 10) // 重试次数过多，认定视觉掉线
             {
                 g_vision_errorflag = 1; // 设定标志位
-                Error_Handler(); // 进入错误处理，尝试复位
+                // Error_Handler(); // 进入错误处理，尝试复位
                 return;
             }
             SendReady(); // 重发准备信号

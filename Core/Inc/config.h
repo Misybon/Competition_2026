@@ -1,9 +1,9 @@
 #pragma once
 
 // 麦克纳姆轮底盘相关
-#define CAR_H (0) // 底盘轮距，单位m
-#define CAR_W (0) // 底盘轴距，单位m
-#define ROT_PARAM ((CAR_H >> 1) + (CAR_W >> 1)) // 旋转参数
+#define CAR_H (12356) // 底盘轮距，单位m，放大100000倍
+#define CAR_W (19200) // 底盘轴距，单位m,放大100000倍
+#define ROT_PARAM (((CAR_H * 2) + (CAR_W * 2))) // 旋转参数,放大100000倍
 
 // 缓冲区长度
 #define BUF_SIZE (30)
@@ -24,6 +24,9 @@
 #define IR_PID_KP (0)
 #define IR_PID_KI (0)
 #define IR_PID_KD (0)
+
+// 电机线速度和编码器读取速度对应比例
+#define MOTOR_KP (0)
 
 // 红外输出值和底盘角速度对应比例
 #define IR_KP (0)

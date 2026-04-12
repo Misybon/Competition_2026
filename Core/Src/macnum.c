@@ -1,8 +1,9 @@
 // 等待完善...
 
 #include "macnum.h"
+#include <stdlib.h>
+#include "config.h"
 #include "motor.h"
-#include "stdlib.h"
 
 /**
  * @brief 麦轮运动学解算
@@ -13,10 +14,16 @@
  */
 void Move_Transform(int32_t Vx, int32_t Vy, int32_t Vz)
 {
-    g_motor_tgtspeed._1 = Vx + Vy - Vz * ROT_PARAM;
-    g_motor_tgtspeed._2 = Vx - Vy - Vz * ROT_PARAM;
-    g_motor_tgtspeed._3 = Vx + Vy + Vz * ROT_PARAM;
-    g_motor_tgtspeed._4 = Vx - Vy + Vz * ROT_PARAM;
+    // 单位m/s
+    g_motor_tgtspeed._1 = Vx + Vy - Vz * ROT_PARAM / 100000;
+    g_motor_tgtspeed._2 = Vx - Vy - Vz * ROT_PARAM / 100000;
+    g_motor_tgtspeed._3 = Vx + Vy + Vz * ROT_PARAM / 100000;
+    g_motor_tgtspeed._4 = Vx - Vy + Vz * ROT_PARAM / 100000;
+
+    g_motor_tgtspeed._1 *= MOTOR_KP;
+    g_motor_tgtspeed._2 *= MOTOR_KP;
+    g_motor_tgtspeed._3 *= MOTOR_KP;
+    g_motor_tgtspeed._4 *= MOTOR_KP;
 
     // 目标值限幅
     uint32_t tmp_max_speed;

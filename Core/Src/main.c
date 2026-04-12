@@ -70,6 +70,7 @@ uint8_t g_rx_data[BUF_SIZE] = { 0 }; // 串口接收缓冲区
 volatile uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
 
 volatile TRACK_STATUS g_status = STBY; // 等待启动
+// volatile TRACK_STATUS g_status = THROW_PREPARE; // 投掷准备状态，用于调试
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -208,8 +209,8 @@ int main(void)
                 Track_Stop(); // 关闭PWM输出
                 Color_Stop(); // 关闭颜色传感器
                 g_corner_count = 0; // 重置转弯计数
-                LL_mDelay(5000);
-                g_break_flag = 0;
+                LL_mDelay(5000); // 等待制动完成
+                g_break_flag = 0; // 清除制动标志位
                 g_status = STBY; // 恢复等待状态
             }
             else if (!g_color_status) // 如果没有开启颜色传感器
