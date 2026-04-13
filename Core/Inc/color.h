@@ -1,7 +1,5 @@
 #pragma once
 
-#include "main.h"
-
 struct Color
 {
     uint8_t red;

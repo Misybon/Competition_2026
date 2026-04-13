@@ -1,5 +1,7 @@
 #pragma once
 
+#include "color.h"
+
 // 麦克纳姆轮底盘相关
 #define CAR_H (12356) // 底盘轮距，单位m，放大100000倍
 #define CAR_W (19200) // 底盘轴距，单位m,放大100000倍
@@ -25,11 +27,13 @@
 #define IR_PID_KI (0)
 #define IR_PID_KD (0)
 
-// 电机线速度和编码器读取速度对应比例
-#define MOTOR_KP (0)
+// 电机线速度和PWM占空比对应比例
+#define MOTOR_KP (1)
+// 电机编码器读取值和PWM占空比对应比例
+#define MOTOR_ENCODER_KP (1)
 
 // 红外输出值和底盘角速度对应比例
-#define IR_KP (0)
+#define IR_KP (1)
 
 // 红外目标值和各路权重
 #define IR_TGT (0)
@@ -40,3 +44,15 @@
 // 颜色传感器
 #define GAIN (0x02) // 增益值
 #define ATIME (0xD6) // 采样时间
+
+// 起始区和投掷区RGB阈值
+const struct Color START_COLOR = {
+    .red = 0,
+    .green = 0,
+    .blue = 0,
+};
+const struct Color THROW_COLOR = {
+    .red = 0,
+    .green = 0,
+    .blue = 0,
+};

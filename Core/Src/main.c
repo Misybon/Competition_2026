@@ -133,6 +133,8 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
+        // 注意：可能因为PID调控导致转弯除无法完全丢线！
+
         switch (g_status)
         {
         case STBY:
@@ -153,17 +155,20 @@ int main(void)
                 {
                     TIM7_Start(); // 开启定时器7，用于丢线判断和PID控制
                 }
+                while (!IsLineLost()) // 先进入线上
+                {
+                }
             }
             break;
         case CORNER:
             Track_Break(); // 制动
             if (!g_return_flag) // 如果不处于返回状态
             {
-                Track_Rot_Angle(90); // 逆时针旋转90°
+                Track_Rot_Angle(-90); // 顺时针旋转90°
             }
             else // 处于返回状态
             {
-                Track_Rot_Angle(-90); // 顺时针旋转90°
+                Track_Rot_Angle(90); // 逆时针旋转90°
             }
             g_corner_count++; // 转弯计数+1
             Track_Restart(); // 重启循迹

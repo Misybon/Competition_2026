@@ -6,7 +6,7 @@
 // 加校验和位
 const uint8_t TASK_READY[5] = { 0xAA, 0x55, 0x01, 0x01, 0x02 };
 const uint8_t TASK_RETURN[10] = { 0xAA, 0x55, 0x01, 0x02, 0x03 };
-const uint8_t TASK_ACK[7] = { 0xAA, 0x55, 0x03, 'A', 'C', 'K' };
+const uint8_t TASK_ACK[5] = { 0xAA, 0x55, 0x01, 'A', 0x42 };
 
 /**
  * @brief 等待视觉应答，1000毫秒超时，重试10次
@@ -24,7 +24,7 @@ void WaitForAck(void)
             if (retry >= 10) // 重试次数过多，认定视觉掉线
             {
                 g_vision_errorflag = 1; // 设定标志位
-                // Error_Handler(); // 进入错误处理，尝试复位
+                Error_Handler(); // 进入错误处理，尝试复位
                 return;
             }
             SendReady(); // 重发准备信号

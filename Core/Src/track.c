@@ -1,7 +1,9 @@
 // 等待完善...
 
 #include "track.h"
+#include "main.h"
 #include "motor.h"
+#include "stm32f1xx_hal.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
 
@@ -86,6 +88,12 @@ void ProcessLineLostEvent(void)
         return; // 没丢线就返回
     }
 
+    // 时间阈值判断
+    uint32_t tick_start = HAL_GetTick();
+    while (HAL_GetTick() - tick_start < 500)
+    {
+    }
+
     // 丢线了
     if (g_corner_count == 0) // 第一次丢线
     {
@@ -95,30 +103,31 @@ void ProcessLineLostEvent(void)
     {
         if (!g_return_flag) // 不处于返回状态
         {
-            g_status = CORNER; // 进入转弯状态
-        }
-        else // 处于返回状态
-        {
             // 直接在此完成转弯动作
             Track_Break(); // 制动
             Track_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 
+            g_corner_count++; // 转弯计数+1
+            g_status = THROW_PREPARE; // 等待进入投掷区
+        }
+        else // 处于返回状态
+        {
+            // 直接在此完成转弯动作
+            Track_Break(); // 制动
+            Track_Rot_Angle(90); // 逆时针旋转90°
+            Track_Restart(); // 重启循迹
+
+            g_corner_count++; // 转弯计数+1
             g_status = STOP_PREPARE; // 准备停车
         }
     }
     else if (g_corner_count >= 2) // 第三次丢线
     {
-        if (!g_return_flag) // 不处于返回状态
-        {
-            g_status = THROW_PREPARE; // 准备进入投掷状态
-        }
-        else // 出现问题！！！
-        {
-            g_corner_count = 0; // 重置转弯计数
-            g_motor_startflag = 0; // 重置电机启动状态
-            g_status_errorflag = 1; // 状态机错误
-            Error_Handler(); // 进入错误处理，尝试恢复待机模式
-        }
+        // 出现问题！！！
+        g_corner_count = 0; // 重置转弯计数
+        g_motor_startflag = 0; // 重置电机启动状态
+        g_status_errorflag = 1; // 状态机错误
+        Error_Handler(); // 进入错误处理，尝试恢复待机模式
     }
 }

@@ -94,10 +94,10 @@ void PID_Control(void)
     {
         // 获取目标速度
         Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
-        g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1);
-        g_motor_speed._2 = Motor_GetSpeed(MOTOR_ENCODER_2);
-        g_motor_speed._3 = Motor_GetSpeed(MOTOR_ENCODER_3);
-        g_motor_speed._4 = Motor_GetSpeed(MOTOR_ENCODER_4);
+        g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
+        g_motor_speed._2 = Motor_GetSpeed(MOTOR_ENCODER_2) * MOTOR_ENCODER_KP;
+        g_motor_speed._3 = Motor_GetSpeed(MOTOR_ENCODER_3) * MOTOR_ENCODER_KP;
+        g_motor_speed._4 = Motor_GetSpeed(MOTOR_ENCODER_4) * MOTOR_ENCODER_KP;
     }
 
     // 计算误差值

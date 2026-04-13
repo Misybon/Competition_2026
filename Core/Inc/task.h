@@ -6,7 +6,7 @@
 
 extern const uint8_t TASK_READY[5];
 extern const uint8_t TASK_RETURN[10];
-extern const uint8_t TASK_ACK[7];
+extern const uint8_t TASK_ACK[5];
 
 void WaitForAck(void);
 void FindBasket(void);
