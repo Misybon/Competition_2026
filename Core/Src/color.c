@@ -31,6 +31,18 @@ struct Color
     uint8_t blue;
 } g_color = { 0 };
 
+// 起始区和投掷区RGB阈值
+const struct Color START_COLOR = {
+    .red = 0,
+    .green = 0,
+    .blue = 0,
+};
+const struct Color THROW_COLOR = {
+    .red = 0,
+    .green = 0,
+    .blue = 0,
+};
+
 static struct Origin_Color s_org_color = { 0 };
 
 /**

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "color.h"
-
 // 麦克纳姆轮底盘相关
 #define CAR_H (12356) // 底盘轮距，单位m，放大100000倍
 #define CAR_W (19200) // 底盘轴距，单位m,放大100000倍
@@ -44,15 +42,3 @@
 // 颜色传感器
 #define GAIN (0x02) // 增益值
 #define ATIME (0xD6) // 采样时间
-
-// 起始区和投掷区RGB阈值
-const struct Color START_COLOR = {
-    .red = 0,
-    .green = 0,
-    .blue = 0,
-};
-const struct Color THROW_COLOR = {
-    .red = 0,
-    .green = 0,
-    .blue = 0,
-};

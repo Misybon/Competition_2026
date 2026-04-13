@@ -2,10 +2,8 @@
 
 #include "pid.h"
 #include <stdlib.h>
-#include "ir.h"
 #include "macnum.h"
 #include "main.h"
-#include "motor.h"
 #include "track.h"
 
 struct IR_PID
@@ -94,6 +92,7 @@ void PID_Control(void)
     {
         // 获取目标速度
         Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+        // 乘上比例
         g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
         g_motor_speed._2 = Motor_GetSpeed(MOTOR_ENCODER_2) * MOTOR_ENCODER_KP;
         g_motor_speed._3 = Motor_GetSpeed(MOTOR_ENCODER_3) * MOTOR_ENCODER_KP;
