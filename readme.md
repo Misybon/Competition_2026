@@ -1,5 +1,4 @@
 # 机器人方案设计制作大赛 - 电控软件
----
 
 ## 项目简介
 本项目基于 **STM32CubeMX + VS Code + STM32CubeIDE for VS Code + Cortex-Debug** 开发，面向机器人方案设计制作大赛电控任务。
