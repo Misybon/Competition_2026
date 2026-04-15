@@ -164,7 +164,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 static void ReadCmd(void)
 {
     // 清空命令
-    for (uint32_t i = 0; i <= 19; i++)
+    for (uint32_t i = 0; i < BUF_SIZE; i++)
     {
         g_cmd[i] = '\0';
     }
@@ -218,7 +218,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef* huart)
 {
     if (huart == &huart3)
     {
-        for (uint32_t i = 0; i <= 19; i++) // 清空缓冲区
+        for (uint32_t i = 0; i < BUF_SIZE; i++) // 清空缓冲区
         {
             g_rx_data[i] = '\0';
         }

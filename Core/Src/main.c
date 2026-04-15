@@ -70,18 +70,26 @@ uint8_t g_rx_data[BUF_SIZE] = { 0 }; // 串口接收缓冲区
 volatile uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
 
 volatile TRACK_STATUS g_status = STBY; // 等待启动
-// volatile TRACK_STATUS g_status = THROW_PREPARE; // 投掷准备状态，用于调试
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+
+/**
+ * @brief 重置状态机
+ */
 void Reset(void)
 {
+    g_status = STBY; // 恢复等待状态
     g_return_flag = 0; // 清除返回状态标志位
     g_break_flag = 0; // 清除制动标志位
-    g_status = STBY; // 恢复等待状态
-    g_corner_count = 0; // 重置转弯计数
+    g_corner_count = 0; // 清零转弯计数
+    g_line_reached = 0; // 清除到达线上标志位
+    g_start_area_flag = 0; // 清除到达启动区域标志位
+    g_throw_area_flag = 0; // 清除到达投掷区域标志位
+    g_color_status = 0; // 清除颜色传感器状态标志位
+    g_motor_startflag = 0; // 清除电机启动标志位
 }
 /* USER CODE END PFP */
 
@@ -304,6 +312,7 @@ void Error_Handler(void)
             Track_Stop();
             g_break_flag = 0;
             Reset();
+            g_status_errorflag = 0;
             break;
         }
     }

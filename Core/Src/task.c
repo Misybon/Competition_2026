@@ -36,6 +36,8 @@ void SendReady(void)
         }
     }
 
+    s_vision_errorflag = 0; // 视觉在线
+
     // 清除应答命令
     g_cmd[0] = '\0';
     g_cmd[1] = '\0';
