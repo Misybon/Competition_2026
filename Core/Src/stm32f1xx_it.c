@@ -282,6 +282,8 @@ void TIM7_IRQHandler(void)
         if (g_break_flag) // 制动状态处理
         {
             s_break_timeout_cnt++;
+
+            // 获取速度小于阈值
             if (abs(Motor_GetSpeed(MOTOR_ENCODER_1)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_2)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_3)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_4)) <= BREAK_CPLT)
             {
                 s_break_cnt++;

@@ -14,7 +14,7 @@ const uint8_t TASK_RETURN[5] = { 0xAA, 0x55, 0x01, 0x02, 0x03 };
 const uint8_t TASK_ACK[5] = { 0xAA, 0x55, 0x01, 'A', 0x42 };
 
 /**
- * @brief 等待视觉应答，超时1000ms，重试10次
+ * @brief 等待视觉应答，超时300ms，重试10次
  */
 void WaitForAck(void)
 {
@@ -23,7 +23,7 @@ void WaitForAck(void)
 
     while (!(g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K')) // 等待收到应答命令
     {
-        if (HAL_GetTick() - tick_start >= 500)
+        if (HAL_GetTick() - tick_start >= 300) // 300ms超时
         {
             tick_start = HAL_GetTick();
             if (retry >= 10) // 重试次数过多，认定视觉掉线
@@ -38,7 +38,7 @@ void WaitForAck(void)
 }
 
 /**
- * @brief 寻找篮筐函数，超时30s
+ * @brief 寻找篮筐函数，超时10s
  */
 void FindBasket(void)
 {
@@ -70,7 +70,7 @@ void FindBasket(void)
         {
             tick_start = HAL_GetTick();
             timeout_cnt++;
-            if (timeout_cnt >= 30) // 30s后仍没找到篮筐就放弃
+            if (timeout_cnt >= 10) // 10s后仍没找到篮筐就放弃
             {
                 Track_Break(); // 直接制动
                 break; // 返回
@@ -81,11 +81,19 @@ void FindBasket(void)
     HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
 }
 
-// 待完善
+/**
+ * @brief 投掷弹丸并向视觉发送返回指令
+ * 
+ */
 void Throw(void)
 {
     // 投掷代码
+    LL_GPIO_SetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
+    LL_mDelay(1000); // 根据经验修改
+    LL_GPIO_ResetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
 
-    // 向视觉发送返回指令
-    SendReturn();
+    if (!s_vision_errorflag) // 如果视觉没有掉线
+    {
+        SendReturn(); // 发送返回指令
+    }
 }

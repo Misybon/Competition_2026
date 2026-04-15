@@ -24,6 +24,7 @@
 #include "tim.h"
 #include "usart.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "color.h"
@@ -139,9 +140,15 @@ int main(void)
         case STBY:
             if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
             {
+                uint32_t tick_start = HAL_GetTick();
+
                 LL_mDelay(20); // 消抖
                 while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
                 {
+                    if (HAL_GetTick() - tick_start >= 2000) // 2000ms超时
+                    {
+                        break;
+                    }
                 }
                 g_status = TRACK; // 进入循迹状态
             }
@@ -195,7 +202,7 @@ int main(void)
             WaitForAck(); // 等待应答
             FindBasket(); // 寻找篮筐
             Throw(); // 投掷弹丸
-            g_return_flag = 1; // 返回
+            g_return_flag = 1; // 设置返回标志位
             Track_Rot_Angle(180); // 转身离开
             Track_Restart(); // 重启循迹
             while (!IsLineLost()) // 等待回到线上
@@ -212,7 +219,7 @@ int main(void)
                 Track_Stop(); // 关闭PWM输出
                 Color_Stop(); // 关闭颜色传感器
                 g_corner_count = 0; // 重置转弯计数
-                LL_mDelay(5000); // 等待制动完成
+                LL_mDelay(3000); // 等待制动完成
                 g_break_flag = 0; // 清除制动标志位
                 g_status = STBY; // 恢复等待状态
             }

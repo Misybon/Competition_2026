@@ -5,6 +5,7 @@
 #define CAR_W (19200) // 底盘轴距，单位m,放大100000倍
 #define ROT_PARAM (((CAR_H * 2) + (CAR_W * 2))) // 旋转参数,放大100000倍
 #define MAX_VZ (1) // 底盘最大角速度，单位rad/s
+#define MAX_VX (1) // 底盘最大直线速度，单位m/s
 
 // 缓冲区长度
 #define BUF_SIZE (30)
@@ -39,6 +40,9 @@
 #define IR_WEIGH_1 (200)
 #define IR_WEIGH_2 (100)
 #define IR_WEIGH_3 (0)
+
+// 丢线时间，单位ms
+#define LINELOST_TIME (100)
 
 // 视觉偏移值和底盘角速度比例
 #define OFFSET_KP (1)

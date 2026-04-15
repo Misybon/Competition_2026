@@ -29,16 +29,16 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
-#include "stm32f1xx_ll_bus.h"
-#include "stm32f1xx_ll_cortex.h"
-#include "stm32f1xx_ll_dma.h"
-#include "stm32f1xx_ll_exti.h"
-#include "stm32f1xx_ll_gpio.h"
-#include "stm32f1xx_ll_pwr.h"
 #include "stm32f1xx_ll_rcc.h"
+#include "stm32f1xx_ll_bus.h"
 #include "stm32f1xx_ll_system.h"
-#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_exti.h"
+#include "stm32f1xx_ll_cortex.h"
 #include "stm32f1xx_ll_utils.h"
+#include "stm32f1xx_ll_pwr.h"
+#include "stm32f1xx_ll_dma.h"
+#include "stm32f1xx_ll_tim.h"
+#include "stm32f1xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -126,10 +126,10 @@ void Error_Handler(void);
 #define Motor4_Con1_GPIO_Port GPIOB
 #define Motor4_Con2_Pin LL_GPIO_PIN_15
 #define Motor4_Con2_GPIO_Port GPIOB
-#define Motor_PWM_Alternative_Pin LL_GPIO_PIN_6
+#define Motor5_Pin LL_GPIO_PIN_6
+#define Motor5_GPIO_Port GPIOC
+#define Motor_PWM_Alternative_Pin LL_GPIO_PIN_7
 #define Motor_PWM_Alternative_GPIO_Port GPIOC
-#define Motor_PWM_AlternativeC7_Pin LL_GPIO_PIN_7
-#define Motor_PWM_AlternativeC7_GPIO_Port GPIOC
 #define Motor_PWM_AlternativeC8_Pin LL_GPIO_PIN_8
 #define Motor_PWM_AlternativeC8_GPIO_Port GPIOC
 #define Motor_PWM_AlternativeC9_Pin LL_GPIO_PIN_9

@@ -21,7 +21,7 @@ void Track_Start(void)
     Motor2_Start();
     Motor3_Start();
     Motor4_Start();
-    for (uint32_t speed = 0; speed <= 999; speed++) // 坡度启动
+    for (uint32_t speed = 0; speed <= MAX_VX; speed++) // 坡度启动
     {
         g_track_speed.vx = speed;
         LL_mDelay(1);
@@ -81,17 +81,16 @@ void Track_Break(void)
  */
 void ProcessLineLostEvent(void)
 {
-    IR_GetVal();
-
-    if (!IsLineLost())
-    {
-        return; // 没丢线就返回
-    }
-
     // 时间阈值判断
     uint32_t tick_start = HAL_GetTick();
-    while (HAL_GetTick() - tick_start < 500)
+    while (HAL_GetTick() - tick_start < LINELOST_TIME)
     {
+        IR_GetVal();
+
+        if (!IsLineLost())
+        {
+            return; // 没丢线就返回
+        }
     }
 
     // 丢线了
