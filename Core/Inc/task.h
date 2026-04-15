@@ -11,14 +11,7 @@ extern const uint8_t TASK_ACK[5];
 void WaitForAck(void);
 void FindBasket(void);
 void Throw(void);
-
-/**
- * @brief 向视觉发送准备信号
- */
-__STATIC_INLINE void SendReady(void)
-{
-    HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 100);
-}
+void SendReady(void);
 
 /**
  * @brief 向视觉发送应答信号

@@ -76,7 +76,13 @@ volatile TRACK_STATUS g_status = STBY; // 等待启动
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void Reset(void)
+{
+    g_return_flag = 0; // 清除返回状态标志位
+    g_break_flag = 0; // 清除制动标志位
+    g_status = STBY; // 恢复等待状态
+    g_corner_count = 0; // 重置转弯计数
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -200,7 +206,6 @@ int main(void)
             HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, sizeof(g_rx_data) / sizeof(uint8_t)); // 准备接收应答
             __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT); // 关闭半传输中断
             SendReady(); // 发送准备信号
-            WaitForAck(); // 等待应答
             FindBasket(); // 寻找篮筐
             Throw(); // 投掷弹丸
             g_return_flag = 1; // 设置返回标志位
@@ -216,10 +221,7 @@ int main(void)
                 TIM7_Stop(); // 关闭定时器7
                 Track_Stop(); // 关闭PWM输出
                 Color_Stop(); // 关闭颜色传感器
-                g_corner_count = 0; // 重置转弯计数
                 LL_mDelay(3000); // 等待制动完成
-                g_break_flag = 0; // 清除制动标志位
-                g_status = STBY; // 恢复等待状态
             }
             else if (!g_color_status) // 如果没有开启颜色传感器
             {
@@ -300,9 +302,8 @@ void Error_Handler(void)
             // 恢复起始状态
             Track_Break();
             Track_Stop();
-            LL_mDelay(5000);
             g_break_flag = 0;
-            g_status = STBY;
+            Reset();
             break;
         }
     }

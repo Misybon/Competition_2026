@@ -1,6 +1,7 @@
 // 等待完善...
 
 #include "track.h"
+#include "ir.h"
 #include "main.h"
 #include "motor.h"
 #include "stm32f1xx_hal.h"
@@ -67,24 +68,27 @@ void Track_Rot_Angle(int32_t Angle)
         g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
         while (g_ir_val._2) // 等待红外传感器识别到黑线
         {
+            IR_GetVal(); // 更新红外值
         }
-        Track_Break_Soft(); // 制动
+        Track_Break_Soft(); // 软制动
     }
     else if (Angle == -90)
     {
         g_track_speed.vz = -MAX_VZ; // 最大速度顺时针旋转
         while (g_ir_val._4) // 等待红外传感器识别到黑线
         {
+            IR_GetVal(); // 更新红外值
         }
-        Track_Break_Soft(); // 制动
+        Track_Break_Soft(); // 软制动
     }
     else if (Angle == 180)
     {
-        g_track_speed.vz = MAX_VZ;
+        g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
         while (g_ir_val._3) // 等待中间红外传感器识别到黑线
         {
+            IR_GetVal(); // 更新红外值
         }
-        Track_Break();
+        Track_Break_Soft(); // 软制动
     }
     else
     {

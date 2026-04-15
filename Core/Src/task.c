@@ -14,9 +14,9 @@ const uint8_t TASK_RETURN[5] = { 0xAA, 0x55, 0x01, 0x02, 0x03 };
 const uint8_t TASK_ACK[5] = { 0xAA, 0x55, 0x01, 'A', 0x42 };
 
 /**
- * @brief 等待视觉应答，超时300ms，重试10次
+ * @brief 向视觉发送准备信号并等待应答
  */
-void WaitForAck(void)
+void SendReady(void)
 {
     uint32_t tick_start = HAL_GetTick();
     uint32_t retry = 0; // 重试次数
@@ -31,10 +31,15 @@ void WaitForAck(void)
                 s_vision_errorflag = 1; // 设定标志位
                 return;
             }
-            SendReady(); // 重发准备信号
+            HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 100); // 重发准备信号
             retry++; // 重试计数+1
         }
     }
+
+    // 清除应答命令
+    g_cmd[0] = '\0';
+    g_cmd[1] = '\0';
+    g_cmd[2] = '\0';
 }
 
 /**
