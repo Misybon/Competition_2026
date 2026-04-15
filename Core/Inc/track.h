@@ -21,34 +21,16 @@ void Track_Stop(void);
 void Track_Break(void);
 // void Track_Restart(void);
 void ProcessLineLostEvent(void);
+void Track_Rot_Angle(int32_t Angle);
 
 /**
- * @brief 小车旋转指定角度，逆时针正，顺时针负
- * 
- * @param Angle 旋转的角度，应该只有90, -90, 180
+ * @brief 整车软制动(滑行)
  */
-__STATIC_INLINE void Track_Rot_Angle(int32_t Angle)
+__STATIC_INLINE void Track_Break_Soft(void)
 {
-    if (Angle == 90 || Angle == -90)
-    {
-        g_track_speed.vz = MAX_VZ;
-        while (g_ir_val._3) // 等待中间红外传感器识别到黑线
-        {
-        }
-        Track_Break();
-    }
-    else if (Angle == 180)
-    {
-        g_track_speed.vz = MAX_VZ;
-        while (g_ir_val._3) // 等待中间红外传感器识别到黑线
-        {
-        }
-        Track_Break();
-    }
-    else
-    {
-        return;
-    }
+    g_track_speed.vx = 0;
+    g_track_speed.vy = 0;
+    g_track_speed.vz = 0;
 }
 
 // /**

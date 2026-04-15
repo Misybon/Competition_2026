@@ -24,7 +24,6 @@
 #include "tim.h"
 #include "usart.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "color.h"
@@ -60,6 +59,7 @@ volatile bool g_color_status = 0; // 颜色传感器标志位
 
 volatile bool g_status_errorflag = 0; // 状态机错误标志位
 
+volatile bool g_line_reached = 0; // 是否已经到达线上
 volatile bool g_start_area_flag = 0; // 是否处于开始区
 volatile bool g_throw_area_flag = 0; // 是否处于投掷区
 volatile bool g_return_flag = 0; // 是否处于返回过程
@@ -145,7 +145,7 @@ int main(void)
                 LL_mDelay(20); // 消抖
                 while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
                 {
-                    if (HAL_GetTick() - tick_start >= 2000) // 2000ms超时
+                    if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
                     {
                         break;
                     }
@@ -156,18 +156,19 @@ int main(void)
         case TRACK:
             if (!g_motor_startflag) // 如果电机没启动
             {
-                Track_Start(); // 开始循迹
                 if (!g_return_flag) // 如果不在返回状态
                 {
                     TIM7_Start(); // 开启定时器7，用于丢线判断和PID控制
                 }
+                Track_Start(); // 开始循迹
                 while (!IsLineLost()) // 先进入线上
                 {
                 }
+                g_line_reached = 1; // 设置标志位
             }
             break;
         case CORNER:
-            Track_Break(); // 制动
+            Track_Break_Soft(); // 软制动
             if (!g_return_flag) // 如果不处于返回状态
             {
                 Track_Rot_Angle(-90); // 顺时针旋转90°
@@ -205,9 +206,6 @@ int main(void)
             g_return_flag = 1; // 设置返回标志位
             Track_Rot_Angle(180); // 转身离开
             Track_Restart(); // 重启循迹
-            while (!IsLineLost()) // 等待回到线上
-            {
-            }
             g_status = TRACK; // 返回循迹状态
             break;
         case STOP_PREPARE:

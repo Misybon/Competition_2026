@@ -53,8 +53,42 @@ void Track_Break(void)
 
     g_break_flag = 1;
     g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
-    while (g_break_flag) // 等待制动完成
+}
+
+/**
+ * @brief 小车旋转指定角度，逆时针正，顺时针负
+ * 
+ * @param Angle 旋转的角度，应该只有90, -90, 180
+ */
+void Track_Rot_Angle(int32_t Angle)
+{
+    if (Angle == 90)
     {
+        g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
+        while (g_ir_val._2) // 等待红外传感器识别到黑线
+        {
+        }
+        Track_Break_Soft(); // 制动
+    }
+    else if (Angle == -90)
+    {
+        g_track_speed.vz = -MAX_VZ; // 最大速度顺时针旋转
+        while (g_ir_val._4) // 等待红外传感器识别到黑线
+        {
+        }
+        Track_Break_Soft(); // 制动
+    }
+    else if (Angle == 180)
+    {
+        g_track_speed.vz = MAX_VZ;
+        while (g_ir_val._3) // 等待中间红外传感器识别到黑线
+        {
+        }
+        Track_Break();
+    }
+    else
+    {
+        return;
     }
 }
 
@@ -103,7 +137,7 @@ void ProcessLineLostEvent(void)
         if (!g_return_flag) // 不处于返回状态
         {
             // 直接在此完成转弯动作
-            Track_Break(); // 制动
+            Track_Break_Soft(); // 软制动
             Track_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 
@@ -113,7 +147,7 @@ void ProcessLineLostEvent(void)
         else // 处于返回状态
         {
             // 直接在此完成转弯动作
-            Track_Break(); // 制动
+            Track_Break_Soft(); // 软制动
             Track_Rot_Angle(90); // 逆时针旋转90°
             Track_Restart(); // 重启循迹
 
