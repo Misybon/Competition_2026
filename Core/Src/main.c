@@ -58,7 +58,6 @@ volatile bool g_motor_startflag = 0; // 电机标志位
 volatile bool g_color_status = 0; // 颜色传感器标志位
 
 volatile bool g_status_errorflag = 0; // 状态机错误标志位
-volatile bool g_vision_errorflag = 0; // 视觉错误标志位
 
 volatile bool g_start_area_flag = 0; // 是否处于开始区
 volatile bool g_throw_area_flag = 0; // 是否处于投掷区
@@ -133,7 +132,7 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        // 注意：可能因为PID调控导致转弯除无法完全丢线！
+        // 注意：可能因为PID调控导致转弯处无法完全丢线！
 
         switch (g_status)
         {
@@ -202,7 +201,6 @@ int main(void)
             while (!IsLineLost()) // 等待回到线上
             {
             }
-            HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
             g_status = TRACK; // 返回循迹状态
             break;
         case STOP_PREPARE:
@@ -293,16 +291,6 @@ void Error_Handler(void)
     while (1)
     {
         if (g_status_errorflag) // 状态错误
-        {
-            // 恢复起始状态
-            Track_Break();
-            Track_Stop();
-            LL_mDelay(5000);
-            g_break_flag = 0;
-            g_status = STBY;
-            break;
-        }
-        else if (g_vision_errorflag) // 视觉错误
         {
             // 恢复起始状态
             Track_Break();

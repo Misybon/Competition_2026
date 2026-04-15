@@ -4,14 +4,15 @@
 #define CAR_H (12356) // 底盘轮距，单位m，放大100000倍
 #define CAR_W (19200) // 底盘轴距，单位m,放大100000倍
 #define ROT_PARAM (((CAR_H * 2) + (CAR_W * 2))) // 旋转参数,放大100000倍
+#define MAX_VZ (1) // 底盘最大角速度，单位rad/s
 
 // 缓冲区长度
 #define BUF_SIZE (30)
 
 // 制动完成判断阈值
-#define BREAK_CPLT (0)
+#define BREAK_CPLT (10)
 
-// 制动完成判断计数和超时判断计数
+// 制动完成判断计数和超时判断计数，总时间需乘上50ms
 #define BREAK_CPLT_CNT (5)
 #define BREAK_MAX_CNT (20)
 
@@ -38,6 +39,9 @@
 #define IR_WEIGH_1 (200)
 #define IR_WEIGH_2 (100)
 #define IR_WEIGH_3 (0)
+
+// 视觉偏移值和底盘角速度比例
+#define OFFSET_KP (1)
 
 // 颜色传感器
 #define GAIN (0x02) // 增益值
