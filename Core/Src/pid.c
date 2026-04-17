@@ -1,6 +1,7 @@
 // 等待完善...
 
 #include "pid.h"
+#include <math.h>
 #include <stdlib.h>
 #include "macnum.h"
 #include "main.h"
@@ -22,9 +23,9 @@ static struct IR_PID s_ir_pid = { 0 };
 
 struct Motor_PID
 {
-    uint16_t kp;
-    uint16_t ki;
-    uint16_t kd;
+    float kp;
+    float ki;
+    float kd;
 };
 
 struct Motor_PID_Err
@@ -37,10 +38,10 @@ struct Motor_PID_Err
 
 struct Motor_PID_Out
 {
-    int32_t _1;
-    int32_t _2;
-    int32_t _3;
-    int32_t _4;
+    float _1;
+    float _2;
+    float _3;
+    float _4;
 };
 
 static struct Motor_PID s_motor_pid = { 0 };
@@ -48,8 +49,10 @@ static struct Motor_PID s_motor_pid = { 0 };
 static struct Motor_PID_Err s_motor_err_0 = { 0 };
 static struct Motor_PID_Err s_motor_err_1 = { 0 };
 static struct Motor_PID_Err s_motor_err_2 = { 0 };
+static struct Motor_PID_Out s_motor_speed_lpf = { 0 };
+static uint8_t s_motor_speed_lpf_inited = 0;
 
-static struct Motor_PID_Out s_motor_out = { 0 };
+struct Motor_PID_Out g_motor_out = { 0 };
 
 /**
  * @brief PID初始化
@@ -63,6 +66,13 @@ void PID_Init(void)
     s_motor_pid.kp = MOTOR_PID_KP;
     s_motor_pid.ki = MOTOR_PID_KI;
     s_motor_pid.kd = MOTOR_PID_KD;
+
+    s_motor_err_0 = (struct Motor_PID_Err) { 0 };
+    s_motor_err_1 = (struct Motor_PID_Err) { 0 };
+    s_motor_err_2 = (struct Motor_PID_Err) { 0 };
+    s_motor_speed_lpf = (struct Motor_PID_Out) { 0 };
+    s_motor_speed_lpf_inited = 0;
+    g_motor_out = (struct Motor_PID_Out) { 0 };
 }
 
 /**
@@ -91,12 +101,33 @@ void PID_Control(void)
     // 电机PID
     {
         // 获取目标速度
-        Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
-        // 乘上比例
-        g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
-        g_motor_speed._2 = Motor_GetSpeed(MOTOR_ENCODER_2) * MOTOR_ENCODER_KP;
-        g_motor_speed._3 = Motor_GetSpeed(MOTOR_ENCODER_3) * MOTOR_ENCODER_KP;
-        g_motor_speed._4 = Motor_GetSpeed(MOTOR_ENCODER_4) * MOTOR_ENCODER_KP;
+        // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+        // 乘上比例并做一阶低通，抑制编码器计数离散带来的抖动
+        float motor_speed_raw_1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
+        float motor_speed_raw_2 = Motor_GetSpeed(MOTOR_ENCODER_2) * MOTOR_ENCODER_KP;
+        float motor_speed_raw_3 = Motor_GetSpeed(MOTOR_ENCODER_3) * MOTOR_ENCODER_KP;
+        float motor_speed_raw_4 = Motor_GetSpeed(MOTOR_ENCODER_4) * MOTOR_ENCODER_KP;
+
+        if (!s_motor_speed_lpf_inited)
+        {
+            s_motor_speed_lpf._1 = motor_speed_raw_1;
+            s_motor_speed_lpf._2 = motor_speed_raw_2;
+            s_motor_speed_lpf._3 = motor_speed_raw_3;
+            s_motor_speed_lpf._4 = motor_speed_raw_4;
+            s_motor_speed_lpf_inited = 1;
+        }
+        else
+        {
+            s_motor_speed_lpf._1 += MOTOR_SPEED_LPF_ALPHA * (motor_speed_raw_1 - s_motor_speed_lpf._1);
+            s_motor_speed_lpf._2 += MOTOR_SPEED_LPF_ALPHA * (motor_speed_raw_2 - s_motor_speed_lpf._2);
+            s_motor_speed_lpf._3 += MOTOR_SPEED_LPF_ALPHA * (motor_speed_raw_3 - s_motor_speed_lpf._3);
+            s_motor_speed_lpf._4 += MOTOR_SPEED_LPF_ALPHA * (motor_speed_raw_4 - s_motor_speed_lpf._4);
+        }
+
+        g_motor_speed._1 = (int32_t)(s_motor_speed_lpf._1);
+        g_motor_speed._2 = (int32_t)(s_motor_speed_lpf._2);
+        g_motor_speed._3 = (int32_t)(s_motor_speed_lpf._3);
+        g_motor_speed._4 = (int32_t)(s_motor_speed_lpf._4);
     }
 
     // 计算误差值
@@ -112,70 +143,84 @@ void PID_Control(void)
 
     // 计算输出值
     {
-        int32_t motor_delta_1 = s_motor_pid.kp * (s_motor_err_0._1 - s_motor_err_1._1) + s_motor_pid.ki * s_motor_err_0._1 + s_motor_pid.kd * (s_motor_err_0._1 - (s_motor_err_1._1 * 2) + s_motor_err_2._1);
-        int32_t motor_delta_2 = s_motor_pid.kp * (s_motor_err_0._2 - s_motor_err_1._2) + s_motor_pid.ki * s_motor_err_0._2 + s_motor_pid.kd * (s_motor_err_0._2 - (s_motor_err_1._2 * 2) + s_motor_err_2._2);
-        int32_t motor_delta_3 = s_motor_pid.kp * (s_motor_err_0._3 - s_motor_err_1._3) + s_motor_pid.ki * s_motor_err_0._3 + s_motor_pid.kd * (s_motor_err_0._3 - (s_motor_err_1._3 * 2) + s_motor_err_2._3);
-        int32_t motor_delta_4 = s_motor_pid.kp * (s_motor_err_0._4 - s_motor_err_1._4) + s_motor_pid.ki * s_motor_err_0._4 + s_motor_pid.kd * (s_motor_err_0._4 - (s_motor_err_1._4 * 2) + s_motor_err_2._4);
-
-        // 输出值按比例缩小
-        s_motor_out._1 += (motor_delta_1 >> 8);
-        s_motor_out._2 += (motor_delta_2 >> 8);
-        s_motor_out._3 += (motor_delta_3 >> 8);
-        s_motor_out._4 += (motor_delta_4 >> 8);
+        g_motor_out._1 += s_motor_pid.kp * (s_motor_err_0._1 - s_motor_err_1._1) + s_motor_pid.ki * s_motor_err_0._1 + s_motor_pid.kd * (s_motor_err_0._1 - (s_motor_err_1._1 * 2) + s_motor_err_2._1);
+        g_motor_out._2 += s_motor_pid.kp * (s_motor_err_0._2 - s_motor_err_1._2) + s_motor_pid.ki * s_motor_err_0._2 + s_motor_pid.kd * (s_motor_err_0._2 - (s_motor_err_1._2 * 2) + s_motor_err_2._2);
+        g_motor_out._3 += s_motor_pid.kp * (s_motor_err_0._3 - s_motor_err_1._3) + s_motor_pid.ki * s_motor_err_0._3 + s_motor_pid.kd * (s_motor_err_0._3 - (s_motor_err_1._3 * 2) + s_motor_err_2._3);
+        g_motor_out._4 += s_motor_pid.kp * (s_motor_err_0._4 - s_motor_err_1._4) + s_motor_pid.ki * s_motor_err_0._4 + s_motor_pid.kd * (s_motor_err_0._4 - (s_motor_err_1._4 * 2) + s_motor_err_2._4);
     }
 
     // 输出限幅
     {
-        if (s_motor_out._1 > MOTOR_MAX_SPEED)
+        if (g_motor_out._1 > MOTOR_MAX_SPEED)
         {
-            s_motor_out._1 = MOTOR_MAX_SPEED;
+            g_motor_out._1 = MOTOR_MAX_SPEED;
         }
-        else if (s_motor_out._1 < -MOTOR_MAX_SPEED)
+        else if (g_motor_out._1 < -MOTOR_MAX_SPEED)
         {
-            s_motor_out._1 = -MOTOR_MAX_SPEED;
+            g_motor_out._1 = -MOTOR_MAX_SPEED;
         }
-        if (s_motor_out._2 > MOTOR_MAX_SPEED)
+        if (g_motor_out._2 > MOTOR_MAX_SPEED)
         {
-            s_motor_out._2 = MOTOR_MAX_SPEED;
+            g_motor_out._2 = MOTOR_MAX_SPEED;
         }
-        else if (s_motor_out._2 < -MOTOR_MAX_SPEED)
+        else if (g_motor_out._2 < -MOTOR_MAX_SPEED)
         {
-            s_motor_out._2 = -MOTOR_MAX_SPEED;
+            g_motor_out._2 = -MOTOR_MAX_SPEED;
         }
-        if (s_motor_out._3 > MOTOR_MAX_SPEED)
+        if (g_motor_out._3 > MOTOR_MAX_SPEED)
         {
-            s_motor_out._3 = MOTOR_MAX_SPEED;
+            g_motor_out._3 = MOTOR_MAX_SPEED;
         }
-        else if (s_motor_out._3 < -MOTOR_MAX_SPEED)
+        else if (g_motor_out._3 < -MOTOR_MAX_SPEED)
         {
-            s_motor_out._3 = -MOTOR_MAX_SPEED;
+            g_motor_out._3 = -MOTOR_MAX_SPEED;
         }
-        if (s_motor_out._4 > MOTOR_MAX_SPEED)
+        if (g_motor_out._4 > MOTOR_MAX_SPEED)
         {
-            s_motor_out._4 = MOTOR_MAX_SPEED;
+            g_motor_out._4 = MOTOR_MAX_SPEED;
         }
-        else if (s_motor_out._4 < -MOTOR_MAX_SPEED)
+        else if (g_motor_out._4 < -MOTOR_MAX_SPEED)
         {
-            s_motor_out._4 = -MOTOR_MAX_SPEED;
+            g_motor_out._4 = -MOTOR_MAX_SPEED;
+        }
+    }
+
+    // 输出死区
+    {
+        if (fabs(g_motor_out._1) <= MOTOR_OUT_DEADZONE)
+        {
+            g_motor_out._1 = 0;
+        }
+        if (fabs(g_motor_out._2) <= MOTOR_OUT_DEADZONE)
+        {
+            g_motor_out._2 = 0;
+        }
+        if (fabs(g_motor_out._3) <= MOTOR_OUT_DEADZONE)
+        {
+            g_motor_out._3 = 0;
+        }
+        if (fabs(g_motor_out._4) <= MOTOR_OUT_DEADZONE)
+        {
+            g_motor_out._4 = 0;
         }
     }
 
     // 设置电机旋转方向
     {
         // 电机1
-        if (s_motor_out._1 >= 0)
-        {
-            LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-            LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
-        }
-        else
+        if (g_motor_out._1 >= 0)
         {
             LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
             LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
         }
+        else
+        {
+            LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+            LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+        }
 
         // 电机2
-        if (s_motor_out._2 >= 0)
+        if (g_motor_out._2 >= 0)
         {
             LL_GPIO_ResetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
@@ -187,7 +232,7 @@ void PID_Control(void)
         }
 
         // 电机3
-        if (s_motor_out._3 >= 0)
+        if (g_motor_out._3 >= 0)
         {
             LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
@@ -199,7 +244,7 @@ void PID_Control(void)
         }
 
         // 电机4
-        if (s_motor_out._4 >= 0)
+        if (g_motor_out._4 >= 0)
         {
             LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
@@ -213,9 +258,9 @@ void PID_Control(void)
 
     // 输出速度
     {
-        Motor_SetSpeed(MOTOR_1, abs(s_motor_out._1));
-        Motor_SetSpeed(MOTOR_2, abs(s_motor_out._2));
-        Motor_SetSpeed(MOTOR_3, abs(s_motor_out._3));
-        Motor_SetSpeed(MOTOR_4, abs(s_motor_out._4));
+        Motor_SetSpeed(MOTOR_1, fabs(g_motor_out._1));
+        Motor_SetSpeed(MOTOR_2, fabs(g_motor_out._2));
+        Motor_SetSpeed(MOTOR_3, fabs(g_motor_out._3));
+        Motor_SetSpeed(MOTOR_4, fabs(g_motor_out._4));
     }
 }

@@ -25,7 +25,9 @@
 /* USER CODE BEGIN Includes */
 #include <stdlib.h>
 #include "color.h"
+#include "debug.h"
 #include "main.h"
+#include "motor.h"
 #include "pid.h"
 #include "track.h"
 
@@ -276,47 +278,51 @@ void TIM6_IRQHandler(void)
 void TIM7_IRQHandler(void)
 {
     /* USER CODE BEGIN TIM7_IRQn 0 */
-    if (LL_TIM_IsActiveFlag_UPDATE(TIM7)) // 周期为50ms
+    if (LL_TIM_IsActiveFlag_UPDATE(TIM7)) // 周期为20ms
     {
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
-        if (g_break_flag) // 制动状态处理
-        {
-            s_break_timeout_cnt++;
+        PID_Control();
+        PID_Debug_SendData();
+        // g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
 
-            // 获取速度小于阈值
-            if (abs(Motor_GetSpeed(MOTOR_ENCODER_1)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_2)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_3)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_4)) <= BREAK_CPLT)
-            {
-                s_break_cnt++;
+        // if (g_break_flag) // 制动状态处理
+        // {
+        //     s_break_timeout_cnt++;
 
-                if (s_break_cnt >= BREAK_CPLT_CNT) // 多次计数防抖动
-                {
-                    s_break_cnt = 0; // 清除计数
-                    g_break_flag = 0; // 读取到的速度小于阈值则认定制动完成
-                }
-            }
-            else if (s_break_timeout_cnt >= BREAK_MAX_CNT)
-            {
-                s_break_timeout_cnt = 0; // 清除计数
-                g_break_flag = 0; // 超时也认定制动完成
-            }
+        //     // 获取速度小于阈值
+        //     if (abs(Motor_GetSpeed(MOTOR_ENCODER_1)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_2)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_3)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_4)) <= BREAK_CPLT)
+        //     {
+        //         s_break_cnt++;
 
-            return; // 制动状态关闭控制
-        }
+        //         if (s_break_cnt >= BREAK_CPLT_CNT) // 多次计数防抖动
+        //         {
+        //             s_break_cnt = 0; // 清除计数
+        //             g_break_flag = 0; // 读取到的速度小于阈值则认定制动完成
+        //         }
+        //     }
+        //     else if (s_break_timeout_cnt >= BREAK_MAX_CNT)
+        //     {
+        //         s_break_timeout_cnt = 0; // 清除计数
+        //         g_break_flag = 0; // 超时也认定制动完成
+        //     }
 
-        // PID控制和丢线判断
-        if (g_status == TRACK)
-        {
-            if (g_line_reached) // 先到线上再进行丢线判断
-            {
-                ProcessLineLostEvent();
-            }
-            PID_Control();
-        }
-        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
-        {
-            PID_Control();
-        }
+        //     return; // 制动状态关闭控制
+        // }
+
+        // // PID控制和丢线判断
+        // if (g_status == TRACK)
+        // {
+        //     if (g_line_reached) // 先到线上再进行丢线判断
+        //     {
+        //         ProcessLineLostEvent();
+        //     }
+        //     PID_Control();
+        // }
+        // else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+        // {
+        //     PID_Control();
+        // }
     }
     /* USER CODE END TIM7_IRQn 0 */
     /* USER CODE BEGIN TIM7_IRQn 1 */

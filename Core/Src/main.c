@@ -21,12 +21,15 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
+#include "motor.h"
+#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
 #include "usart.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "color.h"
+#include "debug.h"
 #include "ir.h"
 #include "pid.h"
 #include "task.h"
@@ -79,7 +82,7 @@ void SystemClock_Config(void);
 /**
  * @brief 重置状态机
  */
-void Reset(void)
+static void Status_Reset(void)
 {
     g_status = STBY; // 恢复等待状态
     g_return_flag = 0; // 清除返回状态标志位
@@ -141,6 +144,11 @@ int main(void)
     PID_Init(); // 初始化PID参数
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
+
+    Motor1_Start();
+    // Motor_SetSpeed(MOTOR_1, 999);
+
+    TIM7_Start(); // 开启定时器7，用于丢线判断和PID控制
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -148,24 +156,42 @@ int main(void)
     while (1)
     {
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
+        g_motor_tgtspeed._1 = 999;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = -999;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = 0;
+        LL_mDelay(3000);
+        // while (speed <= 999)
+        // {
+        //     g_motor_tgtspeed._1 = speed;
+        //     speed++;
+        //     LL_mDelay(2);
+        // }
+        // while (speed >= -999)
+        // {
+        //     g_motor_tgtspeed._1 = speed;
+        //     speed--;
+        //     LL_mDelay(2);
+        // }
 
         switch (g_status)
         {
         case STBY:
-            if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
-            {
-                uint32_t tick_start = HAL_GetTick();
+            // if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
+            // {
+            //     uint32_t tick_start = HAL_GetTick();
 
-                LL_mDelay(20); // 消抖
-                while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
-                {
-                    if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
-                    {
-                        break;
-                    }
-                }
-                g_status = TRACK; // 进入循迹状态
-            }
+            //     LL_mDelay(20); // 消抖
+            //     while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
+            //     {
+            //         if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
+            //         {
+            //             break; // 直接启动
+            //         }
+            //     }
+            //     g_status = TRACK; // 进入循迹状态
+            // }
             break;
         case TRACK:
             if (!g_motor_startflag) // 如果电机没启动
@@ -311,7 +337,7 @@ void Error_Handler(void)
             Track_Break();
             Track_Stop();
             g_break_flag = 0;
-            Reset();
+            Status_Reset();
             g_status_errorflag = 0;
             break;
         }

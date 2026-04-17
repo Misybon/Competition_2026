@@ -4,6 +4,8 @@
 
 // PWM频率：18KHz
 
+#include "main.h"
+#include "stm32f1xx_ll_gpio.h"
 #include "tim.h"
 
 #define MOTOR_1 TIM_CHANNEL_1
@@ -46,7 +48,8 @@ __STATIC_INLINE void Motor1_Start(void)
     HAL_TIM_PWM_Start(&htim5, MOTOR_1);
 
     // 是否还要下面的函数有待考量...
-    // LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
 }
 
 /**
@@ -184,7 +187,7 @@ __STATIC_INLINE void Motor_SetSpeed(uint32_t Motor, uint32_t Speed)
  */
 __STATIC_INLINE int32_t Motor_GetSpeed(TIM_TypeDef* Motor_Encoder)
 {
-    int32_t speed = LL_TIM_GetCounter(Motor_Encoder);
+    int32_t speed = (int16_t)LL_TIM_GetCounter(Motor_Encoder);
     LL_TIM_SetCounter(Motor_Encoder, 0);
     return speed;
 }
