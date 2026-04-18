@@ -43,13 +43,13 @@ void Track_Stop(void)
  */
 void Track_Break(void)
 {
+    g_break_flag = 1;
+    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
+
     Motor1_Break();
     Motor2_Break();
     Motor3_Break();
     Motor4_Break();
-
-    g_break_flag = 1;
-    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
 }
 
 /**

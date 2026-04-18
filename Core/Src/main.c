@@ -21,6 +21,8 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
+#include "motor.h"
+#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
 #include "usart.h"
 
@@ -157,20 +159,20 @@ int main(void)
         switch (g_status)
         {
         case STBY:
-            if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
-            {
-                uint32_t tick_start = HAL_GetTick();
+            // if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
+            // {
+            //     uint32_t tick_start = HAL_GetTick();
 
-                LL_mDelay(20); // 消抖
-                while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
-                {
-                    if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
-                    {
-                        break; // 直接启动
-                    }
-                }
-                g_status = TRACK; // 进入循迹状态
-            }
+            //     LL_mDelay(20); // 消抖
+            //     while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
+            //     {
+            //         if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
+            //         {
+            //             break; // 直接启动
+            //         }
+            //     }
+            //     g_status = TRACK; // 进入循迹状态
+            // }
             break;
         case TRACK:
             if (!g_motor_startflag) // 如果电机没启动

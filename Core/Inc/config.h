@@ -13,9 +13,9 @@
 // 制动完成判断阈值
 #define BREAK_CPLT (10)
 
-// 制动完成判断计数和超时判断计数，总时间需乘上50ms
-#define BREAK_CPLT_CNT (5)
-#define BREAK_MAX_CNT (20)
+// 制动完成判断计数和超时判断计数，总时间需乘上20ms
+#define BREAK_CPLT_CNT (110)
+#define BREAK_MAX_CNT (250)
 
 // PID计数分频参数（基准周期为TIM7更新周期）
 #define PID_DIV_SPEED_LOW (200) // 低速分频目标速度

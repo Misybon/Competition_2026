@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdlib.h>
 #include "color.h"
+#include "debug.h"
 #include "pid.h"
 #include "track.h"
 
@@ -316,22 +317,7 @@ void TIM7_IRQHandler(void)
     {
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
-        uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
-
-        if (pid_div_ratio == 0)
-        {
-            pid_div_ratio = 1; // 防止除0
-        }
-
-        s_pid_div_cnt++; // 分频计数值+1
-
-        if (s_pid_div_cnt < pid_div_ratio) // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
-        {
-            return;
-        }
-
-        s_pid_div_cnt = 0; // 重置计数值
-        PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
+        PID_Debug_SendData();
 
         if (g_break_flag) // 制动状态处理
         {
@@ -357,19 +343,38 @@ void TIM7_IRQHandler(void)
             return; // 制动状态关闭控制
         }
 
-        // PID控制和丢线判断
-        if (g_status == TRACK)
+        PID_Control();
+
+        uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
+
+        if (pid_div_ratio == 0)
         {
-            if (g_line_reached) // 先到线上再进行丢线判断
-            {
-                ProcessLineLostEvent();
-            }
-            PID_Control();
+            pid_div_ratio = 1; // 防止除0
         }
-        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+
+        s_pid_div_cnt++; // 分频计数值+1
+
+        if (s_pid_div_cnt < pid_div_ratio) // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
         {
-            PID_Control();
+            return;
         }
+
+        s_pid_div_cnt = 0; // 重置计数值
+        PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
+
+        // // PID控制和丢线判断
+        // if (g_status == TRACK)
+        // {
+        //     if (g_line_reached) // 先到线上再进行丢线判断
+        //     {
+        //         ProcessLineLostEvent();
+        //     }
+        //     PID_Control();
+        // }
+        // else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+        // {
+        //     PID_Control();
+        // }
     }
     /* USER CODE END TIM7_IRQn 0 */
     /* USER CODE BEGIN TIM7_IRQn 1 */
