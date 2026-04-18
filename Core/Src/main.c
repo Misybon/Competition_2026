@@ -157,11 +157,13 @@ int main(void)
     {
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
         g_motor_tgtspeed._1 = 999;
-        LL_mDelay(3000);
+        LL_mDelay(5000);
+        g_motor_tgtspeed._1 = 500;
+        LL_mDelay(5000);
+        g_motor_tgtspeed._1 = -500;
+        LL_mDelay(5000);
         g_motor_tgtspeed._1 = -999;
-        LL_mDelay(3000);
-        g_motor_tgtspeed._1 = 0;
-        LL_mDelay(3000);
+        LL_mDelay(5000);
         // while (speed <= 999)
         // {
         //     g_motor_tgtspeed._1 = speed;

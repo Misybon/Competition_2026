@@ -17,9 +17,9 @@
 #define BREAK_CPLT_CNT (5)
 #define BREAK_MAX_CNT (20)
 
-// 电机PID参数(放大256倍)
-#define MOTOR_PID_KP (0.4F)
-#define MOTOR_PID_KI (0.12F)
+// 电机PID参数
+#define MOTOR_PID_KP (0.9F)
+#define MOTOR_PID_KI (0.05F)
 #define MOTOR_PID_KD (0.1F)
 
 // 红外PID参数(放大256倍)
@@ -33,7 +33,7 @@
 #define MOTOR_ENCODER_KP (6.25F)
 
 // 电机速度一阶低通滤波系数(0~1)
-#define MOTOR_SPEED_LPF_ALPHA (0.4F)
+#define MOTOR_SPEED_LPF_ALPHA (0.2F)
 
 // 电机输出死区阈值(PWM计数)
 #define MOTOR_OUT_DEADZONE (10)
