@@ -51,6 +51,7 @@ static struct Motor_PID_Err s_motor_err_1 = { 0 };
 static struct Motor_PID_Err s_motor_err_2 = { 0 };
 static struct Motor_PID_Out s_motor_speed_lpf = { 0 };
 static uint8_t s_motor_speed_lpf_inited = 0;
+static uint8_t s_motor_ctrl_divider = 1;
 
 struct Motor_PID_Out g_motor_out = { 0 };
 
@@ -72,7 +73,24 @@ void PID_Init(void)
     s_motor_err_2 = (struct Motor_PID_Err) { 0 };
     s_motor_speed_lpf = (struct Motor_PID_Out) { 0 };
     s_motor_speed_lpf_inited = 0;
+    s_motor_ctrl_divider = 1;
     g_motor_out = (struct Motor_PID_Out) { 0 };
+}
+
+/**
+ * @brief 设置当前PID控制分频
+ *
+ * @param divider 分频值，最小为1
+ */
+void PID_SetControlDivider(uint32_t divider)
+{
+    if (divider == 0)
+    {
+        s_motor_ctrl_divider = 1;
+        return;
+    }
+
+    s_motor_ctrl_divider = divider;
 }
 
 /**
@@ -100,14 +118,15 @@ void PID_Control(void)
 
     // 电机PID
     {
+        float speed_scale = MOTOR_ENCODER_KP / s_motor_ctrl_divider;
+        float motor_speed_raw_1 = Motor_GetSpeed(MOTOR_ENCODER_1) * speed_scale;
+        float motor_speed_raw_2 = Motor_GetSpeed(MOTOR_ENCODER_2) * speed_scale;
+        float motor_speed_raw_3 = Motor_GetSpeed(MOTOR_ENCODER_3) * speed_scale;
+        float motor_speed_raw_4 = Motor_GetSpeed(MOTOR_ENCODER_4) * speed_scale;
+
         // 获取目标速度
         // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
-        // 乘上比例并做一阶低通，抑制编码器计数离散带来的抖动
-        float motor_speed_raw_1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
-        float motor_speed_raw_2 = Motor_GetSpeed(MOTOR_ENCODER_2) * MOTOR_ENCODER_KP;
-        float motor_speed_raw_3 = Motor_GetSpeed(MOTOR_ENCODER_3) * MOTOR_ENCODER_KP;
-        float motor_speed_raw_4 = Motor_GetSpeed(MOTOR_ENCODER_4) * MOTOR_ENCODER_KP;
-
+        // 乘上比例并做一阶低通
         if (!s_motor_speed_lpf_inited)
         {
             s_motor_speed_lpf._1 = motor_speed_raw_1;
@@ -208,19 +227,29 @@ void PID_Control(void)
     // 设置电机旋转方向
     {
         // 电机1
-        if (g_motor_out._1 >= 0)
+        if (g_motor_out._1 > 0)
         {
             LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
             LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
         }
-        else
+        else if (g_motor_out._1 < 0)
         {
             LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
         }
+        else
+        {
+            LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+            LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+        }
 
         // 电机2
-        if (g_motor_out._2 >= 0)
+        if (g_motor_out._2 > 0)
+        {
+            LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+            LL_GPIO_ResetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+        }
+        else if (g_motor_out._2 < 0)
         {
             LL_GPIO_ResetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
@@ -228,11 +257,16 @@ void PID_Control(void)
         else
         {
             LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
-            LL_GPIO_ResetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+            LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
         }
 
         // 电机3
-        if (g_motor_out._3 >= 0)
+        if (g_motor_out._3 > 0)
+        {
+            LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+            LL_GPIO_ResetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+        }
+        else if (g_motor_out._3 < 0)
         {
             LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
@@ -240,11 +274,16 @@ void PID_Control(void)
         else
         {
             LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
-            LL_GPIO_ResetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+            LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
         }
 
         // 电机4
-        if (g_motor_out._4 >= 0)
+        if (g_motor_out._4 > 0)
+        {
+            LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+            LL_GPIO_ResetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
+        }
+        else if (g_motor_out._4 < 0)
         {
             LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
             LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
@@ -252,7 +291,7 @@ void PID_Control(void)
         else
         {
             LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
-            LL_GPIO_ResetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
+            LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
         }
     }
 

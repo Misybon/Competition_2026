@@ -21,10 +21,9 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "motor.h"
-#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
 #include "usart.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -146,7 +145,6 @@ int main(void)
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
 
     Motor1_Start();
-    // Motor_SetSpeed(MOTOR_1, 999);
 
     TIM7_Start(); // 开启定时器7，用于丢线判断和PID控制
     /* USER CODE END 2 */

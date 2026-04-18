@@ -48,8 +48,8 @@ __STATIC_INLINE void Motor1_Start(void)
     HAL_TIM_PWM_Start(&htim5, MOTOR_1);
 
     // 是否还要下面的函数有待考量...
-    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-    LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+    // LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    // LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
 }
 
 /**

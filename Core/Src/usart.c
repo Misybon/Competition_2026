@@ -23,6 +23,7 @@
 /* USER CODE BEGIN 0 */
 #include "config.h"
 #include "main.h"
+#include "motor.h"
 #include "task.h"
 /* USER CODE END 0 */
 
