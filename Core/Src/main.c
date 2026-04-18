@@ -139,7 +139,6 @@ int main(void)
     MX_TIM6_Init();
     MX_TIM7_Init();
     /* USER CODE BEGIN 2 */
-    // int32_t speed = 0;
     PID_Init(); // 初始化PID参数
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
@@ -154,44 +153,24 @@ int main(void)
     while (1)
     {
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
-        g_motor_tgtspeed._1 = 999;
-        LL_mDelay(5000);
-        g_motor_tgtspeed._1 = 500;
-        LL_mDelay(5000);
-        g_motor_tgtspeed._1 = -500;
-        LL_mDelay(5000);
-        g_motor_tgtspeed._1 = -999;
-        LL_mDelay(5000);
-        // while (speed <= 999)
-        // {
-        //     g_motor_tgtspeed._1 = speed;
-        //     speed++;
-        //     LL_mDelay(2);
-        // }
-        // while (speed >= -999)
-        // {
-        //     g_motor_tgtspeed._1 = speed;
-        //     speed--;
-        //     LL_mDelay(2);
-        // }
 
         switch (g_status)
         {
         case STBY:
-            // if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
-            // {
-            //     uint32_t tick_start = HAL_GetTick();
+            if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
+            {
+                uint32_t tick_start = HAL_GetTick();
 
-            //     LL_mDelay(20); // 消抖
-            //     while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
-            //     {
-            //         if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
-            //         {
-            //             break; // 直接启动
-            //         }
-            //     }
-            //     g_status = TRACK; // 进入循迹状态
-            // }
+                LL_mDelay(20); // 消抖
+                while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
+                {
+                    if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
+                    {
+                        break; // 直接启动
+                    }
+                }
+                g_status = TRACK; // 进入循迹状态
+            }
             break;
         case TRACK:
             if (!g_motor_startflag) // 如果电机没启动
