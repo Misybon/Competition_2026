@@ -42,7 +42,7 @@
 #define PID_DIV_SPEED_MID (500) // 中速分频目标速度
 #define PID_DIV_RATIO_LOW (3) // 低速：3个基准周期执行1次PID
 #define PID_DIV_RATIO_MID (2) // 中速：2个基准周期执行1次PID
-#define PID_DIV_RATIO_HIGH (1) // 高速：每个基准周期都执行PID
+#define PID_DIV_RATIO_HIGH (1) // 高速：1个基准周期执行1次PID
 
 // 红外输出值和底盘角速度对应比例
 #define IR_KP (1)

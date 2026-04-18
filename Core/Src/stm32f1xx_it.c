@@ -49,6 +49,7 @@
 /* USER CODE BEGIN PV */
 static uint8_t s_break_timeout_cnt = 0; // 制动超时计数
 static uint8_t s_break_cnt = 0; // 制动完成计数
+static uint8_t s_pid_div_cnt = 0; // PID分频计数值
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,7 +59,6 @@ static uint8_t s_break_cnt = 0; // 制动完成计数
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-static uint8_t s_pid_div_cnt = 0;
 
 /**
  * @brief 根据目标速度修改PID分频值
@@ -314,28 +314,24 @@ void TIM7_IRQHandler(void)
     /* USER CODE BEGIN TIM7_IRQn 0 */
     if (LL_TIM_IsActiveFlag_UPDATE(TIM7)) // 周期为20ms
     {
-        uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed();
+        LL_TIM_ClearFlag_UPDATE(TIM7);
+
+        uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
 
         if (pid_div_ratio == 0)
         {
-            pid_div_ratio = 1;
+            pid_div_ratio = 1; // 防止除0
         }
 
-        LL_TIM_ClearFlag_UPDATE(TIM7);
-        s_pid_div_cnt++;
+        s_pid_div_cnt++; // 分频计数值+1
 
-        if (s_pid_div_cnt < pid_div_ratio)
+        if (s_pid_div_cnt < pid_div_ratio) // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
         {
-            // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
             return;
         }
 
-        s_pid_div_cnt = 0;
-        PID_SetControlDivider(pid_div_ratio);
-
-        // PID_Control();
-        // PID_Debug_SendData();
-        // g_motor_speed._1 = Motor_GetSpeed(MOTOR_ENCODER_1) * MOTOR_ENCODER_KP;
+        s_pid_div_cnt = 0; // 重置计数值
+        PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
 
         if (g_break_flag) // 制动状态处理
         {
