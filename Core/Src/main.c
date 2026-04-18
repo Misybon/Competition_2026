@@ -24,7 +24,6 @@
 #include "tim.h"
 #include "usart.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "color.h"
@@ -140,6 +139,7 @@ int main(void)
     MX_TIM6_Init();
     MX_TIM7_Init();
     /* USER CODE BEGIN 2 */
+    // int32_t speed = 0;
     PID_Init(); // 初始化PID参数
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...

@@ -18,7 +18,7 @@
 #define BREAK_MAX_CNT (20)
 
 // 电机PID参数
-#define MOTOR_PID_KP (0.15F)
+#define MOTOR_PID_KP (0.18F)
 #define MOTOR_PID_KI (0.012F)
 #define MOTOR_PID_KD (0.006F)
 

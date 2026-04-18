@@ -53,10 +53,5 @@ __STATIC_INLINE void Track_Restart(void)
     // Motor2_Restart();
     // Motor3_Restart();
     // Motor4_Restart();
-
-    for (uint32_t speed = 0; speed <= MAX_VX; speed++) // 坡度启动
-    {
-        g_track_speed.vx = speed;
-        LL_mDelay(1);
-    }
+    g_track_speed.vx = MAX_VX; // 无须坡度启动
 }

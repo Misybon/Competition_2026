@@ -1,6 +1,7 @@
 // 等待完善...
 
 #include "track.h"
+#include "config.h"
 #include "ir.h"
 #include "main.h"
 #include "motor.h"
@@ -22,11 +23,7 @@ void Track_Start(void)
     Motor2_Start();
     Motor3_Start();
     Motor4_Start();
-    for (uint32_t speed = 0; speed <= MAX_VX; speed++) // 坡度启动
-    {
-        g_track_speed.vx = speed;
-        LL_mDelay(1);
-    }
+    g_track_speed.vx = MAX_VX; // 无须坡度启动
     g_motor_startflag = 1;
 }
 
