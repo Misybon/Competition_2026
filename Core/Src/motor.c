@@ -1,5 +1,3 @@
-// 等待完善...
-
 #include "motor.h"
 #include "main.h"
 

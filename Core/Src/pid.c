@@ -49,7 +49,9 @@ static struct Motor_PID s_motor_pid = { 0 };
 static struct Motor_PID_Err s_motor_err_0 = { 0 };
 static struct Motor_PID_Err s_motor_err_1 = { 0 };
 static struct Motor_PID_Err s_motor_err_2 = { 0 };
+
 static struct Motor_PID_Out s_motor_speed_lpf = { 0 };
+
 static uint8_t s_motor_speed_lpf_inited = 0;
 static uint8_t s_motor_ctrl_divider = 1;
 
@@ -118,14 +120,16 @@ void PID_Control(void)
 
     // 电机PID
     {
+        // 获取目标速度
+        // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+
+        // 乘上分频值
         float speed_scale = MOTOR_ENCODER_KP / s_motor_ctrl_divider;
         float motor_speed_raw_1 = Motor_GetSpeed(MOTOR_ENCODER_1) * speed_scale;
         float motor_speed_raw_2 = Motor_GetSpeed(MOTOR_ENCODER_2) * speed_scale;
         float motor_speed_raw_3 = Motor_GetSpeed(MOTOR_ENCODER_3) * speed_scale;
         float motor_speed_raw_4 = Motor_GetSpeed(MOTOR_ENCODER_4) * speed_scale;
 
-        // 获取目标速度
-        // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
         // 乘上比例并做一阶低通
         if (!s_motor_speed_lpf_inited)
         {

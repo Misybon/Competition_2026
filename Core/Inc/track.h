@@ -1,5 +1,3 @@
-// 等待完善...
-
 #pragma once
 
 #include "config.h"
@@ -33,25 +31,10 @@ __STATIC_INLINE void Track_Break_Soft(void)
     g_track_speed.vz = 0;
 }
 
-// /**
-//  * @brief 让电机以给定速度旋转
-//  *
-//  * @param Speed 旋转速度，逆时针为正
-//  */
-// __STATIC_INLINE void Track_Rot_Speed(int32_t Speed)
-// {
-//     g_track_speed.vz = Speed;
-// }
-
 /**
  * @brief 重启循迹
  */
 __STATIC_INLINE void Track_Restart(void)
 {
-    // 是否还要下面四个函数有待考量...
-    // Motor1_Restart();
-    // Motor2_Restart();
-    // Motor3_Restart();
-    // Motor4_Restart();
     g_track_speed.vx = MAX_VX; // 无须坡度启动
 }

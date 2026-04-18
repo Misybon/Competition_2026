@@ -1,11 +1,8 @@
-// 等待完善...
-
 #pragma once
 
 // PWM频率：18KHz
 
 #include "main.h"
-#include "stm32f1xx_ll_gpio.h"
 #include "tim.h"
 
 #define MOTOR_1 TIM_CHANNEL_1
@@ -46,10 +43,6 @@ extern struct Motor_TargetSpeed g_motor_tgtspeed;
 __STATIC_INLINE void Motor1_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_1);
-
-    // 是否还要下面的函数有待考量...
-    // LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-    // LL_GPIO_ResetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
 }
 
 /**
@@ -58,9 +51,6 @@ __STATIC_INLINE void Motor1_Start(void)
 __STATIC_INLINE void Motor2_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_2);
-
-    // 是否还要下面的函数有待考量...
-    // LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
 }
 
 /**
@@ -69,9 +59,6 @@ __STATIC_INLINE void Motor2_Start(void)
 __STATIC_INLINE void Motor3_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_3);
-
-    // 是否还要下面的函数有待考量...
-    // LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
 }
 
 /**
@@ -80,9 +67,6 @@ __STATIC_INLINE void Motor3_Start(void)
 __STATIC_INLINE void Motor4_Start(void)
 {
     HAL_TIM_PWM_Start(&htim5, MOTOR_4);
-
-    // 是否还要下面的函数有待考量...
-    // LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
 }
 
 /**
@@ -135,38 +119,6 @@ __STATIC_INLINE void Motor4_Break(void)
     LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
     __HAL_TIM_SET_COMPARE(&htim5, MOTOR_4, MOTOR_MAX_SPEED);
 }
-
-// /**
-//  * @brief 重启电机1
-//  */
-// __STATIC_INLINE void Motor1_Restart(void)
-// {
-//     LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
-// }
-
-// /**
-//  * @brief 重启电机2
-//  */
-// __STATIC_INLINE void Motor2_Restart(void)
-// {
-//     LL_GPIO_ResetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
-// }
-
-// /**
-//  * @brief 重启电机3
-//  */
-// __STATIC_INLINE void Motor3_Restart(void)
-// {
-//     LL_GPIO_ResetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
-// }
-
-// /**
-//  * @brief 重启电机4
-//  */
-// __STATIC_INLINE void Motor4_Restart(void)
-// {
-//     LL_GPIO_ResetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
-// }
 
 /**
  * @brief 设置电机速度
