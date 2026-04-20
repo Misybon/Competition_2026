@@ -96,33 +96,37 @@ void PID_SetControlDivider(uint32_t divider)
 }
 
 /**
+ * @brief 红外PID控制
+ * 
+ */
+void IR_PID_Control(void)
+{
+    // 获取当前值
+    s_ir_current = -IR_WEIGH_1 * g_ir_val._1 - IR_WEIGH_2 * g_ir_val._2 + IR_WEIGH_3 * g_ir_val._3 + IR_WEIGH_2 * g_ir_val._4 + IR_WEIGH_1 * g_ir_val._5;
+
+    // 计算误差值
+    s_ir_err_2 = s_ir_err_1;
+    s_ir_err_1 = s_ir_err_0;
+    s_ir_err_0 = IR_TGT - s_ir_current;
+
+    // 将放大的输出值按比例减小
+    int32_t ir_delta = s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 * 2) + s_ir_err_2);
+    g_ir_out += (ir_delta >> 8);
+
+    // 根据输出值修改角速度
+    g_track_speed.vz = IR_KP * g_ir_out;
+}
+
+/**
  * @brief 电机和循迹PID控制
  */
-void PID_Control(void)
+void Motor_PID_Control(void)
 {
-    // 红外PID
+    // 获取目标速度
+    // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+
+    // 获取当前速度
     {
-        // 获取当前值
-        s_ir_current = -IR_WEIGH_1 * g_ir_val._1 - IR_WEIGH_2 * g_ir_val._2 + IR_WEIGH_3 * g_ir_val._3 + IR_WEIGH_2 * g_ir_val._4 + IR_WEIGH_1 * g_ir_val._5;
-
-        // 计算误差值
-        s_ir_err_2 = s_ir_err_1;
-        s_ir_err_1 = s_ir_err_0;
-        s_ir_err_0 = IR_TGT - s_ir_current;
-
-        // 将放大的输出值按比例减小
-        int32_t ir_delta = s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 * 2) + s_ir_err_2);
-        g_ir_out += (ir_delta >> 8);
-
-        // 根据输出值修改角速度
-        g_track_speed.vz = IR_KP * g_ir_out;
-    }
-
-    // 电机PID
-    {
-        // 获取目标速度
-        // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
-
         // 乘上分频值
         float speed_scale = MOTOR_ENCODER_KP / s_motor_ctrl_divider;
         float motor_speed_raw_1 = Motor_GetSpeed(MOTOR_ENCODER_1) * speed_scale;
@@ -182,6 +186,7 @@ void PID_Control(void)
         {
             g_motor_out._1 = -MOTOR_MAX_SPEED;
         }
+
         if (g_motor_out._2 > MOTOR_MAX_SPEED)
         {
             g_motor_out._2 = MOTOR_MAX_SPEED;
@@ -190,6 +195,7 @@ void PID_Control(void)
         {
             g_motor_out._2 = -MOTOR_MAX_SPEED;
         }
+
         if (g_motor_out._3 > MOTOR_MAX_SPEED)
         {
             g_motor_out._3 = MOTOR_MAX_SPEED;
@@ -198,6 +204,7 @@ void PID_Control(void)
         {
             g_motor_out._3 = -MOTOR_MAX_SPEED;
         }
+
         if (g_motor_out._4 > MOTOR_MAX_SPEED)
         {
             g_motor_out._4 = MOTOR_MAX_SPEED;

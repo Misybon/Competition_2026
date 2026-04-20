@@ -319,6 +319,8 @@ void TIM7_IRQHandler(void)
 
         PID_Debug_SendData();
 
+        IR_PID_Control(); // 红外PID控制
+
         if (g_break_flag) // 制动状态处理
         {
             s_break_timeout_cnt++;
@@ -343,8 +345,6 @@ void TIM7_IRQHandler(void)
             return; // 制动状态关闭控制
         }
 
-        PID_Control();
-
         uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
 
         if (pid_div_ratio == 0)
@@ -362,19 +362,19 @@ void TIM7_IRQHandler(void)
         s_pid_div_cnt = 0; // 重置计数值
         PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
 
-        // // PID控制和丢线判断
-        // if (g_status == TRACK)
-        // {
-        //     if (g_line_reached) // 先到线上再进行丢线判断
-        //     {
-        //         ProcessLineLostEvent();
-        //     }
-        //     PID_Control();
-        // }
-        // else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
-        // {
-        //     PID_Control();
-        // }
+        // PID控制和丢线判断
+        if (g_status == TRACK)
+        {
+            if (g_line_reached) // 先到线上再进行丢线判断
+            {
+                ProcessLineLostEvent();
+            }
+            Motor_PID_Control();
+        }
+        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+        {
+            Motor_PID_Control();
+        }
     }
     /* USER CODE END TIM7_IRQn 0 */
     /* USER CODE BEGIN TIM7_IRQn 1 */
