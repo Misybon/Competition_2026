@@ -1,6 +1,5 @@
 #include "color.h"
 #include "i2c.h"
-#include "main.h"
 
 #define COLOR_ADDR (0x29 << 1) // 7位地址
 

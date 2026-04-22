@@ -2,7 +2,6 @@
 
 #include "pid.h"
 #include <math.h>
-#include <stdlib.h>
 #include "macnum.h"
 #include "main.h"
 #include "track.h"
@@ -123,7 +122,7 @@ void IR_PID_Control(void)
 void Motor_PID_Control(void)
 {
     // 获取目标速度
-    // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+    Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
 
     // 获取当前速度
     {
@@ -134,7 +133,7 @@ void Motor_PID_Control(void)
         float motor_speed_raw_3 = Motor_GetSpeed(MOTOR_ENCODER_3) * speed_scale;
         float motor_speed_raw_4 = Motor_GetSpeed(MOTOR_ENCODER_4) * speed_scale;
 
-        // 乘上比例并做一阶低通
+        // 一阶低通滤波
         if (!s_motor_speed_lpf_inited)
         {
             s_motor_speed_lpf._1 = motor_speed_raw_1;

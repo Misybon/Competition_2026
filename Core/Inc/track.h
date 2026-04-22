@@ -22,7 +22,7 @@ void ProcessLineLostEvent(void);
 void Track_Rot_Angle(int32_t Angle);
 
 /**
- * @brief 整车软制动(滑行)
+ * @brief 整车软制动(滑行)，只清除速度
  */
 __STATIC_INLINE void Track_Break_Soft(void)
 {

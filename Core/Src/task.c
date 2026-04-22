@@ -3,7 +3,6 @@
 #include "task.h"
 #include "config.h"
 #include "main.h"
-#include "stm32f1xx_hal.h"
 #include "track.h"
 
 static volatile bool s_vision_errorflag = 0; // 视觉错误标志位
@@ -21,14 +20,38 @@ void SendReady(void)
     uint32_t tick_start = HAL_GetTick();
     uint32_t retry = 0; // 重试次数
 
-    while (!(g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K')) // 等待收到应答命令
+    while (1) // 等待收到应答命令
     {
+        if (g_usart_flag) // 解析出新命令
+        {
+            g_usart_flag = 0; // 清除标志位
+
+            if (g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K') // 收到应答命令
+            {
+                break;
+            }
+            else // 否则清除命令
+            {
+                for (uint32_t i = 0; i < BUF_SIZE; i++)
+                {
+                    g_cmd[i] = '\0';
+                }
+            }
+        }
+
         if (HAL_GetTick() - tick_start >= 300) // 300ms超时
         {
             tick_start = HAL_GetTick();
             if (retry >= 10) // 重试次数过多，认定视觉掉线
             {
                 s_vision_errorflag = 1; // 设定标志位
+
+                // 清除命令
+                for (uint32_t i = 0; i < BUF_SIZE; i++)
+                {
+                    g_cmd[i] = '\0';
+                }
+
                 return;
             }
             HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 100); // 重发准备信号
@@ -58,19 +81,25 @@ void FindBasket(void)
         {
             break; // 放弃寻找篮筐
         }
-        else if (g_cmd[5]) // 没找到篮筐
+
+        if (g_usart_flag) // 解析出新命令
         {
-            g_track_speed.vz = MAX_VZ; // 最大速度扫描篮筐
-        }
-        else if (g_cmd[4]) // 对准篮筐
-        {
-            Track_Break(); // 制动
-            break; // 返回
-        }
-        else // 找到篮筐但没对准
-        {
-            uint32_t offset = (uint32_t)0x0000 | (uint32_t)g_cmd[0] | (uint32_t)g_cmd[1] << 8; // 拼接偏移值
-            g_track_speed.vz = OFFSET_KP * offset; // 乘上比例赋予角速度
+            g_usart_flag = 0; // 清除标志位
+
+            if (g_cmd[5]) // 没找到篮筐
+            {
+                g_track_speed.vz = MAX_VZ; // 最大速度扫描篮筐
+            }
+            else if (g_cmd[4]) // 对准篮筐
+            {
+                Track_Break(); // 制动
+                break; // 返回
+            }
+            else // 找到篮筐但没对准
+            {
+                uint32_t offset = (uint32_t)0x0000 | (uint32_t)g_cmd[0] | (uint32_t)g_cmd[1] << 8; // 拼接偏移值
+                g_track_speed.vz = OFFSET_KP * offset; // 乘上比例赋予角速度
+            }
         }
 
         if (HAL_GetTick() - tick_start >= 1000) // 单次超时1000ms
@@ -84,8 +113,6 @@ void FindBasket(void)
             }
         }
     }
-
-    HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
 }
 
 /**
@@ -103,4 +130,6 @@ void Throw(void)
     {
         SendReturn(); // 发送返回指令
     }
+
+    HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
 }

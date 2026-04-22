@@ -72,6 +72,8 @@ volatile uint8_t g_corner_count = 0; // 转弯计数
 uint8_t g_rx_data[BUF_SIZE] = { 0 }; // 串口接收缓冲区
 volatile uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
 
+volatile bool g_usart_flag = 0; // 是否解析出一帧命令
+
 volatile TRACK_STATUS g_status = STBY; // 等待启动
 /* USER CODE END PV */
 
@@ -233,6 +235,7 @@ int main(void)
                 Track_Stop(); // 关闭PWM输出
                 Color_Stop(); // 关闭颜色传感器
                 LL_mDelay(3000); // 等待制动完成
+                Status_Reset(); // 重置
             }
             else if (!g_color_status) // 如果没有开启颜色传感器
             {

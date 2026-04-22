@@ -1,5 +1,4 @@
 #include "ir.h"
-#include <stdint.h>
 #include "main.h"
 
 struct IR_Val

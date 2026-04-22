@@ -1,5 +1,4 @@
 #include "motor.h"
-#include "main.h"
 
 struct Motor_TargetSpeed g_motor_tgtspeed = { 0 };
 

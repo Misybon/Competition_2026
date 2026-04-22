@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
+#include "main.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -191,6 +192,9 @@ static void ReadCmd(void)
             {
                 g_cmd[j - i - 3] = g_rx_data[j];
             }
+
+            g_usart_flag = 1; // 解析出新命令，置位标志位
+
             return;
         }
     }

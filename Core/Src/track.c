@@ -2,8 +2,6 @@
 
 #include "track.h"
 #include "config.h"
-#include "ir.h"
-#include "main.h"
 #include "motor.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
@@ -43,8 +41,12 @@ void Track_Stop(void)
  */
 void Track_Break(void)
 {
-    g_break_flag = 1;
-    g_track_speed.vx = g_track_speed.vy = g_track_speed.vz = 0;
+    g_break_flag = 1; // 置位制动标志位
+
+    // 清零目标速度
+    g_track_speed.vx = 0;
+    g_track_speed.vy = 0;
+    g_track_speed.vz = 0;
 
     Motor1_Break();
     Motor2_Break();
@@ -80,7 +82,7 @@ void Track_Rot_Angle(int32_t Angle)
     else if (Angle == 180)
     {
         g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
-        while (g_ir_val._3) // 等待中间红外传感器识别到黑线
+        while (g_ir_val._2) // 等待红外传感器识别到黑线
         {
             IR_GetVal(); // 更新红外值
         }
