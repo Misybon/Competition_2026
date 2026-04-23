@@ -1,7 +1,10 @@
 // 等待完善...
 
+// 注意到电机离线时，特定情况下Out输出会出现严重问题，需要根据实际情况考虑是否修复...
+
 #include "pid.h"
 #include <math.h>
+#include <stdlib.h>
 #include "macnum.h"
 #include "main.h"
 #include "track.h"
@@ -76,6 +79,42 @@ void PID_Init(void)
     s_motor_speed_lpf_inited = 0;
     s_motor_ctrl_divider = 1;
     g_motor_out = (struct Motor_PID_Out) { 0 };
+}
+
+/**
+ * @brief 根据目标速度修改PID分频值
+ */
+uint32_t PID_GetDivRatioByTargetSpeed(void)
+{
+    uint32_t abs_tgt_1 = abs(g_motor_tgtspeed._1);
+    uint32_t abs_tgt_2 = abs(g_motor_tgtspeed._2);
+    uint32_t abs_tgt_3 = abs(g_motor_tgtspeed._3);
+    uint32_t abs_tgt_4 = abs(g_motor_tgtspeed._4);
+    uint32_t abs_tgt_max = abs_tgt_1;
+
+    if (abs_tgt_2 > abs_tgt_max)
+    {
+        abs_tgt_max = abs_tgt_2;
+    }
+    if (abs_tgt_3 > abs_tgt_max)
+    {
+        abs_tgt_max = abs_tgt_3;
+    }
+    if (abs_tgt_4 > abs_tgt_max)
+    {
+        abs_tgt_max = abs_tgt_4;
+    }
+
+    if (abs_tgt_max <= PID_DIV_SPEED_LOW)
+    {
+        return PID_DIV_RATIO_LOW;
+    }
+    if (abs_tgt_max <= PID_DIV_SPEED_MID)
+    {
+        return PID_DIV_RATIO_MID;
+    }
+
+    return PID_DIV_RATIO_HIGH;
 }
 
 /**

@@ -43,7 +43,7 @@
 // 电机线速度和PWM占空比对应比例
 #define MOTOR_KP (1)
 // 电机编码器读取值和PWM占空比对应比例
-#define MOTOR_ENCODER_KP (6.71F)
+#define MOTOR_ENCODER_KP (5.9F)
 
 // 红外输出值和底盘角速度对应比例
 #define IR_KP (1)

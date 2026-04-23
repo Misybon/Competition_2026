@@ -61,42 +61,6 @@ static uint8_t s_pid_div_cnt = 0; // PID分频计数值
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/**
- * @brief 根据目标速度修改PID分频值
- */
-__STATIC_INLINE uint8_t PID_GetDivRatioByTargetSpeed(void)
-{
-    uint32_t abs_tgt_1 = abs(g_motor_tgtspeed._1);
-    uint32_t abs_tgt_2 = abs(g_motor_tgtspeed._2);
-    uint32_t abs_tgt_3 = abs(g_motor_tgtspeed._3);
-    uint32_t abs_tgt_4 = abs(g_motor_tgtspeed._4);
-    uint32_t abs_tgt_max = abs_tgt_1;
-
-    if (abs_tgt_2 > abs_tgt_max)
-    {
-        abs_tgt_max = abs_tgt_2;
-    }
-    if (abs_tgt_3 > abs_tgt_max)
-    {
-        abs_tgt_max = abs_tgt_3;
-    }
-    if (abs_tgt_4 > abs_tgt_max)
-    {
-        abs_tgt_max = abs_tgt_4;
-    }
-
-    if (abs_tgt_max <= PID_DIV_SPEED_LOW)
-    {
-        return PID_DIV_RATIO_LOW;
-    }
-    if (abs_tgt_max <= PID_DIV_SPEED_MID)
-    {
-        return PID_DIV_RATIO_MID;
-    }
-
-    return PID_DIV_RATIO_HIGH;
-}
-
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -318,7 +282,6 @@ void TIM7_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
         PID_Debug_SendData();
-
         IR_PID_Control(); // 红外PID控制
 
         if (g_break_flag) // 制动状态处理

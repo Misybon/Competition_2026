@@ -54,7 +54,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* USER CODE BEGIN Prototypes */
 
 /**
- * @brief 开启Timer6
+ * @brief 开启定时器6
  */
 __STATIC_INLINE void TIM6_Start(void)
 {
@@ -63,7 +63,7 @@ __STATIC_INLINE void TIM6_Start(void)
 }
 
 /**
- * @brief 关闭Timer6
+ * @brief 关闭定时器6
  */
 __STATIC_INLINE void TIM6_Stop(void)
 {
@@ -71,7 +71,7 @@ __STATIC_INLINE void TIM6_Stop(void)
 }
 
 /**
- * @brief 开启Timer7
+ * @brief 开启定时器7
  */
 __STATIC_INLINE void TIM7_Start(void)
 {
@@ -81,6 +81,9 @@ __STATIC_INLINE void TIM7_Start(void)
     LL_TIM_EnableCounter(TIM7);
 }
 
+/**
+ * @brief 关闭定时器7
+ */
 __STATIC_INLINE void TIM7_Stop(void)
 {
     LL_TIM_DisableCounter(TIM7);
