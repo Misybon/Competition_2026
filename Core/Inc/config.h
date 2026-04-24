@@ -26,7 +26,7 @@
 
 // 电机PID参数
 #define MOTOR_PID_KP (0.18F)
-#define MOTOR_PID_KI (0.012F)
+#define MOTOR_PID_KI (0.018F)
 #define MOTOR_PID_KD (0.006F)
 
 // 电机速度一阶低通滤波系数(0~1)
@@ -34,6 +34,11 @@
 
 // 电机输出死区阈值(PWM计数)
 #define MOTOR_OUT_DEADZONE (10)
+
+// 电机启动超时计数
+#define MOTOR_START_TIMEOUT_CNT (20)
+// 电机强制启动倍率
+#define MOTOR_FORCE_START_BOOST (100)
 
 // 红外PID参数(放大256倍)
 #define IR_PID_KP (0)
@@ -43,7 +48,7 @@
 // 电机线速度和PWM占空比对应比例
 #define MOTOR_KP (1)
 // 电机编码器读取值和PWM占空比对应比例
-#define MOTOR_ENCODER_KP (5.9F)
+#define MOTOR_ENCODER_KP (5.8F)
 
 // 红外输出值和底盘角速度对应比例
 #define IR_KP (1)

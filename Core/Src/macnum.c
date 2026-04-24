@@ -20,6 +20,7 @@ void Move_Transform(int32_t Vx, int32_t Vy, int32_t Vz)
     g_motor_tgtspeed._3 = Vx + Vy + Vz * ROT_PARAM / 100000;
     g_motor_tgtspeed._4 = Vx - Vy + Vz * ROT_PARAM / 100000;
 
+    // 换算到PWM占空比
     g_motor_tgtspeed._1 *= MOTOR_KP;
     g_motor_tgtspeed._2 *= MOTOR_KP;
     g_motor_tgtspeed._3 *= MOTOR_KP;

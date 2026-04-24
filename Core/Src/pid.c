@@ -5,8 +5,11 @@
 #include "pid.h"
 #include <math.h>
 #include <stdlib.h>
+#include "config.h"
 #include "macnum.h"
 #include "main.h"
+#include "motor.h"
+#include "stm32f1xx_hal.h"
 #include "track.h"
 
 struct IR_PID
@@ -14,6 +17,14 @@ struct IR_PID
     uint16_t kp;
     uint16_t ki;
     uint16_t kd;
+};
+
+struct Motor_Start_Timeout
+{
+    uint32_t _1;
+    uint32_t _2;
+    uint32_t _3;
+    uint32_t _4;
 };
 
 static int32_t s_ir_current = 0;
@@ -46,6 +57,8 @@ struct Motor_PID_Out
     float _4;
 };
 
+static struct Motor_Start_Timeout s_motor_start_timeout = { 0 };
+
 static struct Motor_PID s_motor_pid = { 0 };
 
 static struct Motor_PID_Err s_motor_err_0 = { 0 };
@@ -76,9 +89,10 @@ void PID_Init(void)
     s_motor_err_1 = (struct Motor_PID_Err) { 0 };
     s_motor_err_2 = (struct Motor_PID_Err) { 0 };
     s_motor_speed_lpf = (struct Motor_PID_Out) { 0 };
+    g_motor_out = (struct Motor_PID_Out) { 0 };
+    s_motor_start_timeout = (struct Motor_Start_Timeout) { 0 };
     s_motor_speed_lpf_inited = 0;
     s_motor_ctrl_divider = 1;
-    g_motor_out = (struct Motor_PID_Out) { 0 };
 }
 
 /**
@@ -161,7 +175,7 @@ void IR_PID_Control(void)
 void Motor_PID_Control(void)
 {
     // 获取目标速度
-    Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+    // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
 
     // 获取当前速度
     {
@@ -212,6 +226,65 @@ void Motor_PID_Control(void)
         g_motor_out._2 += s_motor_pid.kp * (s_motor_err_0._2 - s_motor_err_1._2) + s_motor_pid.ki * s_motor_err_0._2 + s_motor_pid.kd * (s_motor_err_0._2 - (s_motor_err_1._2 * 2) + s_motor_err_2._2);
         g_motor_out._3 += s_motor_pid.kp * (s_motor_err_0._3 - s_motor_err_1._3) + s_motor_pid.ki * s_motor_err_0._3 + s_motor_pid.kd * (s_motor_err_0._3 - (s_motor_err_1._3 * 2) + s_motor_err_2._3);
         g_motor_out._4 += s_motor_pid.kp * (s_motor_err_0._4 - s_motor_err_1._4) + s_motor_pid.ki * s_motor_err_0._4 + s_motor_pid.kd * (s_motor_err_0._4 - (s_motor_err_1._4 * 2) + s_motor_err_2._4);
+    }
+
+    // 电机超时未启动则强制启动
+    {
+        if (abs(g_motor_speed._1) <= BREAK_CPLT && g_motor_tgtspeed._1 != 0) // 实际速度小于阈值且目标速度不为0
+        {
+            s_motor_start_timeout._1++; // 进行计数
+            if (s_motor_start_timeout._1 >= MOTOR_START_TIMEOUT_CNT) // 超时未启动
+            {
+                g_motor_out._1 += g_motor_tgtspeed._1 > 0 ? MOTOR_FORCE_START_BOOST : -MOTOR_FORCE_START_BOOST; // 加脉冲强制启动
+                s_motor_start_timeout._1 = 0; // 清除计数
+            }
+        }
+        else
+        {
+            s_motor_start_timeout._1 = 0; // 清除计数
+        }
+
+        if (abs(g_motor_speed._2) <= BREAK_CPLT && g_motor_tgtspeed._2 != 0)
+        {
+            s_motor_start_timeout._2++;
+            if (s_motor_start_timeout._2 >= MOTOR_START_TIMEOUT_CNT)
+            {
+                g_motor_out._2 += g_motor_tgtspeed._2 > 0 ? MOTOR_FORCE_START_BOOST : -MOTOR_FORCE_START_BOOST;
+                s_motor_start_timeout._2 = 0;
+            }
+        }
+        else
+        {
+            s_motor_start_timeout._2 = 0;
+        }
+
+        if (abs(g_motor_speed._3) <= BREAK_CPLT && g_motor_tgtspeed._3 != 0)
+        {
+            s_motor_start_timeout._3++;
+            if (s_motor_start_timeout._3 >= MOTOR_START_TIMEOUT_CNT)
+            {
+                g_motor_out._3 += g_motor_tgtspeed._3 > 0 ? MOTOR_FORCE_START_BOOST : -MOTOR_FORCE_START_BOOST;
+                s_motor_start_timeout._3 = 0;
+            }
+        }
+        else
+        {
+            s_motor_start_timeout._3 = 0;
+        }
+
+        if (abs(g_motor_speed._4) <= BREAK_CPLT && g_motor_tgtspeed._4 != 0)
+        {
+            s_motor_start_timeout._4++;
+            if (s_motor_start_timeout._4 >= MOTOR_START_TIMEOUT_CNT)
+            {
+                g_motor_out._4 += g_motor_tgtspeed._4 > 0 ? MOTOR_FORCE_START_BOOST : -MOTOR_FORCE_START_BOOST;
+                s_motor_start_timeout._4 = 0;
+            }
+        }
+        else
+        {
+            s_motor_start_timeout._4 = 0;
+        }
     }
 
     // 输出限幅

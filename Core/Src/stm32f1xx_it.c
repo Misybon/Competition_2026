@@ -325,6 +325,8 @@ void TIM7_IRQHandler(void)
         s_pid_div_cnt = 0; // 重置计数值
         PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
 
+        // Motor_PID_Control();
+
         // PID控制和丢线判断
         if (g_status == TRACK)
         {
