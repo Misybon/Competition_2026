@@ -1,6 +1,7 @@
 // 等待完善...
 
 // 注意到电机离线时，特定情况下Out输出会出现严重问题，需要根据实际情况考虑是否修复...
+// 需要根据实际情况考虑是否加入强制启动后撤销启动脉冲增量的代码...
 
 #include "pid.h"
 #include <math.h>
@@ -8,8 +9,6 @@
 #include "config.h"
 #include "macnum.h"
 #include "main.h"
-#include "motor.h"
-#include "stm32f1xx_hal.h"
 #include "track.h"
 
 struct IR_PID
@@ -175,7 +174,7 @@ void IR_PID_Control(void)
 void Motor_PID_Control(void)
 {
     // 获取目标速度
-    // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+    Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
 
     // 获取当前速度
     {
@@ -230,6 +229,7 @@ void Motor_PID_Control(void)
 
     // 电机超时未启动则强制启动
     {
+        // 电机1
         if (abs(g_motor_speed._1) <= BREAK_CPLT && g_motor_tgtspeed._1 != 0) // 实际速度小于阈值且目标速度不为0
         {
             s_motor_start_timeout._1++; // 进行计数
@@ -244,6 +244,7 @@ void Motor_PID_Control(void)
             s_motor_start_timeout._1 = 0; // 清除计数
         }
 
+        // 电机2
         if (abs(g_motor_speed._2) <= BREAK_CPLT && g_motor_tgtspeed._2 != 0)
         {
             s_motor_start_timeout._2++;
@@ -258,6 +259,7 @@ void Motor_PID_Control(void)
             s_motor_start_timeout._2 = 0;
         }
 
+        // 电机3
         if (abs(g_motor_speed._3) <= BREAK_CPLT && g_motor_tgtspeed._3 != 0)
         {
             s_motor_start_timeout._3++;
@@ -272,6 +274,7 @@ void Motor_PID_Control(void)
             s_motor_start_timeout._3 = 0;
         }
 
+        // 电机4
         if (abs(g_motor_speed._4) <= BREAK_CPLT && g_motor_tgtspeed._4 != 0)
         {
             s_motor_start_timeout._4++;
@@ -289,6 +292,7 @@ void Motor_PID_Control(void)
 
     // 输出限幅
     {
+        // 电机1
         if (g_motor_out._1 > MOTOR_MAX_SPEED)
         {
             g_motor_out._1 = MOTOR_MAX_SPEED;
@@ -298,6 +302,7 @@ void Motor_PID_Control(void)
             g_motor_out._1 = -MOTOR_MAX_SPEED;
         }
 
+        // 电机2
         if (g_motor_out._2 > MOTOR_MAX_SPEED)
         {
             g_motor_out._2 = MOTOR_MAX_SPEED;
@@ -307,6 +312,7 @@ void Motor_PID_Control(void)
             g_motor_out._2 = -MOTOR_MAX_SPEED;
         }
 
+        // 电机3
         if (g_motor_out._3 > MOTOR_MAX_SPEED)
         {
             g_motor_out._3 = MOTOR_MAX_SPEED;
@@ -316,6 +322,7 @@ void Motor_PID_Control(void)
             g_motor_out._3 = -MOTOR_MAX_SPEED;
         }
 
+        // 电机4
         if (g_motor_out._4 > MOTOR_MAX_SPEED)
         {
             g_motor_out._4 = MOTOR_MAX_SPEED;
