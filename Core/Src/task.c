@@ -7,7 +7,6 @@
 
 static volatile bool s_vision_errorflag = 0; // 视觉错误标志位
 
-// 加校验和位
 const uint8_t TASK_READY[5] = { 0xAA, 0x55, 0x01, 0x01, 0x02 };
 const uint8_t TASK_RETURN[5] = { 0xAA, 0x55, 0x01, 0x02, 0x03 };
 const uint8_t TASK_ACK[5] = { 0xAA, 0x55, 0x01, 'A', 0x42 };
@@ -54,17 +53,12 @@ void SendReady(void)
 
                 return;
             }
-            HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 100); // 重发准备信号
+            HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 50); // 重发准备信号
             retry++; // 重试计数+1
         }
     }
 
     s_vision_errorflag = 0; // 视觉在线
-
-    // 清除应答命令
-    g_cmd[0] = '\0';
-    g_cmd[1] = '\0';
-    g_cmd[2] = '\0';
 }
 
 /**

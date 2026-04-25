@@ -18,14 +18,6 @@ struct IR_PID
     uint16_t kd;
 };
 
-struct Motor_Start_Timeout
-{
-    uint32_t _1;
-    uint32_t _2;
-    uint32_t _3;
-    uint32_t _4;
-};
-
 static int32_t s_ir_current = 0;
 static int32_t s_ir_err_0 = 0;
 static int32_t s_ir_err_1 = 0;
@@ -54,6 +46,14 @@ struct Motor_PID_Out
     float _2;
     float _3;
     float _4;
+};
+
+struct Motor_Start_Timeout
+{
+    uint32_t _1;
+    uint32_t _2;
+    uint32_t _3;
+    uint32_t _4;
 };
 
 static struct Motor_Start_Timeout s_motor_start_timeout = { 0 };

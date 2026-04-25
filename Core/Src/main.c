@@ -95,6 +95,7 @@ static void Status_Reset(void)
     g_throw_area_flag = 0; // 清除到达投掷区域标志位
     g_color_status = 0; // 清除颜色传感器状态标志位
     g_motor_startflag = 0; // 清除电机启动标志位
+    PID_Init(); // 再次初始化PID
 }
 /* USER CODE END PFP */
 
