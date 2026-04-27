@@ -28,12 +28,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "color.h"
-#include "debug.h"
-#include "ir.h"
 #include "pid.h"
-#include "task.h"
-#include "track.h"
+#include "state_handler.h"
 
 /* USER CODE END Includes */
 
@@ -55,26 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern DMA_HandleTypeDef hdma_usart3_rx;
-
-volatile bool g_motor_startflag = 0; // 电机标志位
-volatile bool g_color_status = 0; // 颜色传感器标志位
-
-volatile bool g_status_errorflag = 0; // 状态机错误标志位
-
-volatile bool g_line_reached = 0; // 是否已经到达线上
-volatile bool g_start_area_flag = 0; // 是否处于开始区
-volatile bool g_throw_area_flag = 0; // 是否处于投掷区
-volatile bool g_return_flag = 0; // 是否处于返回过程
-
-volatile uint8_t g_corner_count = 0; // 转弯计数
-
-uint8_t g_rx_data[BUF_SIZE] = { 0 }; // 串口接收缓冲区
-volatile uint8_t g_cmd[BUF_SIZE] = { 0 }; // 解析出来的命令
-
-volatile bool g_usart_flag = 0; // 是否解析出一帧命令
-
 volatile TRACK_STATUS g_status = STBY; // 等待启动
+extern volatile bool g_status_errorflag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -84,7 +62,7 @@ void SystemClock_Config(void);
 /**
  * @brief 重置状态机
  */
-static void Status_Reset(void)
+void Status_Reset(void)
 {
     g_status = STBY; // 恢复等待状态
     g_return_flag = 0; // 清除返回状态标志位
@@ -174,91 +152,22 @@ int main(void)
         switch (g_status)
         {
         case STBY:
-            // if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
-            // {
-            //     uint32_t tick_start = HAL_GetTick();
-
-            //     LL_mDelay(20); // 消抖
-            //     while (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 阻塞等待释放按钮
-            //     {
-            //         if (HAL_GetTick() - tick_start >= 2000) // 超时2000ms
-            //         {
-            //             break; // 直接启动
-            //         }
-            //     }
-            //     g_status = TRACK; // 进入循迹状态
-            // }
+            STBY_Handler();
             break;
         case TRACK:
-            if (!g_motor_startflag) // 如果电机没启动
-            {
-                if (!g_return_flag) // 如果不在返回状态
-                {
-                    TIM7_Start(); // 开启定时器7，用于丢线判断和PID控制
-                }
-                Track_Start(); // 开始循迹
-                while (!IsLineLost()) // 先进入线上
-                {
-                }
-                g_line_reached = 1; // 设置标志位
-            }
+            TRACK_Handler();
             break;
         case CORNER:
-            Track_Break_Soft(); // 软制动
-            if (!g_return_flag) // 如果不处于返回状态
-            {
-                Track_Rot_Angle(-90); // 顺时针旋转90°
-            }
-            else // 处于返回状态
-            {
-                Track_Rot_Angle(90); // 逆时针旋转90°
-            }
-            g_corner_count++; // 转弯计数+1
-            Track_Restart(); // 重启循迹
-            g_status = TRACK; // 返回循迹状态
+            CORNER_Handler();
             break;
         case THROW_PREPARE:
-            if (g_throw_area_flag) // 如果到达了投掷区
-            {
-                Track_Break(); // 制动
-                TIM6_Stop(); // 关闭定时器6
-                Color_Stop(); // 关闭颜色传感器
-                g_corner_count = 0; // 重置转弯计数
-                g_status = THROW_WAIT; // 进入准备投掷状态
-            }
-            else if (!g_color_status) // 如果没有开启颜色传感器
-            {
-                Color_Start(); // 唤醒颜色传感器
-                TIM6_Start(); // 开启定时器6，用于定时扫描颜色
-            }
+            THROW_PREPARE_Handler();
             break;
         case THROW_WAIT:
-            HAL_UARTEx_ReceiveToIdle_DMA(&huart3, g_rx_data, sizeof(g_rx_data) / sizeof(uint8_t)); // 准备接收应答
-            __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT); // 关闭半传输中断
-            SendReady(); // 发送准备信号
-            FindBasket(); // 寻找篮筐
-            Throw(); // 投掷弹丸
-            g_return_flag = 1; // 设置返回标志位
-            Track_Rot_Angle(180); // 转身离开
-            Track_Restart(); // 重启循迹
-            g_status = TRACK; // 返回循迹状态
+            THROW_WAIT_Handler();
             break;
         case STOP_PREPARE:
-            if (g_start_area_flag) // 如果回到了开始区
-            {
-                Track_Break(); // 制动
-                TIM6_Stop(); // 关闭定时器6
-                TIM7_Stop(); // 关闭定时器7
-                Track_Stop(); // 关闭PWM输出
-                Color_Stop(); // 关闭颜色传感器
-                LL_mDelay(3000); // 等待制动完成
-                Status_Reset(); // 重置
-            }
-            else if (!g_color_status) // 如果没有开启颜色传感器
-            {
-                Color_Start(); // 唤醒颜色传感器
-                TIM6_Start(); // 开启定时器6，用于定时扫描颜色
-            }
+            STOP_PREPARE_Handler();
             break;
         default:
             g_status_errorflag = 1; // 状态机出错

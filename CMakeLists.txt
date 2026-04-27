@@ -53,6 +53,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/track.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/task.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Core/src/macnum.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/state_handler.c
 )
 
 # Add include paths

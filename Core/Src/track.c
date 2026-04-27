@@ -3,10 +3,10 @@
 #include "track.h"
 #include "config.h"
 #include "motor.h"
+#include "state_handler.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
 
-extern volatile bool g_motor_startflag;
 extern volatile bool g_status_errorflag;
 
 struct Track_Speed g_track_speed = { 0 };

@@ -29,6 +29,7 @@
 #include "debug.h"
 #include "motor.h"
 #include "pid.h"
+#include "state_handler.h"
 #include "track.h"
 
 /* USER CODE END Includes */
@@ -283,14 +284,13 @@ void TIM7_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
         PID_Debug_SendData();
-        IR_PID_Control(); // 红外PID控制
 
         if (g_break_flag) // 制动状态处理
         {
             s_break_timeout_cnt++;
 
             // 获取速度小于阈值
-            if (abs(Motor_GetSpeed(MOTOR_ENCODER_1)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_2)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_3)) <= BREAK_CPLT && abs(Motor_GetSpeed(MOTOR_ENCODER_4)) <= BREAK_CPLT)
+            if (Track_Break_Cplt())
             {
                 s_break_cnt++;
 
@@ -309,24 +309,7 @@ void TIM7_IRQHandler(void)
             return; // 制动状态关闭控制
         }
 
-        // uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
-
-        // if (pid_div_ratio == 0)
-        // {
-        //     pid_div_ratio = 1; // 防止除0
-        // }
-
-        // s_pid_div_cnt++; // 分频计数值+1
-
-        // if (s_pid_div_cnt < pid_div_ratio) // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
-        // {
-        //     return;
-        // }
-
-        // s_pid_div_cnt = 0; // 重置计数值
-        // PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
-
-        Motor_PID_Control();
+        PID_Control();
 
         // // PID控制和丢线判断
         // if (g_status == TRACK)

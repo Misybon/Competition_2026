@@ -19,7 +19,7 @@
 
 // 电机PID参数(放大256倍)
 #define MOTOR_PID_KP (300)
-#define MOTOR_PID_KI (100)
+#define MOTOR_PID_KI (80)
 #define MOTOR_PID_KD (88)
 
 // 红外PID参数(放大256倍)

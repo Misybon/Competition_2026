@@ -3,6 +3,7 @@
 #include "task.h"
 #include "config.h"
 #include "main.h"
+#include "state_handler.h"
 #include "track.h"
 
 static volatile bool s_vision_errorflag = 0; // 视觉错误标志位
