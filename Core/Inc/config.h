@@ -17,28 +17,10 @@
 #define BREAK_CPLT_CNT (110)
 #define BREAK_MAX_CNT (250)
 
-// PID计数分频参数（基准周期为TIM7更新周期）
-#define PID_DIV_SPEED_LOW (200) // 低速分频目标速度
-#define PID_DIV_SPEED_MID (500) // 中速分频目标速度
-#define PID_DIV_RATIO_LOW (3) // 低速：3个基准周期执行1次PID
-#define PID_DIV_RATIO_MID (2) // 中速：2个基准周期执行1次PID
-#define PID_DIV_RATIO_HIGH (1) // 高速：1个基准周期执行1次PID
-
-// 电机PID参数
-#define MOTOR_PID_KP (0.18F)
-#define MOTOR_PID_KI (0.018F)
-#define MOTOR_PID_KD (0.006F)
-
-// 电机速度一阶低通滤波系数(0~1)
-#define MOTOR_SPEED_LPF_ALPHA (0.25F)
-
-// 电机输出死区阈值(PWM计数)
-#define MOTOR_OUT_DEADZONE (10)
-
-// 电机启动超时计数
-#define MOTOR_START_TIMEOUT_CNT (20)
-// 电机强制启动倍率
-#define MOTOR_FORCE_START_BOOST (100)
+// 电机PID参数(放大256倍)
+#define MOTOR_PID_KP (300)
+#define MOTOR_PID_KI (100)
+#define MOTOR_PID_KD (88)
 
 // 红外PID参数(放大256倍)
 #define IR_PID_KP (0)
@@ -48,7 +30,7 @@
 // 电机线速度和PWM占空比对应比例
 #define MOTOR_KP (1)
 // 电机编码器读取值和PWM占空比对应比例
-#define MOTOR_ENCODER_KP (5.8F)
+#define MOTOR_ENCODER_KP (6)
 
 // 红外输出值和底盘角速度对应比例
 #define IR_KP (1)

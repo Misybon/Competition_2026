@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_it.h"
+#include "config.h"
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -26,6 +27,7 @@
 #include <stdlib.h>
 #include "color.h"
 #include "debug.h"
+#include "motor.h"
 #include "pid.h"
 #include "track.h"
 
@@ -50,7 +52,6 @@
 /* USER CODE BEGIN PV */
 static uint8_t s_break_timeout_cnt = 0; // 制动超时计数
 static uint8_t s_break_cnt = 0; // 制动完成计数
-static uint8_t s_pid_div_cnt = 0; // PID分频计数值
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -308,38 +309,38 @@ void TIM7_IRQHandler(void)
             return; // 制动状态关闭控制
         }
 
-        uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
+        // uint32_t pid_div_ratio = PID_GetDivRatioByTargetSpeed(); // 根据目标速度获取当前分频值
 
-        if (pid_div_ratio == 0)
-        {
-            pid_div_ratio = 1; // 防止除0
-        }
+        // if (pid_div_ratio == 0)
+        // {
+        //     pid_div_ratio = 1; // 防止除0
+        // }
 
-        s_pid_div_cnt++; // 分频计数值+1
+        // s_pid_div_cnt++; // 分频计数值+1
 
-        if (s_pid_div_cnt < pid_div_ratio) // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
-        {
-            return;
-        }
+        // if (s_pid_div_cnt < pid_div_ratio) // 跳过PID时不清编码器计数，累积长时间窗以提升测速精度
+        // {
+        //     return;
+        // }
 
-        s_pid_div_cnt = 0; // 重置计数值
-        PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
+        // s_pid_div_cnt = 0; // 重置计数值
+        // PID_SetControlDivider(pid_div_ratio); // 设置PID分频值
 
-        // Motor_PID_Control();
+        Motor_PID_Control();
 
-        // PID控制和丢线判断
-        if (g_status == TRACK)
-        {
-            if (g_line_reached) // 先到线上再进行丢线判断
-            {
-                ProcessLineLostEvent();
-            }
-            Motor_PID_Control();
-        }
-        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
-        {
-            Motor_PID_Control();
-        }
+        // // PID控制和丢线判断
+        // if (g_status == TRACK)
+        // {
+        //     if (g_line_reached) // 先到线上再进行丢线判断
+        //     {
+        //         ProcessLineLostEvent();
+        //     }
+        //     Motor_PID_Control();
+        // }
+        // else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+        // {
+        //     Motor_PID_Control();
+        // }
     }
     /* USER CODE END TIM7_IRQn 0 */
     /* USER CODE BEGIN TIM7_IRQn 1 */

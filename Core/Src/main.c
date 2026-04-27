@@ -21,9 +21,10 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
+#include "motor.h"
+#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
 #include "usart.h"
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -150,7 +151,6 @@ int main(void)
     Motor1_Start();
     TIM7_Start();
 
-    // int32_t speed = -999;
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -158,28 +158,18 @@ int main(void)
     while (1)
     {
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
-
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 500;
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 000;
-        // LL_mDelay(3000);
-
-        // while (speed <= 999)
-        // {
-        //     g_motor_tgtspeed._1 = speed;
-        //     speed++;
-        //     LL_mDelay(10);
-        // }
-
-        // while (speed >= -999)
-        // {
-        //     g_motor_tgtspeed._1 = speed;
-        //     speed--;
-        //     LL_mDelay(10);
-        // }
-
-        // Track_Break();
+        g_motor_tgtspeed._1 = 600;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = 999;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = 600;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = 500;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = 300;
+        LL_mDelay(3000);
+        g_motor_tgtspeed._1 = 100;
+        LL_mDelay(3000);
 
         switch (g_status)
         {

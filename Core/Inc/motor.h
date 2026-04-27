@@ -3,6 +3,7 @@
 // PWM频率：18KHz
 
 #include "main.h"
+#include "stm32f1xx_ll_gpio.h"
 #include "tim.h"
 
 #define MOTOR_1 TIM_CHANNEL_1
