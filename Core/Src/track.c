@@ -1,6 +1,7 @@
 // 等待完善...
 
 #include "track.h"
+#include <stdlib.h>
 #include "config.h"
 #include "motor.h"
 #include "pid.h"

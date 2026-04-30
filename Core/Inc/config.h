@@ -1,8 +1,8 @@
 #pragma once
 
 // 麦克纳姆轮底盘相关
-#define CAR_H (12356) // 底盘轮距，单位m，放大100000倍
-#define CAR_W (19200) // 底盘轴距，单位m,放大100000倍
+#define CAR_H (12356UL) // 底盘轮距，单位m，放大100000倍
+#define CAR_W (19200UL) // 底盘轴距，单位m,放大100000倍
 #define ROT_PARAM (((CAR_H * 2) + (CAR_W * 2))) // 旋转参数,放大100000倍
 #define MAX_VZ (1) // 底盘最大角速度，单位rad/s
 #define MAX_VX (1) // 底盘最大直线速度，单位m/s
@@ -50,3 +50,16 @@
 // 颜色传感器
 #define GAIN (0x02) // 增益值
 #define ATIME (0xD6) // 采样时间
+
+// 投掷区颜色阈值
+#define THROW_COLOR_R (0)
+#define THROW_COLOR_G (0)
+#define THROW_COLOR_B (0)
+
+// 开始区颜色阈值
+#define START_COLOR_R (0)
+#define START_COLOR_G (0)
+#define START_COLOR_B (0)
+
+// RGB值最大偏移量
+#define COLOR_MAX_OFFSET (20)

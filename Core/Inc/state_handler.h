@@ -14,8 +14,6 @@ extern volatile bool g_color_status;
 extern volatile bool g_return_flag;
 extern volatile uint8_t g_corner_count;
 extern volatile bool g_motor_startflag;
-extern volatile bool g_start_area_flag;
-extern volatile bool g_throw_area_flag;
 extern volatile bool g_usart_flag;
 extern uint8_t g_rx_data[BUF_SIZE];
 volatile extern uint8_t g_cmd[BUF_SIZE];
@@ -85,7 +83,7 @@ __STATIC_INLINE void CORNER_Handler(void)
  */
 __STATIC_INLINE void THROW_PREPARE_Handler(void)
 {
-    if (g_throw_area_flag) // 如果到达了投掷区
+    if (IsThorwAreaReached()) // 如果到达了投掷区
     {
         Track_Break(); // 制动
         TIM6_Stop(); // 关闭定时器6
@@ -121,7 +119,7 @@ __STATIC_INLINE void THROW_WAIT_Handler(void)
  */
 __STATIC_INLINE void STOP_PREPARE_Handler(void)
 {
-    if (g_start_area_flag) // 如果回到了开始区
+    if (IsStartAreaReached()) // 如果回到了开始区
     {
         Track_Break(); // 制动
         TIM6_Stop(); // 关闭定时器6

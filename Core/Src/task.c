@@ -26,7 +26,7 @@ void SendReady(void)
         {
             g_usart_flag = 0; // 清除标志位
 
-            if (g_cmd[0] == 'A' && g_cmd[1] == 'C' && g_cmd[2] == 'K') // 收到应答命令
+            if (g_cmd[0] == 'A') // 收到应答命令
             {
                 break;
             }
@@ -57,6 +57,11 @@ void SendReady(void)
             HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 50); // 重发准备信号
             retry++; // 重试计数+1
         }
+    }
+
+    for (uint32_t i = 0; i < BUF_SIZE; i++) // 清除命令
+    {
+        g_cmd[i] = '\0';
     }
 
     s_vision_errorflag = 0; // 视觉在线

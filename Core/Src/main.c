@@ -67,8 +67,6 @@ void Status_Reset(void)
     g_break_flag = 0; // 清除制动标志位
     g_corner_count = 0; // 清零转弯计数
     g_line_reached = 0; // 清除到达线上标志位
-    g_start_area_flag = 0; // 清除到达启动区域标志位
-    g_throw_area_flag = 0; // 清除到达投掷区域标志位
     g_color_status = 0; // 清除颜色传感器状态标志位
     g_motor_startflag = 0; // 清除电机启动标志位
     PID_Init(); // 再次初始化PID
