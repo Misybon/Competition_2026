@@ -21,8 +21,6 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "motor.h"
-#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
 #include "usart.h"
 
@@ -52,7 +50,7 @@
 
 /* USER CODE BEGIN PV */
 volatile TRACK_STATUS g_status = STBY; // 等待启动
-extern volatile bool g_status_errorflag;
+extern volatile bool g_status_errorflag; // 状态机错误标志位
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -126,8 +124,8 @@ int main(void)
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
 
-    Motor1_Start();
-    TIM7_Start();
+    // Motor1_Start();
+    // TIM7_Start();
 
     /* USER CODE END 2 */
 
@@ -136,18 +134,23 @@ int main(void)
     while (1)
     {
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
-        g_motor_tgtspeed._1 = 600;
-        LL_mDelay(3000);
-        g_motor_tgtspeed._1 = 999;
-        LL_mDelay(3000);
-        g_motor_tgtspeed._1 = 600;
-        LL_mDelay(3000);
-        g_motor_tgtspeed._1 = 500;
-        LL_mDelay(3000);
-        g_motor_tgtspeed._1 = 300;
-        LL_mDelay(3000);
-        g_motor_tgtspeed._1 = 100;
-        LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 600;
+        // LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 999;
+        // LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 600;
+        // LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 500;
+        // LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 300;
+        // LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 100;
+        // LL_mDelay(3000);
+        // g_motor_tgtspeed._1 = 999;
+        // LL_mDelay(3000);
+        // Track_Break();
+        // g_motor_tgtspeed._1 = 0;
+        // LL_mDelay(3000);
 
         switch (g_status)
         {
@@ -171,7 +174,7 @@ int main(void)
             break;
         default:
             g_status_errorflag = 1; // 状态机出错
-            Error_Handler(); // 进入错误处理，尝试恢复待机模式
+            Error_Handler(); // 进入错误处理，尝试恢复等待状态
             break;
         }
         /* USER CODE END WHILE */

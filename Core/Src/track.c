@@ -3,11 +3,13 @@
 #include "track.h"
 #include "config.h"
 #include "motor.h"
+#include "pid.h"
 #include "state_handler.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
 
 extern volatile bool g_status_errorflag;
+extern struct Motor_PID_Out g_motor_out;
 
 struct Track_Speed g_track_speed = { 0 };
 
@@ -43,15 +45,19 @@ void Track_Break(void)
 {
     g_break_flag = 1; // 置位制动标志位
 
+    // 电机制动
+    Motor1_Break();
+    Motor2_Break();
+    Motor3_Break();
+    Motor4_Break();
+
     // 清零目标速度
     g_track_speed.vx = 0;
     g_track_speed.vy = 0;
     g_track_speed.vz = 0;
 
-    Motor1_Break();
-    Motor2_Break();
-    Motor3_Break();
-    Motor4_Break();
+    // 清除PID记忆
+    PID_Init();
 }
 
 /**

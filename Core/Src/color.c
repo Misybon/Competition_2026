@@ -1,3 +1,5 @@
+// 传输改用 DMA ，可行性有待验证...
+
 #include "color.h"
 #include "i2c.h"
 #include "state_handler.h"
@@ -56,7 +58,7 @@ static void Color_WriteByte(uint8_t Addr, uint8_t Byte)
     uint8_t buf[2];
     buf[0] = COLOR_CMD_BIT | Addr;
     buf[1] = Byte;
-    HAL_I2C_Master_Transmit(&hi2c1, COLOR_ADDR, buf, 2, 100);
+    HAL_I2C_Master_Transmit_DMA(&hi2c1, COLOR_ADDR, buf, 2);
 }
 
 /**
@@ -90,8 +92,8 @@ uint32_t Color_Init(void)
     uint8_t cmd = COLOR_CMD_BIT | COLOR_ID;
 
     // 检查设备是否存在
-    HAL_I2C_Master_Transmit(&hi2c1, COLOR_ADDR, &cmd, 1, 100);
-    HAL_I2C_Master_Receive(&hi2c1, COLOR_ADDR, (uint8_t*)&id, 1, 100);
+    HAL_I2C_Master_Transmit_DMA(&hi2c1, COLOR_ADDR, &cmd, 1);
+    HAL_I2C_Master_Receive_DMA(&hi2c1, COLOR_ADDR, (uint8_t*)&id, 1);
     if (id != 0x4D && id != 0x44)
     {
         return 0;
@@ -150,7 +152,7 @@ void GetColor(void)
     uint8_t buf[8];
 
     uint8_t cmd = COLOR_CMD_BIT | COLOR_CMD_AUTOINC | COLOR_CDATAL;
-    HAL_I2C_Mem_Read(&hi2c1, COLOR_ADDR, cmd, I2C_MEMADD_SIZE_8BIT, buf, 8, 100);
+    HAL_I2C_Mem_Read_DMA(&hi2c1, COLOR_ADDR, cmd, I2C_MEMADD_SIZE_8BIT, buf, 8);
 
     s_org_color.clear = (uint16_t)(buf[1] << 8) | buf[0]; // Clear
     s_org_color.red = (uint16_t)(buf[3] << 8) | buf[2]; // Red

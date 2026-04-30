@@ -1,5 +1,3 @@
-// 等待完善...
-
 #include "macnum.h"
 #include <stdlib.h>
 #include "config.h"

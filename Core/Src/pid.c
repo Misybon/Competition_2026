@@ -3,8 +3,10 @@
 #include "pid.h"
 #include <stdlib.h>
 #include "config.h"
+#include "ir.h"
 #include "macnum.h"
 #include "main.h"
+#include "motor.h"
 #include "track.h"
 
 static int32_t s_ir_current = 0;
@@ -31,9 +33,19 @@ void PID_Init(void)
     s_ir_pid.ki = IR_PID_KI;
     s_ir_pid.kd = IR_PID_KD;
 
+    g_ir_val = (struct IR_Val) { 0 };
+    g_ir_out = 0;
+    s_ir_current = 0;
+
+    s_ir_current = 0;
+    s_ir_err_1 = 0;
+    s_ir_err_2 = 0;
+
     s_motor_pid.kp = MOTOR_PID_KP;
     s_motor_pid.ki = MOTOR_PID_KI;
     s_motor_pid.kd = MOTOR_PID_KD;
+
+    g_motor_speed = (struct Motor_Speed) { 0 };
 
     s_motor_err_0 = (struct Motor_PID_Err) { 0 };
     s_motor_err_1 = (struct Motor_PID_Err) { 0 };
