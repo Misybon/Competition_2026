@@ -152,25 +152,25 @@ int main(void)
 
         switch (g_status)
         {
-        case STBY:
+        case STBY: // 等待状态
             STBY_Handler();
             break;
-        case TRACK:
+        case TRACK: // 循迹状态
             TRACK_Handler();
             break;
-        case CORNER:
+        case CORNER: // 转角状态
             CORNER_Handler();
             break;
-        case THROW_PREPARE:
+        case THROW_PREPARE: // 准备进入投掷区
             THROW_PREPARE_Handler();
             break;
-        case THROW_WAIT:
+        case THROW_WAIT: // 准备投掷
             THROW_WAIT_Handler();
             break;
-        case STOP_PREPARE:
+        case STOP_PREPARE: // 准备进入开始区
             STOP_PREPARE_Handler();
             break;
-        default:
+        default: // 状态出错
             g_status_errorflag = 1; // 状态机出错
             Error_Handler(); // 进入错误处理，尝试恢复等待状态
             break;

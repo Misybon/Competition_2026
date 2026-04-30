@@ -24,7 +24,7 @@ extern volatile TRACK_STATUS g_status;
  */
 __STATIC_INLINE void STBY_Handler(void)
 {
-    if (!LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
+    if (LL_GPIO_IsInputPinSet(Start_GPIO_Port, Start_Pin)) // 检测启动按钮按下
     {
         uint32_t tick_start = HAL_GetTick();
 

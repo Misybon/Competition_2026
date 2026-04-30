@@ -11,15 +11,15 @@
 #define BUF_SIZE (30)
 
 // 制动完成判断阈值
-#define BREAK_CPLT (5)
+#define BREAK_CPLT (3)
 
 // 制动完成判断计数和超时判断计数，总时间需乘上20ms
 #define BREAK_CPLT_CNT (35)
 #define BREAK_MAX_CNT (50)
 
 // 电机PID参数(放大256倍)
-#define MOTOR_PID_KP (300)
-#define MOTOR_PID_KI (80)
+#define MOTOR_PID_KP (280)
+#define MOTOR_PID_KI (120)
 #define MOTOR_PID_KD (88)
 
 // 红外PID参数(放大256倍)

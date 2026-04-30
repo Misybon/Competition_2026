@@ -87,7 +87,7 @@ __STATIC_INLINE void Motor1_Break(void)
 {
     LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
     LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
-    // __HAL_TIM_SET_COMPARE(&htim5, MOTOR_1, MOTOR_MAX_SPEED);
+    __HAL_TIM_SET_COMPARE(&htim5, MOTOR_1, MOTOR_MAX_SPEED);
 }
 
 /**
