@@ -21,7 +21,10 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
+#include "motor.h"
+#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
+#include "track.h"
 #include "usart.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -64,7 +67,6 @@ void Status_Reset(void)
 {
     g_status = STBY; // 恢复等待状态
     g_return_flag = 0; // 清除返回状态标志位
-    g_break_flag = 0; // 清除制动标志位
     g_corner_count = 0; // 清零转弯计数
     g_line_reached = 0; // 清除到达线上标志位
     g_color_status = 0; // 清除颜色传感器状态标志位
@@ -101,7 +103,7 @@ int main(void)
     SystemClock_Config();
 
     /* USER CODE BEGIN SysInit */
-    LL_mDelay(10); // 等待扩展板上电
+
     /* USER CODE END SysInit */
 
     /* Initialize all configured peripherals */
@@ -122,8 +124,8 @@ int main(void)
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
 
-    // Motor1_Start();
-    // TIM7_Start();
+    Motor1_Start();
+    TIM7_Start();
 
     /* USER CODE END 2 */
 
@@ -132,28 +134,40 @@ int main(void)
     while (1)
     {
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
-        // g_motor_tgtspeed._1 = 600;
-        // LL_mDelay(3000);
+
+        g_motor_tgtspeed._1 = 999;
+        LL_mDelay(2000);
+
+        g_motor_tgtspeed._1 = 800;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = 600;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = 400;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = 200;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = 0;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = -200;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = -400;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = -600;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = -800;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = -999;
+        LL_mDelay(2000);
+
         // g_motor_tgtspeed._1 = 999;
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 600;
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 500;
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 300;
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 100;
-        // LL_mDelay(3000);
-        // g_motor_tgtspeed._1 = 999;
-        // LL_mDelay(3000);
-        // Track_Break();
+        // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 0;
-        // LL_mDelay(3000);
+        // LL_mDelay(2000);
 
         switch (g_status)
         {
         case STBY: // 等待状态
-            STBY_Handler();
+            // STBY_Handler();
             break;
         case TRACK: // 循迹状态
             TRACK_Handler();
@@ -243,7 +257,6 @@ void Error_Handler(void)
             // 恢复起始状态
             Track_Break();
             Track_Stop();
-            g_break_flag = 0;
             Status_Reset();
             g_status_errorflag = 0;
             break;

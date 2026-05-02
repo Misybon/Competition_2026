@@ -3,24 +3,17 @@
 // 麦克纳姆轮底盘相关
 #define CAR_H (12356UL) // 底盘轮距，单位m，放大100000倍
 #define CAR_W (19200UL) // 底盘轴距，单位m,放大100000倍
-#define ROT_PARAM (((CAR_H * 2) + (CAR_W * 2))) // 旋转参数,放大100000倍
+#define ROT_PARAM ((CAR_H / 2) + (CAR_W / 2)) // 旋转参数,放大100000倍
 #define MAX_VZ (1) // 底盘最大角速度，单位rad/s
 #define MAX_VX (1) // 底盘最大直线速度，单位m/s
 
 // 缓冲区长度
 #define BUF_SIZE (30)
 
-// 制动完成判断阈值
-#define BREAK_CPLT (3)
-
-// 制动完成判断计数和超时判断计数，总时间需乘上20ms
-#define BREAK_CPLT_CNT (35)
-#define BREAK_MAX_CNT (50)
-
 // 电机PID参数(放大256倍)
-#define MOTOR_PID_KP (280)
-#define MOTOR_PID_KI (120)
-#define MOTOR_PID_KD (88)
+#define MOTOR_PID_KP (450)
+#define MOTOR_PID_KI (130)
+#define MOTOR_PID_KD (120)
 
 // 红外PID参数(放大256倍)
 #define IR_PID_KP (0)

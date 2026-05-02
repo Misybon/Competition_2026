@@ -64,7 +64,7 @@ __STATIC_INLINE void TRACK_Handler(void)
  */
 __STATIC_INLINE void CORNER_Handler(void)
 {
-    Track_Break_Soft(); // 软制动
+    Track_Break(); // 制动
     if (!g_return_flag) // 如果不处于返回状态
     {
         Track_Rot_Angle(-90); // 顺时针旋转90°

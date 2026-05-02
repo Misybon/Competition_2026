@@ -51,7 +51,6 @@ void SendReady(void)
                 {
                     g_cmd[i] = '\0';
                 }
-
                 return;
             }
             HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 50); // 重发准备信号

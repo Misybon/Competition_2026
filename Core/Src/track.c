@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "config.h"
 #include "motor.h"
-#include "pid.h"
 #include "state_handler.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
@@ -40,28 +39,6 @@ void Track_Stop(void)
 }
 
 /**
- * @brief 整车刹车
- */
-void Track_Break(void)
-{
-    g_break_flag = 1; // 置位制动标志位
-
-    // 电机制动
-    Motor1_Break();
-    Motor2_Break();
-    Motor3_Break();
-    Motor4_Break();
-
-    // 清零目标速度
-    g_track_speed.vx = 0;
-    g_track_speed.vy = 0;
-    g_track_speed.vz = 0;
-
-    // 清除PID记忆
-    PID_Init();
-}
-
-/**
  * @brief 小车旋转指定角度，逆时针正，顺时针负
  * 
  * @param Angle 旋转的角度，应该只有90, -90, 180
@@ -75,7 +52,7 @@ void Track_Rot_Angle(int32_t Angle)
         {
             IR_GetVal(); // 更新红外值
         }
-        Track_Break_Soft(); // 软制动
+        Track_Break(); // 制动
     }
     else if (Angle == -90)
     {
@@ -84,7 +61,7 @@ void Track_Rot_Angle(int32_t Angle)
         {
             IR_GetVal(); // 更新红外值
         }
-        Track_Break_Soft(); // 软制动
+        Track_Break(); // 制动
     }
     else if (Angle == 180)
     {
@@ -93,7 +70,7 @@ void Track_Rot_Angle(int32_t Angle)
         {
             IR_GetVal(); // 更新红外值
         }
-        Track_Break_Soft(); // 软制动
+        Track_Break(); // 制动
     }
     else
     {
@@ -128,7 +105,7 @@ void ProcessLineLostEvent(void)
         if (!g_return_flag) // 不处于返回状态
         {
             // 直接在此完成转弯动作
-            Track_Break_Soft(); // 软制动
+            Track_Break(); // 制动
             Track_Rot_Angle(-90); // 顺时针旋转90°
             Track_Restart(); // 重启循迹
 
@@ -138,7 +115,7 @@ void ProcessLineLostEvent(void)
         else // 处于返回状态
         {
             // 直接在此完成转弯动作
-            Track_Break_Soft(); // 软制动
+            Track_Break(); // 制动
             Track_Rot_Angle(90); // 逆时针旋转90°
             Track_Restart(); // 重启循迹
 
