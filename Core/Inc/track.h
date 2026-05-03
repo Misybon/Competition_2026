@@ -9,9 +9,9 @@
 
 struct Track_Speed
 {
-    int32_t vx;
-    int32_t vy;
-    int32_t vz;
+    float vx;
+    float vy;
+    float vz;
 };
 
 extern struct Track_Speed g_track_speed;

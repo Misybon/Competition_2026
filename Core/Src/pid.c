@@ -69,8 +69,7 @@ void PID_Control(void)
         s_ir_err_0 = IR_TGT - s_ir_current;
 
         // 将放大的输出值按比例减小
-        int32_t ir_delta = s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 * 2) + s_ir_err_2);
-        g_ir_out += (ir_delta >> 8);
+        g_ir_out += ((s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 * 2) + s_ir_err_2)) >> 8);
 
         // 根据输出值修改角速度
         g_track_speed.vz = IR_KP * g_ir_out;

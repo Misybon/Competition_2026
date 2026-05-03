@@ -1,11 +1,11 @@
 #pragma once
 
 // 麦克纳姆轮底盘相关
-#define CAR_H (12356UL) // 底盘轮距，单位m，放大100000倍
-#define CAR_W (19200UL) // 底盘轴距，单位m,放大100000倍
-#define ROT_PARAM ((CAR_H / 2) + (CAR_W / 2)) // 旋转参数,放大100000倍
-#define MAX_VZ (1) // 底盘最大角速度，单位rad/s
-#define MAX_VX (1) // 底盘最大直线速度，单位m/s
+#define CAR_H (0.12345F) // 底盘轮距，单位m
+#define CAR_W (0.192F) // 底盘轴距，单位m
+#define ROT_PARAM ((CAR_H / 2) + (CAR_W / 2)) // 旋转参数
+#define MAX_VZ (2.28) // 底盘最大角速度，单位rad/s
+#define MAX_VX (0.36) // 底盘最大直线速度，单位m/s
 
 // 缓冲区长度
 #define BUF_SIZE (30)
@@ -21,7 +21,7 @@
 #define IR_PID_KD (0)
 
 // 电机线速度和PWM占空比对应比例
-#define MOTOR_KP (1)
+#define MOTOR_KP (2775)
 // 电机编码器读取值和PWM占空比对应比例
 #define MOTOR_ENCODER_KP (6)
 
@@ -30,8 +30,8 @@
 
 // 红外目标值和各路权重
 #define IR_TGT (0)
-#define IR_WEIGH_1 (200)
-#define IR_WEIGH_2 (100)
+#define IR_WEIGH_1 (410)
+#define IR_WEIGH_2 (178)
 #define IR_WEIGH_3 (0)
 
 // 丢线时间，单位ms

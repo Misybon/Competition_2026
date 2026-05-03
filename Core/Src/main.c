@@ -137,7 +137,6 @@ int main(void)
 
         g_motor_tgtspeed._1 = 999;
         LL_mDelay(2000);
-
         g_motor_tgtspeed._1 = 800;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = 600;
@@ -158,11 +157,6 @@ int main(void)
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = -999;
         LL_mDelay(2000);
-
-        // g_motor_tgtspeed._1 = 999;
-        // LL_mDelay(2000);
-        // g_motor_tgtspeed._1 = 0;
-        // LL_mDelay(2000);
 
         switch (g_status)
         {

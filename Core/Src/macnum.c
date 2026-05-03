@@ -3,6 +3,14 @@
 #include "config.h"
 #include "motor.h"
 
+struct Motor_Tmp_Speed
+{
+    float _1;
+    float _2;
+    float _3;
+    float _4;
+} static s_motor_tmp_speed_float = { 0 }; // 用作浮点计算
+
 /**
  * @brief 麦轮运动学解算
  * 
@@ -10,19 +18,25 @@
  * @param Vy Y轴方向速度，单位m/s
  * @param Vz 旋转速度，逆时针为正，单位rad/s
  */
-void Move_Transform(int32_t Vx, int32_t Vy, int32_t Vz)
+void Move_Transform(float Vx, float Vy, float Vz)
 {
     // 单位m/s
-    g_motor_tgtspeed._1 = Vx + Vy - Vz * ROT_PARAM / 100000;
-    g_motor_tgtspeed._2 = Vx - Vy - Vz * ROT_PARAM / 100000;
-    g_motor_tgtspeed._3 = Vx + Vy + Vz * ROT_PARAM / 100000;
-    g_motor_tgtspeed._4 = Vx - Vy + Vz * ROT_PARAM / 100000;
+    s_motor_tmp_speed_float._1 = Vx + Vy - Vz * ROT_PARAM;
+    s_motor_tmp_speed_float._2 = Vx - Vy - Vz * ROT_PARAM;
+    s_motor_tmp_speed_float._3 = Vx + Vy + Vz * ROT_PARAM;
+    s_motor_tmp_speed_float._4 = Vx - Vy + Vz * ROT_PARAM;
 
     // 换算到PWM占空比
-    g_motor_tgtspeed._1 *= MOTOR_KP;
-    g_motor_tgtspeed._2 *= MOTOR_KP;
-    g_motor_tgtspeed._3 *= MOTOR_KP;
-    g_motor_tgtspeed._4 *= MOTOR_KP;
+    s_motor_tmp_speed_float._1 *= MOTOR_KP;
+    s_motor_tmp_speed_float._2 *= MOTOR_KP;
+    s_motor_tmp_speed_float._3 *= MOTOR_KP;
+    s_motor_tmp_speed_float._4 *= MOTOR_KP;
+
+    // 赋给目标速度
+    g_motor_tgtspeed._1 = s_motor_tmp_speed_float._1;
+    g_motor_tgtspeed._2 = s_motor_tmp_speed_float._2;
+    g_motor_tgtspeed._3 = s_motor_tmp_speed_float._3;
+    g_motor_tgtspeed._4 = s_motor_tmp_speed_float._4;
 
     // 目标值限幅
     uint32_t tmp_max_speed;
