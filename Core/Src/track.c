@@ -87,7 +87,7 @@ void ProcessLineLostEvent(void)
     uint32_t tick_start = HAL_GetTick();
     while (HAL_GetTick() - tick_start < LINELOST_TIME)
     {
-        IR_GetVal();
+        IR_GetVal(); // 更新红外值
 
         if (!IsLineLost())
         {

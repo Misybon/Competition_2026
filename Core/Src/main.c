@@ -21,11 +21,9 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "motor.h"
-#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
-#include "track.h"
 #include "usart.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -124,8 +122,12 @@ int main(void)
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
 
-    Motor1_Start();
+    // Motor1_Start();
+    // Motor2_Start();
+    // Motor3_Start();
+    Color_Start();
     TIM7_Start();
+    // TIM6_Start();
 
     /* USER CODE END 2 */
 
@@ -136,26 +138,41 @@ int main(void)
         // 注意：可能因为PID调控导致转弯处无法完全丢线！
 
         g_motor_tgtspeed._1 = 999;
+        g_motor_tgtspeed._2 = 999;
+        g_motor_tgtspeed._3 = 999;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = 800;
+        g_motor_tgtspeed._2 = 800;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = 600;
+        g_motor_tgtspeed._2 = 600;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = 400;
+        g_motor_tgtspeed._2 = 400;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = 200;
+        g_motor_tgtspeed._2 = 200;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = 0;
+        g_motor_tgtspeed._2 = 0;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = -200;
+        g_motor_tgtspeed._2 = -200;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = -400;
+        g_motor_tgtspeed._2 = -400;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = -600;
+        g_motor_tgtspeed._2 = -600;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = -800;
+        g_motor_tgtspeed._2 = -800;
         LL_mDelay(2000);
         g_motor_tgtspeed._1 = -999;
+        g_motor_tgtspeed._2 = -999;
+        LL_mDelay(2000);
+        g_motor_tgtspeed._1 = 0;
+        g_motor_tgtspeed._2 = 0;
         LL_mDelay(2000);
 
         switch (g_status)

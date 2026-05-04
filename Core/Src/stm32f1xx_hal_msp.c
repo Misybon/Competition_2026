@@ -76,6 +76,7 @@ void HAL_MspInit(void)
   __HAL_AFIO_REMAP_SWJ_NOJTAG();
 
   /* USER CODE BEGIN MspInit 1 */
+    __HAL_AFIO_REMAP_TIM2_PARTIAL_1();
 
   /* USER CODE END MspInit 1 */
 }

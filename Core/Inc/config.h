@@ -41,8 +41,19 @@
 #define OFFSET_KP (1)
 
 // 颜色传感器
-#define GAIN (0x02) // 增益值
-#define ATIME (0xD6) // 采样时间
+// 增益设置
+// #define GAIN_1X
+// #define GAIN_4X
+#define GAIN_16X
+// #define GAIN_60X
+
+// 积分时间设置
+// #define ATIME_2_4MS
+#define ATIME_24MS
+// #define ATIME_50MS
+// #define ATIME_101MS
+// #define ATIME_154MS
+// #define ATIME_614MS
 
 // 投掷区颜色阈值
 #define THROW_COLOR_R (0)
