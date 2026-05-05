@@ -51,6 +51,9 @@ void SendReady(void)
                 {
                     g_cmd[i] = '\0';
                 }
+
+                HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
+
                 return;
             }
             HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 50); // 重发准备信号
@@ -96,7 +99,7 @@ void FindBasket(void)
             }
             else // 找到篮筐但没对准
             {
-                uint32_t offset = (uint32_t)0x0000 | (uint32_t)g_cmd[0] | (uint32_t)g_cmd[1] << 8; // 拼接偏移值
+                int32_t offset = (int16_t)((uint16_t)g_cmd[0] | ((uint16_t)g_cmd[1] << 8)); // 拼接位移值
                 g_track_speed.vz = OFFSET_KP * offset; // 乘上比例赋予角速度
             }
         }
@@ -128,7 +131,6 @@ void Throw(void)
     if (!s_vision_errorflag) // 如果视觉没有掉线
     {
         SendReturn(); // 发送返回指令
+        HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
     }
-
-    HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
 }

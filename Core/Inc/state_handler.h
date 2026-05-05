@@ -126,7 +126,7 @@ __STATIC_INLINE void STOP_PREPARE_Handler(void)
         TIM7_Stop(); // 关闭定时器7
         Track_Stop(); // 关闭PWM输出
         Color_Stop(); // 关闭颜色传感器
-        LL_mDelay(3000); // 等待制动完成
+        LL_mDelay(1000); // 等待制动完成
         Status_Reset(); // 重置
     }
     else if (!g_color_status) // 如果没有开启颜色传感器

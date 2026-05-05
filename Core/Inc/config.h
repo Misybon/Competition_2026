@@ -16,9 +16,9 @@
 #define MOTOR_PID_KD (120)
 
 // 红外PID参数(放大256倍)
-#define IR_PID_KP (0)
-#define IR_PID_KI (0)
-#define IR_PID_KD (0)
+#define IR_PID_KP (256)
+#define IR_PID_KI (64)
+#define IR_PID_KD (32)
 
 // 电机线速度和PWM占空比对应比例
 #define MOTOR_KP (2775)
@@ -43,16 +43,16 @@
 // 颜色传感器
 // 增益设置
 // #define GAIN_1X
-// #define GAIN_4X
-#define GAIN_16X
+#define GAIN_4X
+// #define GAIN_16X
 // #define GAIN_60X
 
 // 积分时间设置
 // #define ATIME_2_4MS
-#define ATIME_24MS
+// #define ATIME_24MS
 // #define ATIME_50MS
 // #define ATIME_101MS
-// #define ATIME_154MS
+#define ATIME_154MS
 // #define ATIME_614MS
 
 // 投掷区颜色阈值
@@ -66,4 +66,4 @@
 #define START_COLOR_B (0)
 
 // RGB值最大偏移量
-#define COLOR_MAX_OFFSET (20)
+#define COLOR_MAX_OFFSET (5)

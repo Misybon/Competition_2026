@@ -8,3 +8,4 @@ openocd.cfg
 mx.scratch
 !.settings
 .clang-format
+Todo.md

@@ -67,7 +67,7 @@ static void Color_WriteByte(uint8_t Addr, uint8_t Byte)
 __STATIC_INLINE void Color_Sleep(void)
 {
     Color_WriteByte(0x00, 0x00);
-    LL_mDelay(3);
+    // LL_mDelay(3);
 }
 
 /**
@@ -78,7 +78,7 @@ __STATIC_INLINE void Color_Sleep(void)
 __STATIC_INLINE void Color_Wakeup(void)
 {
     Color_WriteByte(COLOR_ENA, COLOR_PEN | COLOR_AEN);
-    LL_mDelay(3);
+    // LL_mDelay(3);
 }
 
 /**
@@ -152,7 +152,7 @@ void GetColor(void)
     uint8_t buf[8];
 
     uint8_t cmd = COLOR_CMD_BIT | COLOR_CMD_AUTOINC | COLOR_CDATAL;
-    HAL_I2C_Mem_Read(&hi2c1, COLOR_ADDR, cmd, I2C_MEMADD_SIZE_8BIT, buf, 8, 15);
+    HAL_I2C_Mem_Read(&hi2c1, COLOR_ADDR, cmd, I2C_MEMADD_SIZE_8BIT, buf, 8, 100);
 
     s_org_color.clear = (uint16_t)(buf[1] << 8) | buf[0]; // Clear
     s_org_color.red = (uint16_t)(buf[3] << 8) | buf[2]; // Red
