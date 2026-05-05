@@ -20,6 +20,8 @@ void SendReady(void)
     uint32_t tick_start = HAL_GetTick();
     uint32_t retry = 0; // 重试次数
 
+    HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY), 100);
+
     while (1) // 等待收到应答命令
     {
         if (g_usart_flag) // 解析出新命令
@@ -102,6 +104,8 @@ void FindBasket(void)
                 int32_t offset = (int16_t)((uint16_t)g_cmd[0] | ((uint16_t)g_cmd[1] << 8)); // 拼接位移值
                 g_track_speed.vz = OFFSET_KP * offset; // 乘上比例赋予角速度
             }
+
+            HAL_UART_Transmit_DMA(&huart3, TASK_ACK, sizeof(TASK_ACK));
         }
 
         if (HAL_GetTick() - tick_start >= 1000) // 单次超时1000ms
