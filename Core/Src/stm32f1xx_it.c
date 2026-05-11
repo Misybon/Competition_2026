@@ -280,12 +280,12 @@ void TIM7_IRQHandler(void)
     {
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
-        PID_Debug_SendData();
+        // PID_Debug_SendData();
 
         PID_Control();
         IR_GetVal();
 
-        // // PID控制和丢线判断
+        // PID控制和丢线判断
         // if (g_status == TRACK)
         // {
         //     if (g_line_reached) // 先到线上再进行丢线判断

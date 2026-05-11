@@ -22,7 +22,7 @@ void Move_Transform(float Vx, float Vy, float Vz)
 {
     // 单位m/s
     s_motor_tmp_speed_float._1 = Vx + Vy - Vz * ROT_PARAM;
-    s_motor_tmp_speed_float._2 = Vx - Vy - Vz * ROT_PARAM;
+    s_motor_tmp_speed_float._4 = Vx - Vy - Vz * ROT_PARAM;
     s_motor_tmp_speed_float._3 = Vx + Vy + Vz * ROT_PARAM;
     s_motor_tmp_speed_float._2 = Vx - Vy + Vz * ROT_PARAM;
 

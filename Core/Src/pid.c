@@ -72,11 +72,11 @@ void PID_Control(void)
         g_ir_out += ((s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 * 2) + s_ir_err_2)) >> 8);
 
         // 根据输出值修改角速度
-        g_track_speed.vz = IR_KP * g_ir_out;
+        // g_track_speed.vz = IR_KP * g_ir_out;
     }
 
     // 获取目标速度
-    // Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
+    Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
 
     // 获取当前速度
     {

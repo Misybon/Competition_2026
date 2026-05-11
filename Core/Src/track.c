@@ -95,6 +95,14 @@ void ProcessLineLostEvent(void)
         }
     }
 
+    // 调试用
+
+    Track_Break();
+    Track_Stop();
+
+    return;
+    // 调试用
+
     // 丢线了
     if (g_corner_count == 0) // 第一次丢线
     {

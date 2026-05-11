@@ -21,7 +21,9 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
+#include "stm32f1xx_ll_utils.h"
 #include "tim.h"
+#include "track.h"
 #include "usart.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -124,8 +126,20 @@ int main(void)
     // Motor1_Start();
     // Motor2_Start();
     // Motor3_Start();
-    Color_Start();
+    // Motor4_Start();
+    // Color_Start();
+    LL_mDelay(2000);
+
     TIM7_Start();
+    Track_Start();
+    LL_mDelay(2000);
+    Track_Break();
+    // LL_mDelay(10);
+    g_track_speed.vz = MAX_VZ;
+    LL_mDelay(2000);
+    Track_Break();
+    Track_Stop();
+
     // TIM6_Start();
 
     /* USER CODE END 2 */
@@ -139,45 +153,68 @@ int main(void)
         // g_motor_tgtspeed._1 = 999;
         // g_motor_tgtspeed._2 = 999;
         // g_motor_tgtspeed._3 = 999;
+        // g_motor_tgtspeed._4 = 999;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 800;
         // g_motor_tgtspeed._2 = 800;
+        // g_motor_tgtspeed._3 = 800;
+        // g_motor_tgtspeed._4 = 800;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 600;
         // g_motor_tgtspeed._2 = 600;
+        // g_motor_tgtspeed._3 = 600;
+        // g_motor_tgtspeed._4 = 600;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 400;
         // g_motor_tgtspeed._2 = 400;
+        // g_motor_tgtspeed._3 = 400;
+        // g_motor_tgtspeed._4 = 400;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 200;
         // g_motor_tgtspeed._2 = 200;
+        // g_motor_tgtspeed._3 = 200;
+        // g_motor_tgtspeed._4 = 200;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 0;
         // g_motor_tgtspeed._2 = 0;
+        // g_motor_tgtspeed._3 = 0;
+        // g_motor_tgtspeed._4 = 0;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = -200;
         // g_motor_tgtspeed._2 = -200;
+        // g_motor_tgtspeed._3 = -200;
+        // g_motor_tgtspeed._4 = -200;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = -400;
         // g_motor_tgtspeed._2 = -400;
+        // g_motor_tgtspeed._3 = -400;
+        // g_motor_tgtspeed._4 = -400;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = -600;
         // g_motor_tgtspeed._2 = -600;
+        // g_motor_tgtspeed._3 = -600;
+        // g_motor_tgtspeed._4 = -600;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = -800;
         // g_motor_tgtspeed._2 = -800;
+        // g_motor_tgtspeed._3 = -800;
+        // g_motor_tgtspeed._4 = -800;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = -999;
         // g_motor_tgtspeed._2 = -999;
+        // g_motor_tgtspeed._3 = -999;
+        // g_motor_tgtspeed._4 = -999;
         // LL_mDelay(2000);
         // g_motor_tgtspeed._1 = 0;
         // g_motor_tgtspeed._2 = 0;
+        // g_motor_tgtspeed._3 = 0;
+        // g_motor_tgtspeed._4 = 0;
         // LL_mDelay(2000);
 
         switch (g_status)
         {
         case STBY: // 等待状态
-            STBY_Handler();
+            // STBY_Handler();
             break;
         case TRACK: // 循迹状态
             TRACK_Handler();
