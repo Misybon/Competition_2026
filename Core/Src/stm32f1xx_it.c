@@ -282,22 +282,22 @@ void TIM7_IRQHandler(void)
 
         // PID_Debug_SendData();
 
-        PID_Control();
-        IR_GetVal();
+        // PID_Control();
+        // IR_GetVal();
 
         // PID控制和丢线判断
-        // if (g_status == TRACK)
-        // {
-        //     if (g_line_reached) // 先到线上再进行丢线判断
-        //     {
-        //         ProcessLineLostEvent();
-        //     }
-        //     PID_Control();
-        // }
-        // else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
-        // {
-        //     PID_Control();
-        // }
+        if (g_status == TRACK)
+        {
+            if (g_line_reached) // 先到线上再进行丢线判断
+            {
+                ProcessLineLostEvent();
+            }
+            PID_Control();
+        }
+        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+        {
+            PID_Control();
+        }
     }
     /* USER CODE END TIM7_IRQn 0 */
     /* USER CODE BEGIN TIM7_IRQn 1 */

@@ -33,5 +33,5 @@ __STATIC_INLINE void IR_GetVal(void)
  */
 __STATIC_INLINE uint32_t IsLineLost(void)
 {
-    return (g_ir_val._1 || g_ir_val._2 || g_ir_val._3 || g_ir_val._4 || g_ir_val._5);
+    return (g_ir_val._1 && g_ir_val._2 && g_ir_val._3 && g_ir_val._4 && g_ir_val._5);
 }

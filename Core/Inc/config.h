@@ -34,8 +34,8 @@
 #define IR_WEIGH_2 (178)
 #define IR_WEIGH_3 (0)
 
-// 丢线时间，单位ms
-#define LINELOST_TIME (100)
+// 丢线时间，单位ms，乘上20
+#define LINELOST_CNT (5)
 
 // 视觉偏移值和底盘角速度比例
 #define OFFSET_KP (1)

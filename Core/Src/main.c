@@ -123,6 +123,7 @@ int main(void)
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
 
+    g_line_reached = 1;
     // Motor1_Start();
     // Motor2_Start();
     // Motor3_Start();

@@ -3,10 +3,12 @@
 #include "track.h"
 #include <stdlib.h>
 #include "config.h"
+#include "ir.h"
 #include "motor.h"
 #include "state_handler.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
+static uint8_t s_linelost_cnt = 0; // 丢线时间计数
 
 extern volatile bool g_status_errorflag;
 extern struct Motor_PID_Out g_motor_out;
@@ -83,17 +85,35 @@ void Track_Rot_Angle(int32_t Angle)
  */
 void ProcessLineLostEvent(void)
 {
-    // 时间阈值判断
-    uint32_t tick_start = HAL_GetTick();
-    while (HAL_GetTick() - tick_start < LINELOST_TIME)
-    {
-        IR_GetVal(); // 更新红外值
+    IR_GetVal(); // 更新红外值
 
-        if (!IsLineLost())
+    // 时间阈值判断
+    if (IsLineLost())
+    {
+        s_linelost_cnt++; // 计数值加一
+        if (s_linelost_cnt < LINELOST_CNT) // 计数次数未达阈值则返回
         {
-            return; // 没丢线就返回
+            return; // 返回
         }
     }
+    else
+    {
+        s_linelost_cnt = 0; // 清零计数值
+        return; // 返回
+    }
+
+    s_linelost_cnt = 0; // 清零计数值
+
+    // uint32_t tick_start = HAL_GetTick();
+    // while (HAL_GetTick() - tick_start < LINELOST_CNT)
+    // {
+    //     IR_GetVal(); // 更新红外值
+
+    //     if (!IsLineLost())
+    //     {
+    //         return; // 没丢线就返回
+    //     }
+    // }
 
     // 调试用
 
