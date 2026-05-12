@@ -9,13 +9,6 @@
 #include "motor.h"
 #include "track.h"
 
-static int32_t s_ir_current = 0;
-static int32_t s_ir_err_0 = 0;
-static int32_t s_ir_err_1 = 0;
-static int32_t s_ir_err_2 = 0;
-
-static struct IR_PID s_ir_pid = { 0 };
-
 static struct Motor_PID s_motor_pid = { 0 };
 
 static struct Motor_PID_Err s_motor_err_0 = { 0 };
@@ -29,18 +22,6 @@ struct Motor_PID_Out g_motor_out = { 0 };
  */
 void PID_Init(void)
 {
-    s_ir_pid.kp = IR_PID_KP;
-    s_ir_pid.ki = IR_PID_KI;
-    s_ir_pid.kd = IR_PID_KD;
-
-    g_ir_val = (struct IR_Val) { 0 };
-    g_ir_out = 0;
-    s_ir_current = 0;
-
-    s_ir_current = 0;
-    s_ir_err_1 = 0;
-    s_ir_err_2 = 0;
-
     s_motor_pid.kp = MOTOR_PID_KP;
     s_motor_pid.ki = MOTOR_PID_KI;
     s_motor_pid.kd = MOTOR_PID_KD;
@@ -54,27 +35,10 @@ void PID_Init(void)
 }
 
 /**
- * @brief 电机和循迹PID控制
+ * @brief 电机PID控制
  */
 void PID_Control(void)
 {
-    // 红外PID
-    {
-        // 获取当前值
-        s_ir_current = -IR_WEIGH_1 * g_ir_val._1 - IR_WEIGH_2 * g_ir_val._2 + IR_WEIGH_3 * g_ir_val._3 + IR_WEIGH_2 * g_ir_val._4 + IR_WEIGH_1 * g_ir_val._5;
-
-        // 计算误差值
-        s_ir_err_2 = s_ir_err_1;
-        s_ir_err_1 = s_ir_err_0;
-        s_ir_err_0 = IR_TGT - s_ir_current;
-
-        // 将放大的输出值按比例减小
-        g_ir_out += ((s_ir_pid.kp * (s_ir_err_0 - s_ir_err_1) + s_ir_pid.ki * s_ir_err_0 + s_ir_pid.kd * (s_ir_err_0 - (s_ir_err_1 * 2) + s_ir_err_2)) >> 8);
-
-        // 根据输出值修改角速度
-        // g_track_speed.vz = IR_KP * g_ir_out;
-    }
-
     // 获取目标速度
     Move_Transform(g_track_speed.vx, g_track_speed.vy, g_track_speed.vz);
 

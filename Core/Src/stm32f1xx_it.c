@@ -280,8 +280,6 @@ void TIM7_IRQHandler(void)
     {
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
-        // PID_Debug_SendData();
-
         // PID_Control();
         // IR_GetVal();
 
@@ -292,10 +290,12 @@ void TIM7_IRQHandler(void)
             {
                 ProcessLineLostEvent();
             }
+            IR_Control();
             PID_Control();
         }
         else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
         {
+            IR_Control();
             PID_Control();
         }
     }

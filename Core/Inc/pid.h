@@ -4,13 +4,6 @@
 
 #include "main.h"
 
-struct IR_PID
-{
-    int32_t kp;
-    int32_t ki;
-    int32_t kd;
-};
-
 struct Motor_PID
 {
     int32_t kp;
@@ -36,5 +29,3 @@ struct Motor_PID_Out
 
 void PID_Control(void);
 void PID_Init(void);
-void PID_SetControlDivider(uint32_t divider);
-uint32_t PID_GetDivRatioByTargetSpeed(void);

@@ -2,6 +2,7 @@
 
 #include "color.h"
 #include "dma.h"
+#include "ir.h"
 #include "main.h"
 #include "motor.h"
 #include "task.h"

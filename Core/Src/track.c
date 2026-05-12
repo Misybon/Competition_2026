@@ -50,27 +50,27 @@ void Track_Rot_Angle(int32_t Angle)
     if (Angle == 90)
     {
         g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
-        while (g_ir_val._2) // 等待红外传感器识别到黑线
+        while (g_ir_status != IR_LOST) // 等待红外传感器识别到黑线
         {
-            IR_GetVal(); // 更新红外值
+            IR_GetStatus(); // 更新红外值
         }
         Track_Break(); // 制动
     }
     else if (Angle == -90)
     {
         g_track_speed.vz = -MAX_VZ; // 最大速度顺时针旋转
-        while (g_ir_val._4) // 等待红外传感器识别到黑线
+        while (g_ir_status != IR_LOST) // 等待红外传感器识别到黑线
         {
-            IR_GetVal(); // 更新红外值
+            IR_GetStatus(); // 更新红外值
         }
         Track_Break(); // 制动
     }
     else if (Angle == 180)
     {
         g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
-        while (g_ir_val._2) // 等待红外传感器识别到黑线
+        while (g_ir_status != IR_LOST) // 等待红外传感器识别到黑线
         {
-            IR_GetVal(); // 更新红外值
+            IR_GetStatus(); // 更新红外值
         }
         Track_Break(); // 制动
     }
@@ -85,7 +85,7 @@ void Track_Rot_Angle(int32_t Angle)
  */
 void ProcessLineLostEvent(void)
 {
-    IR_GetVal(); // 更新红外值
+    IR_GetStatus(); // 更新红外值
 
     // 时间阈值判断
     if (IsLineLost())
@@ -103,17 +103,6 @@ void ProcessLineLostEvent(void)
     }
 
     s_linelost_cnt = 0; // 清零计数值
-
-    // uint32_t tick_start = HAL_GetTick();
-    // while (HAL_GetTick() - tick_start < LINELOST_CNT)
-    // {
-    //     IR_GetVal(); // 更新红外值
-
-    //     if (!IsLineLost())
-    //     {
-    //         return; // 没丢线就返回
-    //     }
-    // }
 
     // 调试用
 
