@@ -72,7 +72,7 @@ void MX_GPIO_Init(void)
   /**/
   GPIO_InitStruct.Pin = Start_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
   LL_GPIO_Init(Start_GPIO_Port, &GPIO_InitStruct);
 
   /**/

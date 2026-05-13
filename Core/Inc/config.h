@@ -27,6 +27,9 @@
 // 丢线时间，单位ms，乘上20
 #define LINELOST_CNT (5)
 
+// 旋转超时时间，单位ms
+#define TRACK_ROT_TIMEOUT (3000)
+
 // 视觉偏移值和底盘角速度比例
 #define OFFSET_KP (1)
 

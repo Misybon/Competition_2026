@@ -20,7 +20,7 @@ void Track_Start(void);
 void Track_Stop(void);
 void ProcessLineLostEvent(void);
 void Track_Rot_Angle(int32_t Angle);
-
+void Track_ForceBreak(void);
 /**
  * @brief 是否到达投掷区
  * 

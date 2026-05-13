@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "config.h"
 #include "ir.h"
+#include "main.h"
 #include "motor.h"
 #include "state_handler.h"
 
@@ -41,36 +42,68 @@ void Track_Stop(void)
 }
 
 /**
+ * @brief 整车强制制动
+ */
+void Track_ForceBreak(void)
+{
+    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor1_Con2_GPIO_Port, Motor1_Con2_Pin);
+
+    LL_GPIO_SetOutputPin(Motor2_Con1_GPIO_Port, Motor2_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor2_Con2_GPIO_Port, Motor2_Con2_Pin);
+
+    LL_GPIO_SetOutputPin(Motor3_Con1_GPIO_Port, Motor3_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor3_Con2_GPIO_Port, Motor3_Con2_Pin);
+
+    LL_GPIO_SetOutputPin(Motor4_Con1_GPIO_Port, Motor4_Con1_Pin);
+    LL_GPIO_SetOutputPin(Motor4_Con2_GPIO_Port, Motor4_Con2_Pin);
+}
+
+/**
  * @brief 小车旋转指定角度，逆时针正，顺时针负
  * 
  * @param Angle 旋转的角度，应该只有90, -90, 180
  */
 void Track_Rot_Angle(int32_t Angle)
 {
+    uint32_t tick_start = HAL_GetTick(); // 开始计数
+
     if (Angle == 90)
     {
         g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
-        while (g_ir_status != IR_LOST) // 等待红外传感器识别到黑线
+        while (g_ir_status != IR_LOST && g_ir_status != IR_L4 && g_ir_status != IR_L3) // 等待红外传感器识别到黑线
         {
-            IR_GetStatus(); // 更新红外值
+            if (HAL_GetTick() - tick_start >= TRACK_ROT_TIMEOUT) // 超时
+            {
+                g_status_errorflag = 1;
+                Error_Handler(); // 进入错误处理
+            }
         }
         Track_Break(); // 制动
     }
     else if (Angle == -90)
     {
         g_track_speed.vz = -MAX_VZ; // 最大速度顺时针旋转
-        while (g_ir_status != IR_LOST) // 等待红外传感器识别到黑线
+        while (g_ir_status != IR_LOST && g_ir_status != IR_R4 && g_ir_status != IR_R3) // 等待红外传感器识别到黑线
         {
-            IR_GetStatus(); // 更新红外值
+            if (HAL_GetTick() - tick_start >= TRACK_ROT_TIMEOUT) // 超时
+            {
+                g_status_errorflag = 1;
+                Error_Handler(); // 进入错误处理
+            }
         }
         Track_Break(); // 制动
     }
     else if (Angle == 180)
     {
         g_track_speed.vz = MAX_VZ; // 最大速度逆时针旋转
-        while (g_ir_status != IR_LOST) // 等待红外传感器识别到黑线
+        while (g_ir_status != IR_LOST && g_ir_status != IR_L4 && g_ir_status != IR_L3) // 等待红外传感器识别到黑线
         {
-            IR_GetStatus(); // 更新红外值
+            if (HAL_GetTick() - tick_start >= TRACK_ROT_TIMEOUT) // 超时
+            {
+                g_status_errorflag = 1;
+                Error_Handler(); // 进入错误处理
+            }
         }
         Track_Break(); // 制动
     }
@@ -96,7 +129,7 @@ void ProcessLineLostEvent(void)
             return; // 返回
         }
     }
-    else
+    else // 没丢线
     {
         s_linelost_cnt = 0; // 清零计数值
         return; // 返回
@@ -105,7 +138,6 @@ void ProcessLineLostEvent(void)
     s_linelost_cnt = 0; // 清零计数值
 
     // 调试用
-
     Track_Break();
     Track_Stop();
 

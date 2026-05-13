@@ -24,14 +24,13 @@ typedef enum
     IR_L3 = -3,
     IR_L4 = -4,
 
+    IR_STOP = 125,
     IR_CORNER_R = 127, // 右转角
     IR_CORNER_L = 126, // 左转角
 } IR_STATUS;
 
 extern IR_STATUS g_ir_status;
 extern const IR_STATUS IR_LUT[32];
-
-extern int32_t g_ir_out;
 
 void IR_Control(void);
 

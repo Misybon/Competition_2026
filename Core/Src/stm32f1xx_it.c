@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_it.h"
+#include "ir.h"
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -280,8 +281,7 @@ void TIM7_IRQHandler(void)
     {
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
-        // PID_Control();
-        // IR_GetVal();
+        IR_GetStatus(); // 更新红外值
 
         // PID控制和丢线判断
         if (g_status == TRACK)
@@ -289,13 +289,17 @@ void TIM7_IRQHandler(void)
             if (g_line_reached) // 先到线上再进行丢线判断
             {
                 ProcessLineLostEvent();
+                IR_Control();
             }
+            PID_Control();
+        }
+        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE)
+        {
             IR_Control();
             PID_Control();
         }
-        else if (g_status == STOP_PREPARE || g_status == THROW_PREPARE || g_status == THROW_WAIT || g_status == CORNER)
+        else if (g_status == CORNER || g_status == THROW_WAIT)
         {
-            IR_Control();
             PID_Control();
         }
     }

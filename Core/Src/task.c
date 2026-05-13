@@ -92,7 +92,7 @@ void FindBasket(void)
 
             if (g_cmd[5]) // 没找到篮筐
             {
-                g_track_speed.vz = MAX_VZ; // 最大速度扫描篮筐
+                g_track_speed.vz = MAX_VZ / 2; // 扫描篮筐
             }
             else if (g_cmd[4]) // 对准篮筐
             {
@@ -105,7 +105,7 @@ void FindBasket(void)
                 g_track_speed.vz = OFFSET_KP * offset; // 乘上比例赋予角速度
             }
 
-            HAL_UART_Transmit_DMA(&huart3, TASK_ACK, sizeof(TASK_ACK));
+            HAL_UART_Transmit_DMA(&huart3, TASK_ACK, sizeof(TASK_ACK)); // 回传应答位
         }
 
         if (HAL_GetTick() - tick_start >= 1000) // 单次超时1000ms
