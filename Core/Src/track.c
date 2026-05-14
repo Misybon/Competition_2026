@@ -2,6 +2,7 @@
 
 #include "track.h"
 #include <stdlib.h>
+#include "color.h"
 #include "config.h"
 #include "ir.h"
 #include "main.h"
@@ -179,5 +180,17 @@ void ProcessLineLostEvent(void)
         g_motor_startflag = 0; // 重置电机启动状态
         g_status_errorflag = 1; // 状态机错误
         Error_Handler(); // 进入错误处理，尝试恢复待机模式
+    }
+}
+
+/**
+ * @brief 循迹错误处理函数，进入禁区则直接制动并重置状态
+ */
+void Track_Error_Handler(void)
+{
+    if (g_color.red - FORBIDDEN_COLOR_R <= COLOR_R_MAX_OFFSET && g_color.green - FORBIDDEN_COLOR_G <= COLOR_G_MAX_OFFSET && g_color.blue - FORBIDDEN_COLOR_B <= COLOR_B_MAX_OFFSET)
+    {
+        g_status_errorflag = 1;
+        Error_Handler();
     }
 }

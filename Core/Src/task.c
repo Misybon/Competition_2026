@@ -92,7 +92,7 @@ void FindBasket(void)
 
             if (g_cmd[5]) // 没找到篮筐
             {
-                g_track_speed.vz = MAX_VZ / 2; // 扫描篮筐
+                g_track_speed.vz = MAX_VZ; // 扫描篮筐
             }
             else if (g_cmd[4]) // 对准篮筐
             {
@@ -123,14 +123,18 @@ void FindBasket(void)
 
 /**
  * @brief 投掷弹丸并向视觉发送返回指令
- * 
  */
 void Throw(void)
 {
     // 投掷代码
-    LL_GPIO_SetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
-    LL_mDelay(1000); // 根据经验修改
-    LL_GPIO_ResetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
+    // LL_GPIO_SetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
+    // LL_mDelay(THROW_TIME);
+    // LL_GPIO_ResetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
+
+    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+
+    LL_mDelay(1000);
+    LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
 
     if (!s_vision_errorflag) // 如果视觉没有掉线
     {

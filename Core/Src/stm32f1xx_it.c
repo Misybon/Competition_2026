@@ -19,7 +19,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_it.h"
-#include "ir.h"
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -257,12 +256,13 @@ void USART3_IRQHandler(void)
 void TIM6_IRQHandler(void)
 {
     /* USER CODE BEGIN TIM6_IRQn 0 */
-    if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) // 周期为200ms
+    if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) // 周期为100ms
     {
         LL_TIM_ClearFlag_UPDATE(TIM6);
         if (g_color_status) // 如果开启了颜色传感器
         {
             GetColor(); // 读取颜色传感器数据
+            Track_Error_Handler(); // 处理循迹错误，防止跑飞
         }
     }
     /* USER CODE END TIM6_IRQn 0 */

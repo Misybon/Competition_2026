@@ -30,7 +30,9 @@
 #include "motor.h"
 #include "pid.h"
 #include "state_handler.h"
+#include "task.h"
 #include "track.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -123,14 +125,7 @@ int main(void)
 
     Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
 
-    TIM7_Start();
-    Track_Start();
-    LL_mDelay(2000);
-    Track_Break();
-    g_track_speed.vz = MAX_VZ;
-    LL_mDelay(2000);
-    Track_Break();
-    Track_Stop();
+    Throw();
 
     /* USER CODE END 2 */
 
@@ -146,7 +141,7 @@ int main(void)
             // STBY_Handler();
             break;
         case TRACK: // 循迹状态
-            TRACK_Handler();
+            // TRACK_Handler();
             break;
         case CORNER: // 转角状态
             CORNER_Handler();

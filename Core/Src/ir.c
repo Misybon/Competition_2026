@@ -5,7 +5,7 @@
 #include "track.h"
 
 extern volatile bool g_status_errorflag; // 状态机错误标志位
-IR_STATUS g_ir_status = 0; // 红外状态值
+IR_STATUS g_ir_status = IR_OK; // 红外状态值
 
 // 红外状态查找表
 const IR_STATUS IR_LUT[32] = {
@@ -24,7 +24,7 @@ const IR_STATUS IR_LUT[32] = {
     IR_R1,
     IR_ERR,
     IR_STOP,
-    IR_CORNER_R,
+    IR_STOP,
     IR_R4,
     IR_ERR,
     IR_ERR,
@@ -39,7 +39,7 @@ const IR_STATUS IR_LUT[32] = {
     IR_ERR,
     IR_CORNER_R,
     IR_ERR,
-    IR_CORNER_R,
+    IR_STOP,
     IR_ERR,
 };
 

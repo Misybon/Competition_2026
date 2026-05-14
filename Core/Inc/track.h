@@ -21,6 +21,8 @@ void Track_Stop(void);
 void ProcessLineLostEvent(void);
 void Track_Rot_Angle(int32_t Angle);
 void Track_ForceBreak(void);
+void Track_Error_Handler(void);
+
 /**
  * @brief 是否到达投掷区
  * 
@@ -28,7 +30,7 @@ void Track_ForceBreak(void);
  */
 __STATIC_INLINE uint32_t IsThorwAreaReached(void)
 {
-    return (abs(g_color.red - THROW_COLOR_R) <= COLOR_MAX_OFFSET && abs(g_color.green - THROW_COLOR_G) <= COLOR_MAX_OFFSET && abs(g_color.blue - THROW_COLOR_B) <= COLOR_MAX_OFFSET);
+    return (abs(g_color.red - THROW_COLOR_R) <= COLOR_R_MAX_OFFSET && abs(g_color.green - THROW_COLOR_G) <= COLOR_G_MAX_OFFSET && abs(g_color.blue - THROW_COLOR_B) <= COLOR_B_MAX_OFFSET);
 }
 
 /**
@@ -38,7 +40,7 @@ __STATIC_INLINE uint32_t IsThorwAreaReached(void)
  */
 __STATIC_INLINE uint32_t IsStartAreaReached(void)
 {
-    return (abs(g_color.red - START_COLOR_R) <= COLOR_MAX_OFFSET && abs(g_color.green - START_COLOR_G) <= COLOR_MAX_OFFSET && abs(g_color.blue - START_COLOR_B) <= COLOR_MAX_OFFSET);
+    return (abs(g_color.red - START_COLOR_R) <= COLOR_R_MAX_OFFSET && abs(g_color.green - START_COLOR_G) <= COLOR_G_MAX_OFFSET && abs(g_color.blue - START_COLOR_B) <= COLOR_B_MAX_OFFSET);
 }
 
 /**

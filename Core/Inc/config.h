@@ -24,6 +24,9 @@
 #define IR_VY_KP (0.045F)
 #define IR_VZ_KP (0.285F)
 
+// 投掷所需延时
+#define THROW_TIME (1000)
+
 // 丢线时间，单位ms，乘上20
 #define LINELOST_CNT (5)
 
@@ -36,27 +39,34 @@
 // 颜色传感器
 // 增益设置
 // #define GAIN_1X
-#define GAIN_4X
-// #define GAIN_16X
+// #define GAIN_4X
+#define GAIN_16X
 // #define GAIN_60X
 
 // 积分时间设置
 // #define ATIME_2_4MS
 // #define ATIME_24MS
 // #define ATIME_50MS
-// #define ATIME_101MS
-#define ATIME_154MS
+#define ATIME_101MS
+// #define ATIME_154MS
 // #define ATIME_614MS
 
 // 投掷区颜色阈值
-#define THROW_COLOR_R (0)
-#define THROW_COLOR_G (0)
-#define THROW_COLOR_B (0)
+#define THROW_COLOR_R (121)
+#define THROW_COLOR_G (118)
+#define THROW_COLOR_B (136)
 
 // 开始区颜色阈值
-#define START_COLOR_R (0)
-#define START_COLOR_G (0)
-#define START_COLOR_B (0)
+#define START_COLOR_R (119)
+#define START_COLOR_G (131)
+#define START_COLOR_B (106)
+
+// 禁区颜色阈值
+#define FORBIDDEN_COLOR_R (119)
+#define FORBIDDEN_COLOR_G (114)
+#define FORBIDDEN_COLOR_B (73)
 
 // RGB值最大偏移量
-#define COLOR_MAX_OFFSET (5)
+#define COLOR_R_MAX_OFFSET (5)
+#define COLOR_G_MAX_OFFSET (5)
+#define COLOR_B_MAX_OFFSET (20)
