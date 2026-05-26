@@ -21,11 +21,11 @@
 #define MOTOR_ENCODER_KP (6)
 
 // 红外输出值和底盘线速度、角速度比例
-#define IR_VY_KP (0.045F)
+#define IR_VY_KP (0.025F)
 #define IR_VZ_KP (0.285F)
 
 // 投掷所需延时
-#define THROW_TIME (1000)
+#define THROW_TIME (120)
 
 // 丢线时间，单位ms，乘上20
 #define LINELOST_CNT (5)
@@ -34,7 +34,7 @@
 #define TRACK_ROT_TIMEOUT (3000)
 
 // 视觉偏移值和底盘角速度比例
-#define OFFSET_KP (1)
+#define OFFSET_KP (0.05F)
 
 // 颜色传感器
 // 增益设置
@@ -52,21 +52,21 @@
 // #define ATIME_614MS
 
 // 投掷区颜色阈值
-#define THROW_COLOR_R (121)
-#define THROW_COLOR_G (118)
-#define THROW_COLOR_B (136)
+#define THROW_COLOR_R (151)
+#define THROW_COLOR_G (146)
+#define THROW_COLOR_B (176)
 
 // 开始区颜色阈值
-#define START_COLOR_R (119)
-#define START_COLOR_G (131)
-#define START_COLOR_B (106)
+#define START_COLOR_R (159)
+#define START_COLOR_G (156)
+#define START_COLOR_B (145)
 
 // 禁区颜色阈值
-#define FORBIDDEN_COLOR_R (119)
-#define FORBIDDEN_COLOR_G (114)
-#define FORBIDDEN_COLOR_B (73)
+#define FORBIDDEN_COLOR_R (154)
+#define FORBIDDEN_COLOR_G (134)
+#define FORBIDDEN_COLOR_B (107)
 
 // RGB值最大偏移量
-#define COLOR_R_MAX_OFFSET (5)
-#define COLOR_G_MAX_OFFSET (5)
-#define COLOR_B_MAX_OFFSET (20)
+#define COLOR_R_MAX_OFFSET (6)
+#define COLOR_G_MAX_OFFSET (6)
+#define COLOR_B_MAX_OFFSET (10)

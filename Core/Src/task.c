@@ -4,6 +4,8 @@
 #include "config.h"
 #include "main.h"
 #include "state_handler.h"
+#include "stm32f1xx_hal_tim.h"
+#include "tim.h"
 #include "track.h"
 
 static volatile bool s_vision_errorflag = 0; // 视觉错误标志位
@@ -11,6 +13,8 @@ static volatile bool s_vision_errorflag = 0; // 视觉错误标志位
 const uint8_t TASK_READY[5] = { 0xAA, 0x55, 0x01, 0x01, 0x02 }; // 准备完毕数据包
 const uint8_t TASK_RETURN[5] = { 0xAA, 0x55, 0x01, 0x02, 0x03 }; // 返回数据包
 const uint8_t TASK_ACK[5] = { 0xAA, 0x55, 0x01, 'A', 0x42 }; // 应答数据包
+
+int32_t debug = 0;
 
 /**
  * @brief 向视觉发送准备信号并等待应答
@@ -20,7 +24,7 @@ void SendReady(void)
     uint32_t tick_start = HAL_GetTick();
     uint32_t retry = 0; // 重试次数
 
-    HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY), 100);
+    HAL_UART_Transmit(&huart3, TASK_READY, sizeof(TASK_READY) / sizeof(uint8_t), 50);
 
     while (1) // 等待收到应答命令
     {
@@ -54,7 +58,7 @@ void SendReady(void)
                     g_cmd[i] = '\0';
                 }
 
-                HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
+                // HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
 
                 return;
             }
@@ -102,10 +106,11 @@ void FindBasket(void)
             else // 找到篮筐但没对准
             {
                 int32_t offset = (int16_t)((uint16_t)g_cmd[0] | ((uint16_t)g_cmd[1] << 8)); // 拼接位移值
+                debug = offset;
                 g_track_speed.vz = OFFSET_KP * offset; // 乘上比例赋予角速度
             }
 
-            HAL_UART_Transmit_DMA(&huart3, TASK_ACK, sizeof(TASK_ACK)); // 回传应答位
+            HAL_UART_Transmit_DMA(&huart3, TASK_ACK, sizeof(TASK_ACK) / sizeof(uint8_t)); // 回传应答位
         }
 
         if (HAL_GetTick() - tick_start >= 1000) // 单次超时1000ms
@@ -127,14 +132,11 @@ void FindBasket(void)
 void Throw(void)
 {
     // 投掷代码
-    // LL_GPIO_SetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
-    // LL_mDelay(THROW_TIME);
-    // LL_GPIO_ResetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
+    LL_GPIO_SetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
 
-    LL_GPIO_SetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_mDelay(THROW_TIME);
 
-    LL_mDelay(1000);
-    LL_GPIO_ResetOutputPin(Motor1_Con1_GPIO_Port, Motor1_Con1_Pin);
+    LL_GPIO_ResetOutputPin(Motor5_GPIO_Port, Motor5_Pin);
 
     if (!s_vision_errorflag) // 如果视觉没有掉线
     {

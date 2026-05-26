@@ -2,6 +2,7 @@
 #include "color.h"
 #include "ir.h"
 #include "main.h"
+#include "stm32f1xx_ll_utils.h"
 #include "task.h"
 #include "track.h"
 
@@ -89,6 +90,9 @@ void THROW_PREPARE_Handler(void)
         Track_Break(); // 制动
         TIM6_Stop(); // 关闭定时器6
         Color_Stop(); // 关闭颜色传感器
+        while (1)
+        {
+        }
         g_corner_count = 0; // 重置转弯计数
         g_status = THROW_WAIT; // 进入准备投掷状态
     }

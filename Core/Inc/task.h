@@ -4,6 +4,7 @@
 
 #include "usart.h"
 
+extern const uint8_t TASK_READY[5];
 extern const uint8_t TASK_RETURN[5];
 extern const uint8_t TASK_ACK[5];
 

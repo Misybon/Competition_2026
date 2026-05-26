@@ -122,12 +122,6 @@ void Status_Reset(void);
 #define Motor4_Con2_GPIO_Port GPIOB
 #define Motor5_Pin LL_GPIO_PIN_6
 #define Motor5_GPIO_Port GPIOC
-#define Motor_PWM_Alternative_Pin LL_GPIO_PIN_7
-#define Motor_PWM_Alternative_GPIO_Port GPIOC
-#define Motor_PWM_AlternativeC8_Pin LL_GPIO_PIN_8
-#define Motor_PWM_AlternativeC8_GPIO_Port GPIOC
-#define Motor_PWM_AlternativeC9_Pin LL_GPIO_PIN_9
-#define Motor_PWM_AlternativeC9_GPIO_Port GPIOC
 #define Motor_Encoder_1_Pin LL_GPIO_PIN_8
 #define Motor_Encoder_1_GPIO_Port GPIOA
 #define Motor_Encoder_1A9_Pin LL_GPIO_PIN_9

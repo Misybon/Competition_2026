@@ -116,16 +116,22 @@ int main(void)
     MX_TIM3_Init();
     MX_TIM4_Init();
     MX_TIM5_Init();
-    MX_TIM8_Init();
     MX_USART3_UART_Init();
     MX_TIM6_Init();
     MX_TIM7_Init();
     /* USER CODE BEGIN 2 */
-    PID_Init(); // 初始化PID参数
 
-    Color_Init(); // 初始化颜色传感器，是否加入设备识别错误处理有待考量...
+    PID_Init(); // 初始化 PID 参数
 
-    Throw();
+    Color_Init(); // 初始化颜色传感器
+
+    // LL_mDelay(1000);
+    // g_track_speed.vx = 0;
+    // g_track_speed.vz = MAX_VZ;
+    // LL_mDelay(1000);
+    // Track_Break();
+    // Track_Stop();
+    uint32_t tick = HAL_GetTick();
 
     /* USER CODE END 2 */
 
@@ -133,15 +139,20 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        // 注意：可能因为PID调控导致转弯处无法完全丢线！
+        if (HAL_GetTick() - tick >= 3000)
+        {
+            g_status_errorflag = 1;
+            Error_Handler();
+        }
+        // 注意：可能因为循迹调控导致转弯处无法完全丢线！
 
         switch (g_status)
         {
         case STBY: // 等待状态
-            // STBY_Handler();
+            STBY_Handler();
             break;
         case TRACK: // 循迹状态
-            // TRACK_Handler();
+            TRACK_Handler();
             break;
         case CORNER: // 转角状态
             CORNER_Handler();

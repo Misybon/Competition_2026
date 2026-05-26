@@ -8,6 +8,7 @@
 #include "main.h"
 #include "motor.h"
 #include "state_handler.h"
+#include "stm32f1xx_ll_tim.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
 static uint8_t s_linelost_cnt = 0; // 丢线时间计数
@@ -22,11 +23,17 @@ struct Track_Speed g_track_speed = { 0 };
  */
 void Track_Start(void)
 {
+    LL_TIM_DisableIT_UPDATE(TIM7);
     Motor1_Start();
     Motor2_Start();
     Motor3_Start();
     Motor4_Start();
-    g_track_speed.vx = MAX_VX; // 无须坡度启动
+    LL_TIM_EnableIT_UPDATE(TIM7);
+
+    for (uint32_t speed = 0; speed <= 999; speed++)
+    {
+        g_track_speed.vx = speed; // 坡度启动
+    }
     g_motor_startflag = 1;
 }
 
@@ -188,7 +195,7 @@ void ProcessLineLostEvent(void)
  */
 void Track_Error_Handler(void)
 {
-    if (g_color.red - FORBIDDEN_COLOR_R <= COLOR_R_MAX_OFFSET && g_color.green - FORBIDDEN_COLOR_G <= COLOR_G_MAX_OFFSET && g_color.blue - FORBIDDEN_COLOR_B <= COLOR_B_MAX_OFFSET)
+    if (abs(g_color.red - FORBIDDEN_COLOR_R) <= COLOR_R_MAX_OFFSET && abs(g_color.green - FORBIDDEN_COLOR_G) <= COLOR_G_MAX_OFFSET && abs(g_color.blue - FORBIDDEN_COLOR_B) <= COLOR_B_MAX_OFFSET)
     {
         g_status_errorflag = 1;
         Error_Handler();
