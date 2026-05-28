@@ -33,16 +33,7 @@ extern IR_STATUS g_ir_status;
 extern const IR_STATUS IR_LUT[32];
 
 void IR_Control(void);
-
-/**
- * @brief 获取红外状态
- */
-__STATIC_INLINE void IR_GetStatus(void)
-{
-    uint32_t port_val = LL_GPIO_ReadInputPort(IR1_GPIO_Port);
-    uint32_t ir_val = (port_val & 0x0007u) | ((port_val >> 7) & 0x0018u);
-    g_ir_status = IR_LUT[(~ir_val & 0x001Fu)];
-}
+void IR_GetStatus(void);
 
 /**
  * @brief 判断是否丢线

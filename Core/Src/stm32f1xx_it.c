@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_it.h"
+#include "ir.h"
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -282,6 +283,9 @@ void TIM7_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM7);
 
         IR_GetStatus(); // 更新红外值
+
+        // PID_Control();
+        // IR_Control();
 
         // PID控制和丢线判断
         if (g_status == TRACK)

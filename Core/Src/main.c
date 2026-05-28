@@ -125,13 +125,24 @@ int main(void)
 
     Color_Init(); // 初始化颜色传感器
 
-    // LL_mDelay(1000);
+    // TIM7_Start();
+    // Track_Start();
     // g_track_speed.vx = 0;
-    // g_track_speed.vz = MAX_VZ;
-    // LL_mDelay(1000);
+    // for (float speed = 0; speed <= MAX_VX; speed += 0.01)
+    // {
+    //     g_track_speed.vy = speed;
+    //     LL_mDelay(100);
+    // }
+    // g_track_speed.vy = 0;
+    // for (float speed = 0; speed <= MAX_VZ; speed += 0.1)
+    // {
+    //     g_track_speed.vz = speed;
+    //     LL_mDelay(100);
+    // }
+
     // Track_Break();
     // Track_Stop();
-    uint32_t tick = HAL_GetTick();
+    // PID_Init();
 
     /* USER CODE END 2 */
 
@@ -139,13 +150,6 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        if (HAL_GetTick() - tick >= 3000)
-        {
-            g_status_errorflag = 1;
-            Error_Handler();
-        }
-        // 注意：可能因为循迹调控导致转弯处无法完全丢线！
-
         switch (g_status)
         {
         case STBY: // 等待状态

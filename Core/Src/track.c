@@ -1,5 +1,3 @@
-// 等待完善...
-
 #include "track.h"
 #include <stdlib.h>
 #include "color.h"
@@ -8,7 +6,6 @@
 #include "main.h"
 #include "motor.h"
 #include "state_handler.h"
-#include "stm32f1xx_ll_tim.h"
 
 volatile bool g_break_flag = 0; // 制动状态标志位
 static uint8_t s_linelost_cnt = 0; // 丢线时间计数
@@ -30,10 +27,8 @@ void Track_Start(void)
     Motor4_Start();
     LL_TIM_EnableIT_UPDATE(TIM7);
 
-    for (uint32_t speed = 0; speed <= 999; speed++)
-    {
-        g_track_speed.vx = speed; // 坡度启动
-    }
+    g_track_speed.vx = MAX_VX / 3;
+
     g_motor_startflag = 1;
 }
 
@@ -126,8 +121,6 @@ void Track_Rot_Angle(int32_t Angle)
  */
 void ProcessLineLostEvent(void)
 {
-    IR_GetStatus(); // 更新红外值
-
     // 时间阈值判断
     if (IsLineLost())
     {
@@ -146,10 +139,12 @@ void ProcessLineLostEvent(void)
     s_linelost_cnt = 0; // 清零计数值
 
     // 调试用
-    Track_Break();
-    Track_Stop();
+    // Track_Break();
+    // Track_Stop();
 
-    return;
+    // while (1)
+    // {
+    // }
     // 调试用
 
     // 丢线了

@@ -4,7 +4,6 @@
 #include "config.h"
 #include "main.h"
 #include "state_handler.h"
-#include "stm32f1xx_hal_tim.h"
 #include "tim.h"
 #include "track.h"
 

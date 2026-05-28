@@ -20,15 +20,15 @@
 // 电机编码器读取值和PWM占空比对应比例
 #define MOTOR_ENCODER_KP (6)
 
-// 红外输出值和底盘线速度、角速度比例
-#define IR_VY_KP (0.025F)
-#define IR_VZ_KP (0.285F)
+// 5路红外模块整定值（精度优先、响应更稳）
+#define IR_VY_KP (0.010F)
+#define IR_VZ_KP (0.63F)
 
 // 投掷所需延时
 #define THROW_TIME (120)
 
-// 丢线时间，单位ms，乘上20
-#define LINELOST_CNT (5)
+// 丢线判定连续次数阈值*20ms
+#define LINELOST_CNT (50)
 
 // 旋转超时时间，单位ms
 #define TRACK_ROT_TIMEOUT (3000)

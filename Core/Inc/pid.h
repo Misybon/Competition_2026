@@ -1,5 +1,3 @@
-// 等待完善...
-
 #pragma once
 
 #include "main.h"

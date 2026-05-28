@@ -6,6 +6,8 @@
 
 extern volatile bool g_status_errorflag; // 状态机错误标志位
 IR_STATUS g_ir_status = IR_OK; // 红外状态值
+static IR_STATUS s_last_valid = IR_OK; // 上次有效值
+static uint8_t s_lost_cnt = 0; // 丢线计数值
 
 // 红外状态查找表
 const IR_STATUS IR_LUT[32] = {
@@ -44,6 +46,37 @@ const IR_STATUS IR_LUT[32] = {
 };
 
 /**
+ * @brief 获取红外状态
+ */
+void IR_GetStatus(void)
+{
+    uint32_t port_val = LL_GPIO_ReadInputPort(IR1_GPIO_Port); // 读取端口值
+    uint32_t ir_val = (port_val & 0x0007u) | ((port_val >> 7) & 0x0018u); // 获取红外值
+    IR_STATUS cur = IR_LUT[(~ir_val & 0x001Fu)]; // 根据LUT获取红外状态
+
+    if (cur == IR_LOST) // 丢线
+    {
+        if (s_lost_cnt < LINELOST_CNT) // 小于计数
+        {
+            s_lost_cnt++; // 计数值+1
+            g_ir_status = s_last_valid; // 维持旧状态
+        }
+        else // 大于计数
+        {
+            g_ir_status = IR_LOST; // 更新状态为丢线
+        }
+        return; // 返回
+    }
+
+    s_lost_cnt = 0; // 清零计数
+    g_ir_status = cur; // 更新状态
+    if (cur != IR_ERR) // 红外未发生错误
+    {
+        s_last_valid = cur;
+    }
+}
+
+/**
  * @brief 红外循迹控制
  */
 void IR_Control(void)
@@ -71,8 +104,8 @@ void IR_Control(void)
         g_status = THROW_PREPARE; // 进入投掷准备状态
         break;
     default: // 正常情况
-        g_track_speed.vy = g_ir_status * IR_VY_KP; // 根据比例赋予平移速度以修正位置
-        g_track_speed.vz = g_ir_status * IR_VZ_KP; // 根据比例赋予角速度以修正方向
+        g_track_speed.vy = (g_ir_status * IR_VY_KP) / 3 * -1; // 根据比例赋予平移速度以修正位置
+        g_track_speed.vz = (g_ir_status * IR_VZ_KP) / 3 * -1; // 根据比例赋予角速度以修正方向
         break;
     }
 }

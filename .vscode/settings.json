@@ -14,5 +14,5 @@
     ],
     "stm32cube-ide-registers.refreshMode": "only expanded",
     "stm32cube-ide-registers.exportMode": "only expanded",
-    "cortex-debug.variableUseNaturalFormat": true
+    "cortex-debug.variableUseNaturalFormat": false
 }

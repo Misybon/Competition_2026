@@ -1,5 +1,3 @@
-// 等待完善...
-
 #include "pid.h"
 #include <stdlib.h>
 #include "config.h"
