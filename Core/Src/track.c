@@ -27,7 +27,7 @@ void Track_Start(void)
     Motor4_Start();
     LL_TIM_EnableIT_UPDATE(TIM7);
 
-    g_track_speed.vx = MAX_VX / 3;
+    g_track_speed.vx = MAX_VX;
 
     g_motor_startflag = 1;
 }
@@ -137,15 +137,6 @@ void ProcessLineLostEvent(void)
     }
 
     s_linelost_cnt = 0; // 清零计数值
-
-    // 调试用
-    // Track_Break();
-    // Track_Stop();
-
-    // while (1)
-    // {
-    // }
-    // 调试用
 
     // 丢线了
     if (g_corner_count == 0) // 第一次丢线

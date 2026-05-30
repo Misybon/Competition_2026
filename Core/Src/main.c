@@ -21,6 +21,7 @@
 #include "dma.h"
 #include "gpio.h"
 #include "i2c.h"
+#include "stm32f1xx_ll_gpio.h"
 #include "tim.h"
 #include "usart.h"
 
@@ -124,25 +125,6 @@ int main(void)
     PID_Init(); // 初始化 PID 参数
 
     Color_Init(); // 初始化颜色传感器
-
-    // TIM7_Start();
-    // Track_Start();
-    // g_track_speed.vx = 0;
-    // for (float speed = 0; speed <= MAX_VX; speed += 0.01)
-    // {
-    //     g_track_speed.vy = speed;
-    //     LL_mDelay(100);
-    // }
-    // g_track_speed.vy = 0;
-    // for (float speed = 0; speed <= MAX_VZ; speed += 0.1)
-    // {
-    //     g_track_speed.vz = speed;
-    //     LL_mDelay(100);
-    // }
-
-    // Track_Break();
-    // Track_Stop();
-    // PID_Init();
 
     /* USER CODE END 2 */
 

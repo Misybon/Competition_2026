@@ -58,5 +58,5 @@ __STATIC_INLINE void Track_Break(void)
  */
 __STATIC_INLINE void Track_Restart(void)
 {
-    g_track_speed.vx = MAX_VX / 3; // 无须坡度启动
+    g_track_speed.vx = MAX_VX; // 无须坡度启动
 }

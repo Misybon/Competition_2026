@@ -91,10 +91,78 @@ void IR_Control(void)
     case IR_LOST: // 丢线
         break;
     case IR_CORNER_L: // 左转角
-        g_status = CORNER;
+        if (g_corner_count == 0) // 第一次
+        {
+            g_status = CORNER; // 进入转弯状态
+        }
+        else if (g_corner_count == 1) // 第二次
+        {
+            if (!g_return_flag) // 不处于返回状态
+            {
+                // 直接在此完成转弯动作
+                Track_Break(); // 制动
+                Track_Rot_Angle(-90); // 顺时针旋转90°
+                Track_Restart(); // 重启循迹
+
+                g_corner_count++; // 转弯计数+1
+                g_status = THROW_PREPARE; // 等待进入投掷区
+            }
+            else // 处于返回状态
+            {
+                // 直接在此完成转弯动作
+                Track_Break(); // 制动
+                Track_Rot_Angle(90); // 逆时针旋转90°
+                Track_Restart(); // 重启循迹
+
+                g_corner_count++; // 转弯计数+1
+                g_status = STOP_PREPARE; // 准备停车
+            }
+        }
+        else if (g_corner_count >= 2) // 第三次
+        {
+            // 出现问题！！！
+            g_corner_count = 0; // 重置转弯计数
+            g_motor_startflag = 0; // 重置电机启动状态
+            g_status_errorflag = 1; // 状态机错误
+            Error_Handler(); // 进入错误处理，尝试恢复待机模式
+        }
         break;
     case IR_CORNER_R: // 右转角
-        g_status = CORNER;
+        if (g_corner_count == 0) // 第一次
+        {
+            g_status = CORNER; // 进入转弯状态
+        }
+        else if (g_corner_count == 1) // 第二次
+        {
+            if (!g_return_flag) // 不处于返回状态
+            {
+                // 直接在此完成转弯动作
+                Track_Break(); // 制动
+                Track_Rot_Angle(-90); // 顺时针旋转90°
+                Track_Restart(); // 重启循迹
+
+                g_corner_count++; // 转弯计数+1
+                g_status = THROW_PREPARE; // 等待进入投掷区
+            }
+            else // 处于返回状态
+            {
+                // 直接在此完成转弯动作
+                Track_Break(); // 制动
+                Track_Rot_Angle(90); // 逆时针旋转90°
+                Track_Restart(); // 重启循迹
+
+                g_corner_count++; // 转弯计数+1
+                g_status = STOP_PREPARE; // 准备停车
+            }
+        }
+        else if (g_corner_count >= 2) // 第三次
+        {
+            // 出现问题！！！
+            g_corner_count = 0; // 重置转弯计数
+            g_motor_startflag = 0; // 重置电机启动状态
+            g_status_errorflag = 1; // 状态机错误
+            Error_Handler(); // 进入错误处理，尝试恢复待机模式
+        }
         break;
     case IR_STOP: // 到达投掷区（旁路保证）
         Track_Break(); // 制动
@@ -104,8 +172,8 @@ void IR_Control(void)
         g_status = THROW_PREPARE; // 进入投掷准备状态
         break;
     default: // 正常情况
-        g_track_speed.vy = (g_ir_status * IR_VY_KP) / 3 * -1; // 根据比例赋予平移速度以修正位置
-        g_track_speed.vz = (g_ir_status * IR_VZ_KP) / 3 * -1; // 根据比例赋予角速度以修正方向
+        g_track_speed.vy = (g_ir_status * IR_VY_KP) * -1; // 根据比例赋予平移速度以修正位置
+        g_track_speed.vz = (g_ir_status * IR_VZ_KP) * -1; // 根据比例赋予角速度以修正方向
         break;
     }
 }

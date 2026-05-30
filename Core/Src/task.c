@@ -57,7 +57,7 @@ void SendReady(void)
                     g_cmd[i] = '\0';
                 }
 
-                // HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
+                HAL_UART_AbortReceive_IT(&huart3); // 关闭串口接收
 
                 return;
             }

@@ -21,14 +21,14 @@
 #define MOTOR_ENCODER_KP (6)
 
 // 5路红外模块整定值（精度优先、响应更稳）
-#define IR_VY_KP (0.010F)
-#define IR_VZ_KP (0.63F)
+#define IR_VY_KP (0.015F)
+#define IR_VZ_KP (0.26F)
 
 // 投掷所需延时
 #define THROW_TIME (120)
 
 // 丢线判定连续次数阈值*20ms
-#define LINELOST_CNT (50)
+#define LINELOST_CNT (15)
 
 // 旋转超时时间，单位ms
 #define TRACK_ROT_TIMEOUT (3000)

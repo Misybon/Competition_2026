@@ -13,16 +13,16 @@ typedef enum
     IR_OK = 0, // 正常
 
     // 右偏
-    IR_R1 = 1,
-    IR_R2 = 2,
-    IR_R3 = 3,
-    IR_R4 = 4,
+    IR_R1 = 2,
+    IR_R2 = 4,
+    IR_R3 = 5,
+    IR_R4 = 6,
 
     // 左偏
-    IR_L1 = -1,
-    IR_L2 = -2,
-    IR_L3 = -3,
-    IR_L4 = -4,
+    IR_L1 = -2,
+    IR_L2 = -4,
+    IR_L3 = -5,
+    IR_L4 = -6,
 
     IR_STOP = 125,
     IR_CORNER_R = 127, // 右转角
